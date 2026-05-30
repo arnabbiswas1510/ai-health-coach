@@ -36,7 +36,7 @@ Create a detailed 28-day (4-week) training plan.
 - **Respect Readiness**: Adjust intensity based on Physiology/Metrics signals (e.g., pull back if recovery is low).
 - **Integrate Signals**: Use Activity Expert advice for session structure.
 - **Brevity**: Use standard notation (e.g., "4x(5' Z4, 2' r)") to keep the plan compact.
-- **Weekend Schedule**: Schedule aerobic base training (long runs / base building sessions) on Saturdays, and active recovery / rest on Sundays.
+- **Weekend Schedule**: Schedule aerobic base training (long runs / base building sessions) on treadmill on Saturdays, and active recovery / rest on Sundays.
 
 ## Inputs
 ### Season Plan
