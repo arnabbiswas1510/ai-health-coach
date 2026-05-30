@@ -754,6 +754,19 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
                 except Exception as e:
                     logger.warning("Failed to copy %s to root: %s", filename, e)
 
+        # Inject chat panel into planning.html (both user dir and root)
+        try:
+            from services.ai.langgraph.workflows.planning_workflow import _inject_chat_panel
+            for plan_path in [output_dir / "planning.html", output_dir.parent / "planning.html"]:
+                if plan_path.exists():
+                    original = plan_path.read_text(encoding="utf-8")
+                    injected = _inject_chat_panel(original)
+                    if injected != original:
+                        plan_path.write_text(injected, encoding="utf-8")
+                        logger.info("Injected chat panel into %s", plan_path)
+        except Exception as e:
+            logger.warning("Could not inject chat panel: %s", e)
+
         logger.info("✅ Analysis completed successfully!")
         if outside_competitions:
             logger.info("✅  Added %d Outside competitions from config", len(outside_competitions))

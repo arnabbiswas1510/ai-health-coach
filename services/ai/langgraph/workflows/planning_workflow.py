@@ -227,3 +227,465 @@ async def run_complete_analysis_and_planning(
         final_state["execution_metadata"] = {}
 
     return final_state
+
+
+async def run_weekly_planning_with_context(
+    user_id: str,
+    athlete_name: str,
+    season_plan_text: str,
+    planning_context: str = "",
+    current_date: dict | None = None,
+    week_dates: list | None = None,
+    metrics_outputs=None,
+    activity_outputs=None,
+    physiology_outputs=None,
+    weight_context: str = "",
+    competitions: list | None = None,
+) -> dict:
+    """Re-run only the planning branch using cached expert outputs.
+
+    Used by the chat API to quickly update the weekly plan from user feedback
+    without re-running the slow Garmin data extraction and analysis pipeline.
+
+    Returns a dict with keys:
+      - ``weekly_plan_md``: the raw markdown plan text
+      - ``planning_html``: the rendered HTML plan page
+    """
+    execution_id = f"{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_chat"
+    config = {"configurable": {"thread_id": execution_id}}
+
+    # Build minimal workflow: data_integration → weekly_planner → plan_formatter
+    LangSmithConfig.setup_langsmith()
+    workflow = StateGraph(TrainingAnalysisState)
+    workflow.add_node("data_integration", data_integration_node)
+    workflow.add_node("weekly_planner", weekly_planner_node)
+    workflow.add_node("plan_formatter", plan_formatter_node)
+    workflow.add_edge(START, "data_integration")
+    workflow.add_edge("data_integration", "weekly_planner")
+    workflow.add_edge("weekly_planner", "plan_formatter")
+    workflow.add_edge("plan_formatter", END)
+
+    checkpointer = MemorySaver()
+    mini_app = workflow.compile(checkpointer=checkpointer)
+
+    initial_state = create_initial_state(
+        user_id=user_id,
+        athlete_name=athlete_name,
+        garmin_data={},
+        planning_context=planning_context,
+        weight_context=weight_context,
+        competitions=competitions,
+        current_date=current_date,
+        week_dates=week_dates,
+        execution_id=execution_id,
+        hitl_enabled=False,
+        skip_synthesis=True,
+    )
+
+    # Pre-populate outputs so planners can use them
+    initial_state.update({
+        "metrics_outputs": metrics_outputs,
+        "activity_outputs": activity_outputs,
+        "physiology_outputs": physiology_outputs,
+        "season_plan": season_plan_text,
+        "season_plan_complete": True,
+        "synthesis_complete": True,
+    })
+
+    final_state: dict = {}
+    async for chunk in mini_app.astream(initial_state, config=config, stream_mode="values"):
+        final_state = chunk
+
+    # Extract weekly plan markdown
+    weekly_plan_raw = final_state.get("weekly_plan", "")
+    weekly_plan_md = ""
+    if isinstance(weekly_plan_raw, dict):
+        output = weekly_plan_raw.get("output", "")
+        weekly_plan_md = output if isinstance(output, str) else ""
+    elif isinstance(weekly_plan_raw, str):
+        weekly_plan_md = weekly_plan_raw
+
+    planning_html = final_state.get("planning_html", "")
+    if planning_html and not isinstance(planning_html, str):
+        planning_html = str(planning_html)
+
+    # Inject chat panel into the rendered HTML
+    planning_html = _inject_chat_panel(planning_html)
+
+    return {"weekly_plan_md": weekly_plan_md, "planning_html": planning_html}
+
+
+def _inject_chat_panel(html: str) -> str:
+    """Inject the floating chat sidebar into an existing planning HTML page."""
+    if not html or "garmin-chat-panel" in html:
+        return html
+
+    chat_html = _get_chat_panel_html()
+    # Inject before </body>
+    if "</body>" in html:
+        return html.replace("</body>", chat_html + "\n</body>")
+    return html + chat_html
+
+
+def _get_chat_panel_html() -> str:
+    return """
+<!-- ========== Garmin AI Coach Chat Panel ========== -->
+<style>
+  #garmin-chat-panel {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 380px;
+    max-height: 600px;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(99, 179, 237, 0.25);
+    border-radius: 20px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 9999;
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  #garmin-chat-panel.collapsed {
+    max-height: 56px;
+    width: 220px;
+  }
+  #chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, rgba(59,130,246,0.3), rgba(139,92,246,0.3));
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  #chat-header .chat-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  #chat-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #e2e8f0;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #chat-toggle-btn {
+    background: none; border: none;
+    color: #94a3b8; cursor: pointer;
+    font-size: 16px; padding: 2px 6px;
+    border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+  #chat-toggle-btn:hover { color: #e2e8f0; background: rgba(255,255,255,0.1); }
+  #chat-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    transition: opacity 0.2s;
+  }
+  #garmin-chat-panel.collapsed #chat-body { opacity: 0; pointer-events: none; }
+  #chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 380px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99,179,237,0.3) transparent;
+  }
+  .chat-msg {
+    display: flex;
+    flex-direction: column;
+    max-width: 88%;
+    animation: msgIn 0.25s ease;
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .chat-msg.user { align-self: flex-end; }
+  .chat-msg.assistant { align-self: flex-start; }
+  .msg-bubble {
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #e2e8f0;
+    word-break: break-word;
+  }
+  .chat-msg.user .msg-bubble {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border-bottom-right-radius: 4px;
+  }
+  .chat-msg.assistant .msg-bubble {
+    background: rgba(51, 65, 85, 0.8);
+    border: 1px solid rgba(99,179,237,0.15);
+    border-bottom-left-radius: 4px;
+  }
+  .msg-label {
+    font-size: 10px;
+    color: #64748b;
+    margin-bottom: 4px;
+    padding: 0 4px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .chat-msg.user .msg-label { text-align: right; }
+  #chat-thinking {
+    display: none;
+    align-self: flex-start;
+    padding: 10px 14px;
+    background: rgba(51,65,85,0.8);
+    border: 1px solid rgba(99,179,237,0.15);
+    border-radius: 16px;
+    border-bottom-left-radius: 4px;
+    font-size: 13px;
+    color: #94a3b8;
+    gap: 6px;
+    align-items: center;
+  }
+  #chat-thinking.visible { display: flex; }
+  .thinking-dots span {
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: #64b5f6;
+    border-radius: 50%;
+    animation: dot-bounce 1.2s infinite;
+    margin: 0 1px;
+  }
+  .thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes dot-bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+    40% { transform: translateY(-5px); opacity: 1; }
+  }
+  #chat-input-area {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    background: rgba(15,23,42,0.6);
+    flex-shrink: 0;
+  }
+  #chat-input {
+    flex: 1;
+    background: rgba(30,41,59,0.9);
+    border: 1px solid rgba(99,179,237,0.2);
+    border-radius: 12px;
+    padding: 9px 13px;
+    color: #e2e8f0;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    resize: none;
+    min-height: 38px;
+    max-height: 120px;
+    overflow-y: auto;
+    line-height: 1.4;
+    transition: border-color 0.2s;
+  }
+  #chat-input:focus { border-color: rgba(99,179,237,0.5); }
+  #chat-input::placeholder { color: #475569; }
+  #chat-send-btn {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: opacity 0.2s, transform 0.1s;
+    align-self: flex-end;
+  }
+  #chat-send-btn:hover { opacity: 0.85; }
+  #chat-send-btn:active { transform: scale(0.95); }
+  #chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  #chat-plan-reload {
+    display: none;
+    margin: 8px 14px;
+    padding: 9px 14px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(6,182,212,0.2));
+    border: 1px solid rgba(16,185,129,0.4);
+    border-radius: 10px;
+    color: #34d399;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: 500;
+  }
+  #chat-plan-reload.visible { display: block; }
+  #chat-plan-reload:hover { background: linear-gradient(135deg, rgba(16,185,129,0.35), rgba(6,182,212,0.35)); }
+  #chat-clear-btn {
+    font-size: 10px;
+    color: #475569;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 6px;
+    transition: color 0.2s;
+  }
+  #chat-clear-btn:hover { color: #94a3b8; }
+</style>
+
+<div id="garmin-chat-panel">
+  <div id="chat-header" onclick="toggleChatPanel()">
+    <div class="chat-icon">🤖</div>
+    <h3>AI Coach Chat</h3>
+    <button id="chat-toggle-btn" title="Minimize">−</button>
+  </div>
+  <div id="chat-body">
+    <div id="chat-messages">
+      <div class="chat-msg assistant">
+        <div class="msg-label">Coach</div>
+        <div class="msg-bubble">
+          👋 Hi! I'm your AI coach. Tell me how you'd like to adjust your training plan — e.g. <em>"I can't train on Wednesdays"</em> or <em>"Make week 3 a recovery week"</em>.
+        </div>
+      </div>
+    </div>
+    <div id="chat-thinking">
+      <span>🧠 Re-planning</span>
+      <div class="thinking-dots"><span></span><span></span><span></span></div>
+    </div>
+    <div id="chat-plan-reload" onclick="location.reload()">
+      🔄 Plan updated! Click to refresh the page
+    </div>
+    <div id="chat-input-area">
+      <textarea id="chat-input" placeholder="Ask your coach anything…" rows="1"
+        onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+      <button id="chat-send-btn" onclick="sendChatMessage()" title="Send">➤</button>
+    </div>
+    <div style="display:flex;justify-content:flex-end;padding:0 14px 10px;">
+      <button id="chat-clear-btn" onclick="clearChatHistory()">Clear history</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const CHAT_API = '/api/chat';
+  const USER_ID = 'Arnabbiswas';
+  let isThinking = false;
+
+  function toggleChatPanel() {
+    const panel = document.getElementById('garmin-chat-panel');
+    const btn = document.getElementById('chat-toggle-btn');
+    panel.classList.toggle('collapsed');
+    btn.textContent = panel.classList.contains('collapsed') ? '+' : '−';
+  }
+
+  function autoResize(el) {
+    el.style.height = 'auto';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  }
+
+  function handleChatKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendChatMessage();
+    }
+  }
+
+  function appendMessage(role, content) {
+    const container = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.innerHTML = '<div class="msg-label">' + (role === 'user' ? 'You' : 'Coach') + '</div>'
+      + '<div class="msg-bubble">' + escapeHtml(content) + '</div>';
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/"/g,'&quot;').replace(/\n/g,'<br>').replace(/\*(.*?)\*/g,'<em>$1</em>');
+  }
+
+  function setThinking(on) {
+    isThinking = on;
+    const el = document.getElementById('chat-thinking');
+    el.classList.toggle('visible', on);
+    document.getElementById('chat-send-btn').disabled = on;
+    document.getElementById('chat-input').disabled = on;
+    if (on) el.scrollIntoView({behavior:'smooth'});
+  }
+
+  function showReloadBanner() {
+    document.getElementById('chat-plan-reload').classList.add('visible');
+  }
+
+  async function sendChatMessage() {
+    if (isThinking) return;
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    appendMessage('user', message);
+    setThinking(true);
+    document.getElementById('chat-plan-reload').classList.remove('visible');
+
+    try {
+      const resp = await fetch(CHAT_API, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({user_id: USER_ID, message: message}),
+      });
+
+      if (!resp.ok) {
+        const err = await resp.text();
+        throw new Error('Server error ' + resp.status + ': ' + err);
+      }
+
+      const data = await resp.json();
+      appendMessage('assistant', data.reply || 'Plan updated.');
+      if (data.plan_updated) showReloadBanner();
+
+    } catch(e) {
+      appendMessage('assistant', '❌ Error: ' + e.message);
+    } finally {
+      setThinking(false);
+    }
+  }
+
+  async function clearChatHistory() {
+    try {
+      await fetch(CHAT_API.replace('/chat', '/chat/' + USER_ID + '/history'), {method: 'DELETE'});
+    } catch(e) { /* ignore */ }
+    const container = document.getElementById('chat-messages');
+    container.innerHTML = '<div class="chat-msg assistant"><div class="msg-label">Coach</div>'
+      + '<div class="msg-bubble">Chat history cleared. How can I help with your training plan?</div></div>';
+    document.getElementById('chat-plan-reload').classList.remove('visible');
+  }
+
+  // Make functions global
+  window.toggleChatPanel = toggleChatPanel;
+  window.sendChatMessage = sendChatMessage;
+  window.handleChatKey = handleChatKey;
+  window.autoResize = autoResize;
+  window.clearChatHistory = clearChatHistory;
+})();
+</script>
+<!-- ========== End Chat Panel ========== -->
+"""
