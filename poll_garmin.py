@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-import json
 import logging
-import os
 import subprocess
 from pathlib import Path
+
 import yaml
 from garminconnect import Garmin
 
@@ -19,12 +18,12 @@ def main():
 
     # 1. Parse athlete email from config
     if not config_path.exists():
-        logger.error(f"Config file not found at {config_path}")
+        logger.error("Config file not found at %s", config_path)
         return
 
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         config = yaml.safe_load(f)
-    
+
     email = config.get("athlete", {}).get("email")
     if not email:
         logger.error("Athlete email is missing in coach_config.yaml")
@@ -37,7 +36,7 @@ def main():
         client = Garmin(email=email, password="", prompt_mfa=None)
         client.login(tokenstore=str(tokens_dir))
     except Exception as e:
-        logger.error(f"Failed to log in using cached tokens: {e}")
+        logger.error("Failed to log in using cached tokens: %s", e)
         logger.error("Please run 'docker compose run --rm coach' once interactively to refresh tokens/MFA.")
         return
 
@@ -46,7 +45,7 @@ def main():
         logger.info("Checking latest Garmin activity...")
         activities = client.get_activities(0, 1)
     except Exception as e:
-        logger.error(f"Failed to fetch activities from Garmin Connect: {e}")
+        logger.error("Failed to fetch activities from Garmin Connect: %s", e)
         return
 
     if not activities:
@@ -59,7 +58,7 @@ def main():
     activity_name = latest_activity.get("activityName", "Activity")
     start_time = latest_activity.get("startTimeLocal", "")
 
-    logger.info(f"Latest activity on Garmin Connect: ID={activity_id} ({activity_name}, type={activity_type}, start={start_time})")
+    logger.info("Latest activity on Garmin Connect: ID=%s (%s, type=%s, start=%s)", activity_id, activity_name, activity_type, start_time)
 
     # 4. Check if we've already processed this activity ID
     last_processed_id = ""
@@ -71,25 +70,25 @@ def main():
         return
 
     # 5. New activity detected! Trigger analysis
-    logger.info(f"New activity detected (ID: {activity_id} != {last_processed_id})!")
+    logger.info("New activity detected (ID: %s != %s)!", activity_id, last_processed_id)
     logger.info("Triggering Garmin AI Coach analysis workflow...")
 
     # Run the docker compose command to execute coach
     cmd = ["docker", "compose", "run", "--rm", "coach"]
     try:
         # Running the command
-        res = subprocess.run(cmd, cwd=str(project_dir), capture_output=True, text=True)
+        res = subprocess.run(cmd, cwd=str(project_dir), capture_output=True, text=True, check=False)
         if res.returncode == 0:
             logger.info("Garmin AI Coach analysis finished successfully!")
             # Update the last processed activity ID
             data_dir.mkdir(parents=True, exist_ok=True)
             last_id_file.write_text(activity_id, encoding="utf-8")
-            logger.info(f"Updated last processed ID to {activity_id}")
+            logger.info("Updated last processed ID to %s", activity_id)
         else:
             logger.error("Garmin AI Coach analysis container failed!")
             logger.error(res.stderr)
     except Exception as e:
-        logger.error(f"Failed to run docker compose command: {e}")
+        logger.error("Failed to run docker compose command: %s", e)
 
 if __name__ == "__main__":
     main()

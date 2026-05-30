@@ -3,8 +3,6 @@ import os
 from collections.abc import Callable
 from pathlib import Path
 
-import garth
-import requests
 from garminconnect import Garmin
 
 logger = logging.getLogger(__name__)

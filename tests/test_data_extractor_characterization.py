@@ -77,7 +77,7 @@ class TestTriathlonCoachDataExtractorCharacterization:
 
         mock_client.assert_called_once()
         mock_instance.connect.assert_called_once()
-        args, kwargs = mock_instance.connect.call_args
+        args, _kwargs = mock_instance.connect.call_args
         assert args == ("test@example.com", "password")
 
     @patch("services.garmin.data_extractor.GarminConnectClient")

@@ -1,7 +1,9 @@
-import pytest
 from unittest.mock import MagicMock, patch
-from pathlib import Path
+
+import pytest
+
 from services.garmin.client import GarminConnectClient
+
 
 def test_connect_successful(tmp_path):
     with patch("services.garmin.client.Garmin") as mock_garmin_class:
@@ -9,10 +11,11 @@ def test_connect_successful(tmp_path):
         mock_garmin_class.return_value = mock_garmin_instance
 
         client = GarminConnectClient(token_dir=str(tmp_path))
-        
+
         email = "user@example.com"
         password = "secret_password"
-        mfa_callback = lambda: "123456"
+        def mfa_callback():
+            return "123456"
 
         client.connect(email, password, mfa_callback=mfa_callback)
 
@@ -47,7 +50,7 @@ def test_connect_failure(tmp_path):
 def test_disconnect_clears_client(tmp_path):
     client = GarminConnectClient(token_dir=str(tmp_path))
     client._client = MagicMock()
-    
+
     assert client._client is not None
     client.disconnect()
     assert client._client is None

@@ -1,6 +1,6 @@
-"""
-Plan Parser: converts the AI weekly planner markdown output into structured
-workout dicts that GarminCalendarSyncer can push to Garmin Connect.
+"""Plan Parser: converts the AI weekly planner markdown output into structured workout dicts.
+
+Workout dicts can be pushed to Garmin Connect via GarminCalendarSyncer.
 
 Supported run types:
   - structured:  warmup + intervals (repeat groups) + cooldown
@@ -22,38 +22,37 @@ logger = logging.getLogger(__name__)
 
 
 def clean_corrupted_json(text: str) -> str:
-    """
-    Remove invalid unicode/token corruptions printed outside JSON strings
-    by the Gemini model when returning structured output.
+    """Remove invalid unicode/token corruptions printed outside JSON strings.
+
+    These are printed by the Gemini model when returning structured output.
     """
     in_string = False
     escaped = False
     result = []
     i = 0
     n = len(text)
-    delimiters = {',', '}', ']', '{', '['}
-    
+    delimiters = {",", "}", "]", "{", "["}
+
     while i < n:
         char = text[i]
         if in_string:
             result.append(char)
             if escaped:
                 escaped = False
-            elif char == '\\':
+            elif char == "\\":
                 escaped = True
             elif char == '"':
                 in_string = False
             i += 1
-        else:
-            if ord(char) > 127:
-                while i < n and text[i] not in delimiters:
-                    i += 1
-            else:
-                if char == '"':
-                    in_string = True
-                result.append(char)
+        elif ord(char) > 127:
+            while i < n and text[i] not in delimiters:
                 i += 1
-                
+        else:
+            if char == '"':
+                in_string = True
+            result.append(char)
+            i += 1
+
     return "".join(result)
 
 # ---------------------------------------------------------------------------
@@ -88,10 +87,9 @@ class ParsedWorkout:
 
 
 class PlanParser:
-    """
-    Parses the markdown weekly plan text (output of weekly_planner_node)
-    into a list of ParsedWorkout objects, one per training day.
+    """Parses the markdown weekly plan text (output of weekly_planner_node) into workouts.
 
+    Creates a list of ParsedWorkout objects, one per training day.
     Dates are inferred from the plan text (e.g. "Mon, Jun 02") combined
     with the start_date anchor.
     """
@@ -107,12 +105,12 @@ class PlanParser:
 
     # "4x(5' Z4, 2' r)" or "3x(8'Z3, 3'rec)"
     _INTERVAL_RE = re.compile(
-        r"(\d+)\s*[xX×]\s*[\(\[]?\s*(\d+)['′m]\s*(Z\d)\s*[,/]\s*(\d+)['′m]\s*r(?:ec(?:overy)?)?",
+        r"(\d+)\s*[xX×]\s*[\(\[]?\s*(\d+)['′m]\s*(Z\d)\s*[,/]\s*(\d+)['′m]\s*r(?:ec(?:overy)?)?",  # noqa: RUF001
         re.IGNORECASE,
     )
 
     # Simple duration: "45'" or "45 min" or "45m"
-    _DURATION_RE = re.compile(r"(\d+)\s*[\'′]?\s*(?:min(?:utes?)?)?", re.IGNORECASE)
+    _DURATION_RE = re.compile(r"(\d+)\s*[\'′]?\s*(?:min(?:utes?)?)?", re.IGNORECASE)  # noqa: RUF001
 
     # Zone reference: Z2, Z3, Z4 etc.
     _ZONE_RE = re.compile(r"Z(\d)", re.IGNORECASE)
@@ -124,7 +122,8 @@ class PlanParser:
     _LONG_RE = re.compile(r"\b(long run|LR|long easy)\b", re.IGNORECASE)
 
     def __init__(self, max_hr: int = 167):
-        """
+        """Initialize PlanParser.
+
         Args:
             max_hr: Athlete's estimated max heart rate (default 220-53=167).
         """
@@ -134,13 +133,13 @@ class PlanParser:
             for zone, (lo, hi) in _DEFAULT_ZONES.items()
         }
 
-    def parse_weekly_plan(
+    def parse_weekly_plan(  # noqa: C901
         self,
         plan_text: str,
         start_date: datetime | date | None = None,
     ) -> list[ParsedWorkout]:
-        """
-        Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects.
+        """Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects.
+
         Rest days are included with type='rest' so callers can skip them.
 
         Args:
@@ -177,7 +176,7 @@ class PlanParser:
                 for day in days:
                     date_str = day.get("date") or day.get("date_str")
                     day_text = day.get("day") or day.get("day_name") or day.get("day_date") or ""
-                    
+
                     if not date_str:
                         # Extract the date part from day_text (e.g. "May 30" from "Sat, May 30")
                         m = self._DAY_RE.search(day_text)
@@ -194,7 +193,7 @@ class PlanParser:
                     workout = day.get("workout", "")
                     purpose = day.get("purpose", "")
                     adaptation = day.get("adaptation", "")
-                    
+
                     # Reconstruct block text for parsing with existing rules
                     block_lines = []
                     if focus:
@@ -206,7 +205,7 @@ class PlanParser:
                     if adaptation:
                         block_lines.append(f"ADAPTATION: {adaptation}")
                     block_text = "\n".join(block_lines)
-                    
+
                     pw = self._parse_day_block(date_str, block_text)
                     workouts.append(pw)
                     day_offset += 1
@@ -226,8 +225,8 @@ class PlanParser:
     def _split_into_day_blocks(
         self, text: str, start_date: date
     ) -> list[tuple[str, str]]:
-        """
-        Split plan text into (date_str, block_text) tuples.
+        """Split plan text into (date_str, block_text) tuples.
+
         Uses a sliding window: each "Mon, Jun 02" header starts a new block.
         Dates not found in text are estimated by sequential offset from start_date.
         """
@@ -266,8 +265,8 @@ class PlanParser:
         return blocks
 
     def _resolve_date(self, date_text: str, start_date: date, offset: int) -> str:
-        """
-        Try to parse a date string like 'Jun 02' or 'Jun 2' relative to start_date's year.
+        """Try to parse a date string like 'Jun 02' or 'Jun 2' relative to start_date's year.
+
         Falls back to start_date + offset days.
         """
         date_text = date_text.strip().rstrip(".")
@@ -407,7 +406,7 @@ class PlanParser:
         # Look for patterns like "45'", "45 min", "90 minutes"
         # Fixed regex: do not assert \b after a single quote/prime character
         m = re.search(
-            r"(\d+)\s*(?:\'|′|\bmin(?:utes?)?\b)",
+            r"(\d+)\s*(?:\'|′|\bmin(?:utes?)?\b)",  # noqa: RUF001
             text,
             re.IGNORECASE,
         )

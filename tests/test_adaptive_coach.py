@@ -1,7 +1,10 @@
-import pytest
 from datetime import datetime, timedelta
-from services.garmin.models import Activity, ActivitySummary, GarminData
+
+import pytest
+
 from services.garmin.adaptive_coach import AdaptiveRunningCoach
+from services.garmin.models import Activity, ActivitySummary, GarminData
+
 
 def create_mock_run(distance_km: float, duration_min: float, avg_hr: int, start_time: str) -> Activity:
     summary = ActivitySummary(
@@ -48,7 +51,7 @@ def sample_garmin_data():
 
 def test_baselines_calculation(sample_garmin_data):
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53)
-    
+
     assert coach.baselines["avg_distance_km"] == 10.0
     assert coach.baselines["avg_duration_min"] == 60.0
     assert coach.baselines["avg_pace_min_km"] == 6.0
@@ -57,7 +60,7 @@ def test_baselines_calculation(sample_garmin_data):
 
 def test_heart_rate_zones(sample_garmin_data):
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53)
-    
+
     # Max HR = 220 - 53 = 167
     assert coach.max_hr == 167
     # Zone 2 Low = 167 * 0.60 = 100
@@ -67,9 +70,9 @@ def test_heart_rate_zones(sample_garmin_data):
 
 def test_suggest_next_run_no_missed_runs(sample_garmin_data):
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53)
-    
+
     suggestion = coach.suggest_next_run(missed_runs_count=0)
-    
+
     # Base building: 1.05 * average distance (10.0 * 1.05 = 10.5 km)
     assert suggestion["distance_km"] == 10.5
     assert suggestion["duration_min"] == 63.0
@@ -80,11 +83,11 @@ def test_suggest_next_run_no_missed_runs(sample_garmin_data):
 
 def test_suggest_next_run_missed_one_run(sample_garmin_data):
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53)
-    
+
     # 1 missed run: debt = 10km. Redistributes 10% of debt = +1.0km
     # Total suggested distance = 10.0 + 1.0 = 11.0km (Capped at 1.10x average distance = 11.0km)
     suggestion = coach.suggest_next_run(missed_runs_count=1, accumulated_debt_km=0.0)
-    
+
     assert suggestion["distance_km"] == 11.0
     assert suggestion["duration_min"] == 66.0
     assert "Adaptive Aerobic Run" in suggestion["focus"]
@@ -93,22 +96,22 @@ def test_suggest_next_run_missed_one_run(sample_garmin_data):
 
 def test_suggest_next_run_missed_multiple_runs_debt_cap(sample_garmin_data):
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53)
-    
+
     # 3 missed runs: new debt = 30km. Total debt = 30km. Capped at 4x average run distance = 40.0km.
     # Redistributed: 10% of 30km = +3.0km. Proposed distance = 13.0km.
     # Capped at 1.10x average = 11.0km. Added distance = 1.0km.
     # Remaining debt = 30km - 1.0km = 29.0km.
     suggestion = coach.suggest_next_run(missed_runs_count=3, accumulated_debt_km=0.0)
-    
+
     assert suggestion["distance_km"] == 11.0
     assert suggestion["new_accumulated_debt_km"] == 29.0
 
 def test_suggest_next_run_missed_week_reset(sample_garmin_data):
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53)
-    
+
     # Missed 4 runs (a full week): reset debt to 0.0, reduce distance to 85% of average (8.5 km)
     suggestion = coach.suggest_next_run(missed_runs_count=4, accumulated_debt_km=15.0)
-    
+
     assert suggestion["distance_km"] == 8.5
     assert suggestion["duration_min"] == 51.0
     assert suggestion["new_accumulated_debt_km"] == 0.0
@@ -118,7 +121,7 @@ def test_suggest_next_run_missed_week_reset(sample_garmin_data):
 
 def test_adaptive_coach_weight_management(sample_garmin_data):
     from services.garmin.models import UserProfile
-    
+
     # Test case 1: Above target weight
     sample_garmin_data.user_profile = UserProfile(weight=80.0, height=175.26)
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53, height=175.26)

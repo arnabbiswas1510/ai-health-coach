@@ -3,10 +3,10 @@
 import argparse
 import asyncio
 import getpass
-import re
 import json
 import logging
 import os
+import re
 import sys
 from dataclasses import asdict
 from datetime import datetime, timedelta
@@ -25,14 +25,13 @@ from services.ai.langgraph.workflows.planning_workflow import (
 )
 from services.ai.utils.plan_storage import FilePlanStorage
 from services.garmin import (
-    ExtractionConfig,
-    TriathlonCoachDataExtractor,
     AdaptiveRunningCoach,
+    ExtractionConfig,
     GarminCalendarSyncer,
     PlanParser,
+    TriathlonCoachDataExtractor,
 )
 from services.outside.client import OutsideApiGraphQlClient
-
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -45,16 +44,16 @@ def parse_height_to_cm(height_val: Any) -> float | None:
         return None
     if isinstance(height_val, (int, float)):
         return float(height_val)
-    
+
     val_str = str(height_val).strip()
     if not val_str:
         return None
-        
+
     try:
         return float(val_str)
     except ValueError:
         pass
-        
+
     # Match feet and inches (e.g. 5'9", 5-9, 5 feet 9 inches, 5 ft 9)
     m = re.match(r"^(\d+(?:\.\d+)?)\s*(?:feet|foot|ft|'|-)\s*(\d+(?:\.\d+)?)\s*(?:inches|inch|in|\")?$", val_str, re.IGNORECASE)
     if m:
@@ -62,7 +61,7 @@ def parse_height_to_cm(height_val: Any) -> float | None:
         inches = float(m.group(2))
         total_inches = feet * 12.0 + inches
         return total_inches * 2.54
-        
+
     # Match feet only (e.g. 5', 5 feet, 5 ft)
     m_feet = re.match(r"^(\d+(?:\.\d+)?)\s*(?:feet|foot|ft|')$", val_str, re.IGNORECASE)
     if m_feet:
@@ -137,7 +136,7 @@ class ConfigParser:
             analysis_context = self.config.get("context", {}).get("analysis") or analysis_context
         else:
             analysis_context = analysis_context or self.config.get("context", {}).get("analysis")
-        
+
         planning_context = os.getenv("CONTEXT_PLANNING") or os.getenv("PLANNING_CONTEXT")
         if self.prioritize_config:
             planning_context = self.config.get("context", {}).get("planning") or planning_context
@@ -325,11 +324,11 @@ def _save_html_outputs(output_dir: Path, result: dict[str, Any]) -> list[str]:
                 if start_idx != -1:
                     content = content[start_idx:]
                     content_lower = content_lower[start_idx:]
-                
+
                 end_idx = content_lower.rfind("</html>")
                 if end_idx != -1:
                     content = content[:end_idx + 7]
-                
+
                 content = content.strip()
 
             output_path = output_dir / filename
@@ -386,14 +385,14 @@ def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: 
     height_m = height_cm / 100.0
     min_bmi = 18.5
     max_bmi = 24.9
-    
+
     min_weight = min_bmi * (height_m ** 2)
     max_weight = max_bmi * (height_m ** 2)
-    
+
     # Target BMI range preferably on the lower side: 18.5 - 22.0
     lower_target_bmi_max = 22.0
     lower_target_weight_max = lower_target_bmi_max * (height_m ** 2)
-    
+
     # Convert height to feet and inches for friendly display
     feet = int(height_cm / 2.54 / 12)
     inches = round((height_cm / 2.54) % 12)
@@ -401,7 +400,7 @@ def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: 
         feet += 1
         inches = 0
     height_ft_in = f"{feet}'{inches}\""
-    
+
     msg = f"""
 ## Athlete Physical Dimensions & Weight Goals
 - **Height**: {height_cm:.1f} cm ({height_ft_in}) [Golden source of truth: Garmin Connect]
@@ -414,18 +413,18 @@ def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: 
         current_bmi = weight_kg / (height_m ** 2)
         msg += f"- **Current Weight**: {weight_kg:.1f} kg ({weight_kg * 2.20462:.1f} lbs) [Source: Garmin Connect]\n"
         msg += f"- **Current BMI**: {current_bmi:.1f}\n"
-        
+
         if current_bmi < min_bmi:
-            msg += f"- **Status**: Underweight (BMI < 18.5). WARNING: Athlete is below the healthy range. Do NOT restrict calories or promote weight loss. Focus on muscle mass preservation, adequate recovery, and caloric sufficiency.\n"
+            msg += "- **Status**: Underweight (BMI < 18.5). WARNING: Athlete is below the healthy range. Do NOT restrict calories or promote weight loss. Focus on muscle mass preservation, adequate recovery, and caloric sufficiency.\n"
         elif current_bmi > lower_target_weight_max:
             excess_weight = weight_kg - lower_target_weight_max
             msg += f"- **Status**: Above target lower-healthy-range. Goal: Focus on gradual, safe weight loss ({excess_weight:.1f} kg / {excess_weight * 2.20462:.1f} lbs to reach target range upper limit). Emphasize aerobic fat oxidation workouts (Zone 2 running, walk-run intervals) and maintain a modest calorie deficit while ensuring adequate protein intake.\n"
         else:
-            msg += f"- **Status**: Within target lower-healthy-range. Goal: Maintain current weight. Emphasize consistency in aerobic conditioning, balance training volume with caloric intake to avoid under-recovery.\n"
+            msg += "- **Status**: Within target lower-healthy-range. Goal: Maintain current weight. Emphasize consistency in aerobic conditioning, balance training volume with caloric intake to avoid under-recovery.\n"
     else:
         msg += "- **Current Weight**: Not available (awaiting Garmin scale sync or manual entry).\n"
         msg += "- **Status**: Pending current weight data. Maintain training routines focused on general aerobic base building.\n"
-        
+
     msg += f"""
 - **Age {age} Training & Weight Considerations**:
   - Focus on safe progression to avoid joint and tendon injury.
@@ -435,7 +434,7 @@ def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: 
     return msg
 
 
-async def run_analysis_from_config(config_path: Path | None, output_dir_override: Path | None = None) -> None:
+async def run_analysis_from_config(config_path: Path | None, output_dir_override: Path | None = None) -> None:  # noqa: C901
     config_parser = ConfigParser(config_path)
     athlete_name, email = config_parser.get_athlete_info()
     analysis_context, planning_context = config_parser.get_contexts()

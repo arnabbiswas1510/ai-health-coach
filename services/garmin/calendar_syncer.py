@@ -1,6 +1,6 @@
-"""
-GarminCalendarSyncer: creates Garmin Connect workout objects and schedules
-them on the calendar for all three run types:
+"""GarminCalendarSyncer: creates Garmin Connect workout objects and schedules workouts on the calendar.
+
+Supports all three run types:
   - structured:  warmup + repeat-group intervals + cooldown
   - simple:      warmup + steady HR-zone run + cooldown
   - long:        warmup + long easy run + cooldown (no HR target)
@@ -9,7 +9,6 @@ them on the calendar for all three run types:
 from __future__ import annotations
 
 import logging
-from collections import defaultdict
 from datetime import date, datetime, timedelta
 from typing import TYPE_CHECKING, Any
 
@@ -21,7 +20,8 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 # HR target dict builder
-_HR_TARGET = lambda lo, hi: {
+def _HR_TARGET(lo, hi):
+    return {
     "workoutTargetTypeId": 4,  # TargetType.HEART_RATE
     "workoutTargetTypeKey": "heart.rate.zone",
     "displayOrder": 1,
@@ -49,8 +49,7 @@ class GarminCalendarSyncer:
         clear_existing: bool = True,
         days_ahead: int = 35,
     ) -> list[str]:
-        """
-        Push a list of ParsedWorkout objects to Garmin Connect calendar.
+        """Push a list of ParsedWorkout objects to Garmin Connect calendar.
 
         Args:
             workouts:       List from PlanParser.parse_weekly_plan()
@@ -83,8 +82,8 @@ class GarminCalendarSyncer:
         return workout_ids
 
     def sync_workout_to_calendar(self, workout_data: dict[str, Any], date_str: str) -> str:
-        """
-        Legacy single-workout sync (used by AdaptiveRunningCoach path).
+        """Legacy single-workout sync (used by AdaptiveRunningCoach path).
+
         Creates a structured running workout and schedules it on the given date.
         Returns the workout ID string.
         """
@@ -220,9 +219,9 @@ class GarminCalendarSyncer:
         steps.append(create_cooldown_step(pw.cooldown_secs, step_order=step_order))
         return steps
 
-    def _clear_future_scheduled_workouts(self, days_ahead: int = 35) -> None:
-        """
-        Unschedule all Garmin-scheduled workouts for today + the next N days.
+    def _clear_future_scheduled_workouts(self, days_ahead: int = 35) -> None:  # noqa: C901
+        """Unschedule all Garmin-scheduled workouts for today + the next N days.
+
         Note: unschedule_workout removes the calendar entry but keeps the
         workout template in the library — keeping your library clean would
         require a separate delete_workout() call which we intentionally skip

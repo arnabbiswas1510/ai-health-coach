@@ -4,6 +4,7 @@ import os
 import subprocess
 import time
 from pathlib import Path
+
 import yaml
 from garminconnect import Garmin
 
@@ -13,7 +14,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("daemon")
 
-def check_and_run():
+def check_and_run():  # noqa: C901
     project_dir = Path(__file__).parent.resolve()
     config_path = project_dir / "coach_config.yaml"
     tokens_dir = project_dir / "tokens"
@@ -24,10 +25,10 @@ def check_and_run():
     config = {}
     if config_path.exists():
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config = yaml.safe_load(f) or {}
         except Exception as e:
-            logger.warning(f"Could not load config at {config_path}: {e}")
+            logger.warning("Could not load config at %s: %s", config_path, e)
 
     if not email:
         email = config.get("athlete", {}).get("email")
@@ -47,7 +48,7 @@ def check_and_run():
         client = Garmin(email=email, password="", prompt_mfa=None)
         client.login(tokenstore=str(user_tokens_dir))
     except Exception as e:
-        logger.error(f"Failed to log in using cached tokens: {e}")
+        logger.error("Failed to log in using cached tokens: %s", e)
         logger.error("Please run the coach container once interactively to log in/refresh tokens.")
         return
 
@@ -56,7 +57,7 @@ def check_and_run():
     try:
         display_name = client.get_full_name() or client.display_name
     except Exception as e:
-        logger.warning(f"Could not retrieve profile name from Garmin Connect: {e}")
+        logger.warning("Could not retrieve profile name from Garmin Connect: %s", e)
         try:
             display_name = client.display_name
         except Exception:
@@ -79,7 +80,7 @@ def check_and_run():
     try:
         activities = client.get_activities(0, 1)
     except Exception as e:
-        logger.error(f"Failed to fetch activities: {e}")
+        logger.error("Failed to fetch activities: %s", e)
         return
 
     if not activities:
@@ -91,7 +92,7 @@ def check_and_run():
     activity_name = latest_activity.get("activityName", "Activity")
     start_time = latest_activity.get("startTimeLocal", "")
 
-    logger.info(f"Latest activity: ID={activity_id} ({activity_name}, start={start_time})")
+    logger.info("Latest activity: ID=%s (%s, start=%s)", activity_id, activity_name, start_time)
 
     # 4. Compare with last processed ID
     last_processed_id = ""
@@ -99,11 +100,11 @@ def check_and_run():
         last_processed_id = last_id_file.read_text(encoding="utf-8").strip()
 
     if activity_id == last_processed_id:
-        logger.info(f"No new runs detected for {display_name}. Plan is up to date.")
+        logger.info("No new runs detected for %s. Plan is up to date.", display_name)
         return
 
     # 5. New activity! Run the CLI analysis
-    logger.info(f"New activity detected for {display_name}! (ID: {activity_id} != {last_processed_id})")
+    logger.info("New activity detected for %s! (ID: %s != %s)", display_name, activity_id, last_processed_id)
     logger.info("Running coach analysis workflow...")
 
     # Run the python CLI script directly inside the container
@@ -112,27 +113,27 @@ def check_and_run():
         cmd.extend(["--config", str(config_path)])
 
     try:
-        res = subprocess.run(cmd, cwd=str(project_dir), capture_output=True, text=True)
+        res = subprocess.run(cmd, cwd=str(project_dir), capture_output=True, text=True, check=False)
         if res.returncode == 0:
             logger.info("Coach analysis completed successfully!")
             # Update local id record
             last_id_file.write_text(activity_id, encoding="utf-8")
-            logger.info(f"Updated last processed ID to {activity_id}")
+            logger.info("Updated last processed ID to %s", activity_id)
         else:
             logger.error("Coach analysis execution failed:")
             logger.error(res.stderr)
     except Exception as e:
-        logger.error(f"Failed to run coach command: {e}")
+        logger.error("Failed to run coach command: %s", e)
 
 def main():
     poll_interval = int(os.getenv("POLL_INTERVAL_SECONDS", "3600"))
-    logger.info(f"Garmin AI Coach daemon started. Polling interval: {poll_interval} seconds.")
-    
+    logger.info("Garmin AI Coach daemon started. Polling interval: %s seconds.", poll_interval)
+
     # Run once immediately on start
     try:
         check_and_run()
     except Exception as e:
-        logger.exception(f"Unhandled error in check_and_run: {e}")
+        logger.exception("Unhandled error in check_and_run: %s", e)
 
     # Enter loop
     while True:
@@ -143,7 +144,7 @@ def main():
             logger.info("Daemon stopped by user.")
             break
         except Exception as e:
-            logger.exception(f"Unhandled error in daemon loop: {e}")
+            logger.exception("Unhandled error in daemon loop: %s", e)
 
 if __name__ == "__main__":
     main()

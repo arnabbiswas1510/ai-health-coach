@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from typing import Any
 
 from langchain_anthropic import ChatAnthropic
-from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_openai import ChatOpenAI
 
 from core.config import get_config
 
@@ -272,7 +272,7 @@ class ModelSelector:
             logger.info(str(log_msg).format(role=role.value))
 
     @classmethod
-    def get_llm(cls, role: AgentRole):
+    def get_llm(cls, role: AgentRole):  # noqa: C901
         model_name = ai_settings.get_model_for_role(role)
         selected_config = cls.CONFIGURATIONS.get(model_name)
         if not selected_config:

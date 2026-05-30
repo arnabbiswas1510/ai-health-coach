@@ -352,7 +352,7 @@ class OutsideApiGraphQlClient:
             except Exception:
                 eid = -1
 
-        provider = categories_provider or (lambda event_id: self.get_event_categories(event_id))
+        provider = categories_provider or (self.get_event_categories)
 
         preloaded: list[EventCategory] | None = None
         if precache_categories:

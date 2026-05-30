@@ -469,7 +469,7 @@ class TriathlonCoachDataExtractor(DataExtractor):
             processed_laps.append(processed)
         return processed_laps
 
-    def get_recent_activities(self, start_date: date, end_date: date) -> list[Activity]:
+    def get_recent_activities(self, start_date: date, end_date: date) -> list[Activity]:  # noqa: C901
         logger.info("Fetching activities between %s and %s", start_date, end_date)
         raw_activities = []
         current_start = start_date
@@ -1186,7 +1186,7 @@ class TriathlonCoachDataExtractor(DataExtractor):
             except ValueError:
                 return None
 
-    def get_daily_activity_loads(self, start_date: date, end_date: date) -> dict[str, float]:
+    def get_daily_activity_loads(self, start_date: date, end_date: date) -> dict[str, float]:  # noqa: C901
         loads = {d.isoformat(): 0.0 for d in _daterange(start_date, end_date)}
 
         activities: list[Any] = []
