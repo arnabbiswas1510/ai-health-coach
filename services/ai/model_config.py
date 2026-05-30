@@ -4,6 +4,7 @@ from typing import Any
 
 from langchain_anthropic import ChatAnthropic
 from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 from core.config import get_config
 
@@ -29,6 +30,8 @@ class ModelSelector:
             return "anthropic"
         elif "openai.com" in base_url:
             return "openai"
+        elif "google" in base_url or "generativelanguage" in base_url:
+            return "google"
         else:
             return "openrouter"
 
@@ -140,10 +143,54 @@ class ModelSelector:
         "deepseek-v3.2": ModelConfiguration(
             name="deepseek/deepseek-v3.2", base_url=OPENROUTER_BASE_URL
         ),
-        # Google Models (via OpenRouter)
-        "gemini-2.5-pro": ModelConfiguration(
-            name="google/gemini-2.5-pro", base_url=OPENROUTER_BASE_URL
+        # Google Models (via OpenRouter) — use when OPENROUTER_API_KEY is set
+        # and you want to avoid Google free-tier quota limits
+        "or-gemini-2.0-flash": ModelConfiguration(
+            name="google/gemini-2.0-flash-exp:free", base_url=OPENROUTER_BASE_URL
         ),
+        "or-gemini-1.5-flash": ModelConfiguration(
+            name="google/gemini-flash-1.5", base_url=OPENROUTER_BASE_URL
+        ),
+        "or-gemini-2.5-flash": ModelConfiguration(
+            name="google/gemini-2.5-flash-preview", base_url=OPENROUTER_BASE_URL
+        ),
+        "or-gemini-2.5-pro": ModelConfiguration(
+            name="google/gemini-2.5-pro-preview", base_url=OPENROUTER_BASE_URL
+        ),
+        # Direct Google Gemini Models
+        "gemini-flash-latest": ModelConfiguration(
+            name="gemini-flash-latest",
+            base_url="https://generativelanguage.googleapis.com",
+        ),
+        "gemini-pro-latest": ModelConfiguration(
+            name="gemini-pro-latest",
+            base_url="https://generativelanguage.googleapis.com",
+        ),
+        "gemini-1.5-flash": ModelConfiguration(
+            name="gemini-1.5-flash",
+            base_url="https://generativelanguage.googleapis.com",
+        ),
+        "gemini-1.5-pro": ModelConfiguration(
+            name="gemini-1.5-pro",
+            base_url="https://generativelanguage.googleapis.com",
+        ),
+        "gemini-2.0-flash": ModelConfiguration(
+            name="gemini-2.0-flash",
+            base_url="https://generativelanguage.googleapis.com",
+        ),
+        "gemini-2.0-pro-exp": ModelConfiguration(
+            name="gemini-2.0-pro-exp",
+            base_url="https://generativelanguage.googleapis.com",
+        ),
+        "gemini-2.5-flash": ModelConfiguration(
+            name="gemini-2.5-flash",
+            base_url="https://generativelanguage.googleapis.com",
+        ),
+        "gemini-2.5-pro": ModelConfiguration(
+            name="gemini-2.5-pro",
+            base_url="https://generativelanguage.googleapis.com",
+        ),
+
         # xAI Models (via OpenRouter)
         "grok-4": ModelConfiguration(
             name="x-ai/grok-4", base_url=OPENROUTER_BASE_URL
@@ -239,13 +286,35 @@ class ModelSelector:
         key_map = {
             "anthropic": config.anthropic_api_key,
             "openai": config.openai_api_key,
+            "google": config.google_api_key,
             "openrouter": config.openrouter_api_key,
         }
 
         api_key = key_map.get(provider)
         use_fallback = False
 
-        if not api_key and provider in ("anthropic", "openai"):
+        if not api_key and provider == "google" and config.openrouter_api_key:
+            # Auto-route Google models through OpenRouter when no GOOGLE_API_KEY is set
+            # but OPENROUTER_API_KEY is available. Map to the OpenRouter variant.
+            or_model_key = f"or-{model_name}"
+            or_config = cls.CONFIGURATIONS.get(or_model_key)
+            if or_config:
+                logger.info(
+                    "No GOOGLE_API_KEY — routing %s through OpenRouter (%s)",
+                    model_name, or_config.name,
+                )
+                api_key = config.openrouter_api_key
+                base_url = OPENROUTER_BASE_URL
+                final_model_name = or_config.name
+                use_fallback = True
+            else:
+                logger.warning(
+                    "No GOOGLE_API_KEY and no OpenRouter mapping for %s — "
+                    "add GOOGLE_API_KEY or use an 'or-' prefixed model name.",
+                    model_name,
+                )
+
+        elif not api_key and provider in ("anthropic", "openai"):
             if not config.openrouter_api_key:
                 raise RuntimeError(f"{provider.title()} API key or OpenRouter API key is required")
             if not selected_config.openrouter_name:
@@ -263,6 +332,9 @@ class ModelSelector:
                 selected_config.name,
                 provider.title(),
             )
+        elif not api_key and provider == "google":
+            # Direct Google API key is required for direct Google models
+            raise RuntimeError("GOOGLE_API_KEY (or GEMINI_API_KEY) is required for direct Gemini models")
         elif not api_key:
             raise RuntimeError("OpenRouter API key is required for OpenRouter-hosted models")
 
@@ -282,6 +354,11 @@ class ModelSelector:
 
         if provider == "anthropic" and not use_fallback:
             return ChatAnthropic(**llm_params)
+        elif provider == "google":
+            # ChatGoogleGenerativeAI expects google_api_key
+            llm_params["google_api_key"] = api_key
+            llm_params.pop("api_key", None)
+            return ChatGoogleGenerativeAI(**llm_params)
 
         llm_params["base_url"] = base_url
         return ChatOpenAI(**llm_params)

@@ -168,9 +168,15 @@ class DataExtractor:
 
 
 class TriathlonCoachDataExtractor(DataExtractor):
-    def __init__(self, email: str, password: str):
+    def __init__(self, email: str, password: str, mfa_callback: Callable[[], str] | None = None):
         self.garmin = GarminConnectClient()
-        self.garmin.connect(email, password)
+        if mfa_callback is None:
+            def default_mfa_callback() -> str:
+                import sys
+                print("Garmin Connect requires Multi-Factor Authentication.", file=sys.stderr)
+                return input("Enter Garmin MFA/OTP code: ").strip()
+            mfa_callback = default_mfa_callback
+        self.garmin.connect(email, password, mfa_callback=mfa_callback)
         self._training_status_cache: OrderedDict[str, dict[str, Any]] = OrderedDict()
         self._training_status_cache_max = 1024
 
@@ -465,13 +471,27 @@ class TriathlonCoachDataExtractor(DataExtractor):
 
     def get_recent_activities(self, start_date: date, end_date: date) -> list[Activity]:
         logger.info("Fetching activities between %s and %s", start_date, end_date)
-        activities = self._call_api(
-            self.garmin.client.get_activities_by_date,
-            start_date.isoformat(), end_date.isoformat(),
-            default=[],
-            what=f"get_activities_by_date({start_date}, {end_date})",
-        ) or []
-        if not isinstance(activities, list) or not activities:
+        raw_activities = []
+        current_start = start_date
+        while current_start <= end_date:
+            current_end = min(current_start + timedelta(days=30), end_date)
+            logger.info("  Fetching activity chunk between %s and %s", current_start, current_end)
+            chunk = self._call_api(
+                self.garmin.client.get_activities_by_date,
+                current_start.isoformat(), current_end.isoformat(),
+                default=[],
+                what=f"get_activities_by_date({current_start}, {current_end})",
+            ) or []
+            if isinstance(chunk, list):
+                existing_ids = {a.get("activityId") or a.get("activityUUID") for a in raw_activities if isinstance(a, Mapping)}
+                for act in chunk:
+                    act_id = act.get("activityId") or act.get("activityUUID")
+                    if act_id and act_id not in existing_ids:
+                        raw_activities.append(act)
+            current_start = current_end + timedelta(days=1)
+
+        activities = raw_activities
+        if not activities:
             logger.warning("No activities found between %s and %s", start_date, end_date)
             return []
 
@@ -485,15 +505,49 @@ class TriathlonCoachDataExtractor(DataExtractor):
                 logger.warning("Activity missing activityId, skipping. Keys: %s", list(activity.keys()))
                 continue
 
-            detailed_activity: dict[str, Any] | None = self._get_activity_details(activity_id)
-            if not detailed_activity:
-                logger.warning("No details found for activity %s, skipping", activity_id)
-                continue
+            # Optimize: Only fetch detailed info (weather, laps, full details) for activities in the last 14 days
+            # For older activities, construct the Activity summary using data already retrieved in the search list.
+            activity_date = self._parse_local_date(self.extract_start_time(activity))
+            is_recent = False
+            if activity_date:
+                days_ago = (date.today() - activity_date).days
+                if days_ago <= 14:
+                    is_recent = True
 
-            if detailed_activity.get("isMultiSportParent", False):
-                focused = self._process_multisport_activity(detailed_activity)
+            if is_recent:
+                detailed_activity = self._get_activity_details(activity_id)
+                if not detailed_activity:
+                    logger.warning("No details found for activity %s, skipping", activity_id)
+                    continue
+
+                if detailed_activity.get("isMultiSportParent", False):
+                    focused = self._process_multisport_activity(detailed_activity)
+                else:
+                    focused = self._process_single_sport_activity(detailed_activity)
             else:
-                focused = self._process_single_sport_activity(detailed_activity)
+                # Historical activity: parse basic info directly from search payload
+                activity_type = self.extract_activity_type(activity)
+                if activity_type in ["open_water_swimming", "lap_swimming"]:
+                    activity_type = "swimming"
+                activity_name = (
+                    activity.get("activityName")
+                    or activity.get("name")
+                    or f"{activity_type.replace('_', ' ').title()} Activity"
+                )
+                start_time = self.extract_start_time(activity)
+                summary_data = _dg(activity, "summaryDTO", {}) or activity
+                summary = self._extract_activity_summary(summary_data)
+
+                focused = Activity(
+                    activity_id=activity_id,
+                    activity_type=activity_type,
+                    activity_name=activity_name,
+                    start_time=start_time,
+                    summary=summary,
+                    weather=None,
+                    hr_zones=None,
+                    laps=[],
+                )
 
             focused_activities.append(focused)
 
@@ -1135,12 +1189,25 @@ class TriathlonCoachDataExtractor(DataExtractor):
     def get_daily_activity_loads(self, start_date: date, end_date: date) -> dict[str, float]:
         loads = {d.isoformat(): 0.0 for d in _daterange(start_date, end_date)}
 
-        activities: list[Any] = self._call_api(
-            self.garmin.client.get_activities_by_date,
-            start_date.isoformat(), end_date.isoformat(),
-            default=[],
-            what=f"get_activities_by_date({start_date}, {end_date})"
-        )
+        activities: list[Any] = []
+        current_start = start_date
+        while current_start <= end_date:
+            current_end = min(current_start + timedelta(days=30), end_date)
+            logger.info("  Fetching load activity chunk between %s and %s", current_start, current_end)
+            chunk = self._call_api(
+                self.garmin.client.get_activities_by_date,
+                current_start.isoformat(), current_end.isoformat(),
+                default=[],
+                what=f"get_activities_by_date({current_start}, {current_end})"
+            ) or []
+            if isinstance(chunk, list):
+                existing_ids = {a.get("activityId") or a.get("activityUUID") for a in activities if isinstance(a, Mapping)}
+                for a in chunk:
+                    act_id = a.get("activityId") or a.get("activityUUID")
+                    if act_id and act_id not in existing_ids:
+                        activities.append(a)
+            current_start = current_end + timedelta(days=1)
+
 
 
 

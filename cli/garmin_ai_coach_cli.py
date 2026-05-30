@@ -14,16 +14,23 @@ from typing import Any
 
 import yaml
 
+# Ensure project root is in python path
+sys.path.append(str(Path(__file__).parent.parent))
+
 from core.config import reload_config
 from services.ai.ai_settings import ai_settings
 from services.ai.langgraph.workflows.planning_workflow import (
     run_complete_analysis_and_planning,
 )
 from services.ai.utils.plan_storage import FilePlanStorage
-from services.garmin import ExtractionConfig, TriathlonCoachDataExtractor
+from services.garmin import (
+    ExtractionConfig,
+    TriathlonCoachDataExtractor,
+    AdaptiveRunningCoach,
+    GarminCalendarSyncer,
+    PlanParser,
+)
 from services.outside.client import OutsideApiGraphQlClient
-
-sys.path.append(str(Path(__file__).parent.parent))
 
 
 logging.basicConfig(
@@ -92,8 +99,24 @@ class ConfigParser:
     def get_password(self) -> str:
         return (
             self.config.get("credentials", {}).get("password", "") or
+            os.getenv("GARMIN_PASSWORD", "") or
             getpass.getpass("Enter Garmin Connect password: ")
         )
+
+    def get_athlete_age(self) -> int:
+        return int(self.config.get("athlete", {}).get("age", 53))
+
+    def get_target_goal(self) -> str:
+        return self.config.get("athlete", {}).get("target_goal", "base_building")
+
+    def get_sync_calendar(self) -> bool:
+        return bool(self.config.get("athlete", {}).get("sync_calendar", False))
+
+    def get_missed_runs_count(self) -> int:
+        return int(self.config.get("athlete", {}).get("missed_runs_count", 0))
+
+    def get_accumulated_debt_km(self) -> float:
+        return float(self.config.get("athlete", {}).get("accumulated_debt_km", 0.0))
 
 
 def fetch_outside_competitions_from_config(config: dict[str, Any]) -> list[dict[str, Any]]:
@@ -223,6 +246,56 @@ async def run_analysis_from_config(config_path: Path) -> None:
         garmin_data = extractor.extract_data(extraction_config)
         logger.info("Data extraction completed")
 
+        # -------------------------------------------------------------
+        # Adaptive Running Coach Integration
+        # -------------------------------------------------------------
+        age = config_parser.get_athlete_age()
+        goal = config_parser.get_target_goal()
+        missed_runs = config_parser.get_missed_runs_count()
+        accumulated_debt = config_parser.get_accumulated_debt_km()
+        sync_calendar = config_parser.get_sync_calendar()
+
+        logger.info("Running Adaptive Running Coach (Age: %d, Goal: %s, Missed runs: %d, Acc Debt: %s km)...", age, goal, missed_runs, accumulated_debt)
+        coach = AdaptiveRunningCoach(garmin_data, goal=goal, age=age)
+        suggestion = coach.suggest_next_run(missed_runs_count=missed_runs, accumulated_debt_km=accumulated_debt)
+
+        logger.info("Suggested Run distance: %s km", suggestion["distance_km"])
+        logger.info("Suggested Run duration: %s min", suggestion["duration_min"])
+        logger.info("Suggested Pace: %s", suggestion["target_pace_str"])
+        logger.info("Suggested HR range: %s", suggestion["target_hr_range"])
+        logger.info("Coach Notes: %s", suggestion["notes"])
+
+        suggested_run_json = output_dir / "suggested_run.json"
+        suggested_run_json.write_text(json.dumps(suggestion, indent=2), encoding="utf-8")
+        logger.info("Saved suggested run JSON to %s", suggested_run_json)
+
+        suggested_run_md = output_dir / "suggested_run.md"
+        md_content = f"""# Suggested Next Run
+
+**Focus**: {suggestion["focus"]}
+- **Distance**: {suggestion["distance_km"]} km
+- **Duration**: {suggestion["duration_min"]} minutes
+- **Target Pace**: {suggestion["target_pace_str"]}
+- **Target HR**: {suggestion["target_hr_range"]}
+- **New Accumulated Debt**: {suggestion["new_accumulated_debt_km"]} km
+
+## Coach Notes
+{suggestion["notes"]}
+
+## Structured Workout Segments
+- **Warmup**: {suggestion["structured_segments"]["warmup_secs"] // 60} minutes walk/easy jog
+- **Steady Run**: {suggestion["structured_segments"]["run_secs"] // 60} minutes at Zone 2 HR ({suggestion["structured_segments"]["target_hr_min"]}-{suggestion["structured_segments"]["target_hr_max"]} bpm)
+- **Cooldown**: {suggestion["structured_segments"]["cooldown_secs"] // 60} minutes walk
+"""
+        suggested_run_md.write_text(md_content, encoding="utf-8")
+        logger.info("Saved suggested run MD report to %s", suggested_run_md)
+
+        if sync_calendar:
+            # NOTE: The full 28-day plan sync below will push all workouts.
+            # The legacy single-run sync is kept as a fallback in case the AI
+            # plan is skipped (e.g. skip_synthesis=True with no weekly_plan).
+            logger.info("Calendar sync enabled — will sync full AI plan after analysis")
+
         now = datetime.now()
         plotting_enabled = extraction_settings.get("enable_plotting", False)
         hitl_enabled = extraction_settings.get("hitl_enabled", True)
@@ -261,6 +334,65 @@ async def run_analysis_from_config(config_path: Path) -> None:
         files_generated.extend(_save_html_outputs(output_dir, result))
         files_generated.extend(_save_expert_outputs(output_dir, result))
         files_generated.extend(_save_plan_outputs(output_dir, result))
+
+        # -----------------------------------------------------------------
+        # Garmin Calendar Sync: push the 28-day AI plan to the watch
+        # -----------------------------------------------------------------
+        if sync_calendar:
+            weekly_plan_dict = result.get("weekly_plan")
+            plan_text: str | None = None
+            if isinstance(weekly_plan_dict, dict):
+                plan_text = weekly_plan_dict.get("output") or weekly_plan_dict.get("content")
+            elif isinstance(weekly_plan_dict, str):
+                plan_text = weekly_plan_dict
+
+            if plan_text:
+                logger.info("Syncing 28-day training plan to Garmin calendar...")
+                try:
+                    max_hr = 220 - age
+                    parser = PlanParser(max_hr=max_hr)
+                    parsed_workouts = parser.parse_weekly_plan(
+                        plan_text=plan_text,
+                        start_date=now,
+                    )
+                    non_rest = [w for w in parsed_workouts if w.workout_type != "rest"]
+                    logger.info(
+                        "Parsed %d workouts from plan (%d rest days skipped)",
+                        len(non_rest),
+                        len(parsed_workouts) - len(non_rest),
+                    )
+                    syncer = GarminCalendarSyncer(extractor.garmin)
+                    workout_ids = syncer.sync_plan_to_calendar(
+                        workouts=parsed_workouts,
+                        clear_existing=True,
+                        days_ahead=35,
+                    )
+                    logger.info("✅ Synced %d workouts to Garmin calendar", len(workout_ids))
+                    # Save a record of what was synced
+                    (output_dir / "calendar_sync.json").write_text(
+                        json.dumps(
+                            [
+                                {
+                                    "date": w.date_str,
+                                    "name": w.workout_name,
+                                    "type": w.workout_type,
+                                    "duration_mins": round(w.estimated_duration_secs / 60),
+                                }
+                                for w in parsed_workouts
+                                if w.workout_type != "rest"
+                            ],
+                            indent=2,
+                        ),
+                        encoding="utf-8",
+                    )
+                    logger.info("Saved calendar_sync.json to %s", output_dir)
+                except Exception:
+                    logger.exception("Calendar sync failed — analysis results are still saved")
+            else:
+                logger.warning(
+                    "sync_calendar=true but no weekly_plan found in result; "
+                    "run with skip_synthesis=false to generate a plan"
+                )
 
         cost_total = float(
             result.get("cost_summary", {}).get("total_cost_usd", 0.0) or

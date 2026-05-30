@@ -1,0 +1,33 @@
+# Garmin AI CLI Configuration
+athlete:
+  name: "Arnab"
+  email: "arnabbiswas@yahoo.com"  # Garmin Connect email
+  age: 53                        # Athlete age (used for estimating Max HR and Zone 2 boundaries)
+  target_goal: "base_building"   # Training goal: e.g., "base_building", "maintenance"
+  sync_calendar: true            # Set to true to automatically sync the 28-day AI plan to your Garmin Calendar/watch
+  missed_runs_count: 0           # Count of missed runs to trigger adaptive training adjustments
+  accumulated_debt_km: 0.0       # Accumulated mileage debt carried forward (km)
+
+# Analysis Context
+context:
+  analysis: |
+    Focusing on base building and improving running adaptation. 
+    Struggle to stay in Zone 2 while running (heart rate spikes to Zone 3/4).
+    Suggest structured walk-run intervals to help build the aerobic base.
+
+  planning: |
+    Focusing on building aerobic capacity and cardiovascular fitness.
+    Adjust run workouts with run-walk intervals to keep heart rate in Zone 2.
+
+# Data Extraction Settings
+extraction:
+  activities_days: 180      # Extract last 180 days of activities (6 months)
+  metrics_days: 28         # Extract last 28 days of metrics (prevents API rate limits/timeouts)
+  ai_mode: "cost_effective" # Development/cost_effective mode
+  enable_plotting: false   # Disable plots to save cost/time
+  hitl_enabled: false      # Disable human-in-the-loop in docker non-interactive mode
+  skip_synthesis: false    # Generate complete weekly plans
+
+# Output Settings
+output:
+  directory: "./data"

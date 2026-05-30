@@ -5,6 +5,11 @@
 athlete:
   name: "John Doe"
   email: "john.doe@example.com"  # Garmin Connect email
+  age: 53                        # Athlete age (used for estimating Max HR and Zone 2 boundaries)
+  target_goal: "base_building"   # Training goal: e.g., "base_building", "maintenance"
+  sync_calendar: false           # Set to true to automatically sync suggested runs to your Garmin Calendar
+  missed_runs_count: 0           # Count of missed runs to trigger adaptive training adjustments
+  accumulated_debt_km: 0.0       # Accumulated mileage debt carried forward (km)
 
 # Analysis Context
 context:
