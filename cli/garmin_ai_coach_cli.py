@@ -730,6 +730,30 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
             encoding="utf-8"
         )
 
+        # Copy generated files to parent directory (root data dir) so that root URLs work
+        import shutil
+        for filename in [
+            "suggested_run.json",
+            "suggested_run.md",
+            "analysis.html",
+            "planning.html",
+            "metrics_expert.json",
+            "activity_expert.json",
+            "physiology_expert.json",
+            "season_plan.md",
+            "weekly_plan.md",
+            "calendar_sync.json",
+            "summary.json"
+        ]:
+            src_file = output_dir / filename
+            dst_file = output_dir.parent / filename
+            if src_file.exists():
+                try:
+                    shutil.copy2(src_file, dst_file)
+                    logger.info("Copied %s to root output directory %s", filename, dst_file)
+                except Exception as e:
+                    logger.warning("Failed to copy %s to root: %s", filename, e)
+
         logger.info("✅ Analysis completed successfully!")
         if outside_competitions:
             logger.info("✅  Added %d Outside competitions from config", len(outside_competitions))

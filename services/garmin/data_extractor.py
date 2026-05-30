@@ -360,7 +360,7 @@ class TriathlonCoachDataExtractor(DataExtractor):
 
         return UserProfile(
             gender=user_data.get("gender"),
-            weight=_to_float(user_data.get("weight")),
+            weight=_round(_to_float(user_data.get("weight")) / 1000.0, 2) if user_data.get("weight") is not None else None,
             height=_to_float(user_data.get("height")),
             birth_date=user_data.get("birthDate"),
             activity_level=user_data.get("activityLevel"),

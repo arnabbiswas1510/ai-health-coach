@@ -104,6 +104,7 @@ class TestTriathlonCoachDataExtractorCharacterization:
         assert hasattr(result, "daily_stats")
         assert result.user_profile is not None
         assert result.user_profile.gender == "male"
+        assert result.user_profile.weight == 70.0
         assert result.daily_stats is not None
         assert result.daily_stats.total_steps == 10000
 
