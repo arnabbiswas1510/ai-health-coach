@@ -11,6 +11,7 @@ Supported run types:
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 from dataclasses import dataclass, field
@@ -18,6 +19,42 @@ from datetime import date, datetime, timedelta
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def clean_corrupted_json(text: str) -> str:
+    """
+    Remove invalid unicode/token corruptions printed outside JSON strings
+    by the Gemini model when returning structured output.
+    """
+    in_string = False
+    escaped = False
+    result = []
+    i = 0
+    n = len(text)
+    delimiters = {',', '}', ']', '{', '['}
+    
+    while i < n:
+        char = text[i]
+        if in_string:
+            result.append(char)
+            if escaped:
+                escaped = False
+            elif char == '\\':
+                escaped = True
+            elif char == '"':
+                in_string = False
+            i += 1
+        else:
+            if ord(char) > 127:
+                while i < n and text[i] not in delimiters:
+                    i += 1
+            else:
+                if char == '"':
+                    in_string = True
+                result.append(char)
+                i += 1
+                
+    return "".join(result)
 
 # ---------------------------------------------------------------------------
 # Zone HR defaults (overridden per athlete at construction time)
@@ -59,9 +96,9 @@ class PlanParser:
     with the start_date anchor.
     """
 
-    # Regex: "Mon, Jun 02" or "Monday, Jun 2" or "Mon Jun 02"
+    # Regex: "Mon, Jun 02" or "Monday, Jun 2" or "Mon Jun 02" (supports leading bullets/bolding)
     _DAY_RE = re.compile(
-        r"^\s*\*{0,2}"
+        r"^\s*[\*\-\s]*\*{0,2}"
         r"(?:Mon(?:day)?|Tue(?:sday)?|Wed(?:nesday)?|Thu(?:rsday)?|"
         r"Fri(?:day)?|Sat(?:urday)?|Sun(?:day)?)"
         r"[,\s]+([A-Za-z]+\.?\s+\d{1,2})",
@@ -103,11 +140,11 @@ class PlanParser:
         start_date: datetime | date | None = None,
     ) -> list[ParsedWorkout]:
         """
-        Parse the 28-day plan markdown into a list of ParsedWorkout objects.
+        Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects.
         Rest days are included with type='rest' so callers can skip them.
 
         Args:
-            plan_text: Markdown string from weekly_planner_node output.
+            plan_text: Markdown or JSON string from weekly_planner_node output.
             start_date: The anchor date for week 1. Defaults to today.
 
         Returns:
@@ -119,12 +156,66 @@ class PlanParser:
             start_date = start_date.date()
 
         workouts: list[ParsedWorkout] = []
-        blocks = self._split_into_day_blocks(plan_text, start_date)
 
-        for date_str, block_text in blocks:
-            pw = self._parse_day_block(date_str, block_text)
-            workouts.append(pw)
-            logger.debug("Parsed %s: %s (%s)", date_str, pw.workout_name, pw.workout_type)
+        cleaned_text = clean_corrupted_json(plan_text)
+
+        # Try parsing as JSON first
+        is_json = False
+        json_data = None
+        if cleaned_text.startswith("{") and cleaned_text.endswith("}"):
+            try:
+                json_data = json.loads(cleaned_text)
+                is_json = True
+            except Exception as e:
+                logger.warning("Attempted to parse weekly plan as JSON but failed: %s", e)
+
+        if is_json and json_data and "weekly_plan" in json_data:
+            weekly_plan_list = json_data.get("weekly_plan", [])
+            day_offset = 0
+            for week_data in weekly_plan_list:
+                days = week_data.get("days", [])
+                for day in days:
+                    date_str = day.get("date") or day.get("date_str")
+                    day_text = day.get("day") or day.get("day_name") or ""
+                    
+                    if not date_str:
+                        # Extract the date part from day_text (e.g. "May 30" from "Sat, May 30")
+                        m = self._DAY_RE.search(day_text)
+                        if m:
+                            date_str = self._resolve_date(m.group(1), start_date, day_offset)
+                        else:
+                            m_sub = re.search(r"([A-Za-z]+\.?\s+\d{1,2})", day_text)
+                            if m_sub:
+                                date_str = self._resolve_date(m_sub.group(1), start_date, day_offset)
+                            else:
+                                date_str = self._resolve_date("", start_date, day_offset)
+
+                    focus = day.get("focus", "")
+                    workout = day.get("workout", "")
+                    purpose = day.get("purpose", "")
+                    adaptation = day.get("adaptation", "")
+                    
+                    # Reconstruct block text for parsing with existing rules
+                    block_lines = []
+                    if focus:
+                        block_lines.append(f"FOCUS: {focus}")
+                    if workout:
+                        block_lines.append(f"WORKOUT: {workout}")
+                    if purpose:
+                        block_lines.append(f"PURPOSE: {purpose}")
+                    if adaptation:
+                        block_lines.append(f"ADAPTATION: {adaptation}")
+                    block_text = "\n".join(block_lines)
+                    
+                    pw = self._parse_day_block(date_str, block_text)
+                    workouts.append(pw)
+                    day_offset += 1
+        else:
+            blocks = self._split_into_day_blocks(plan_text, start_date)
+            for date_str, block_text in blocks:
+                pw = self._parse_day_block(date_str, block_text)
+                workouts.append(pw)
+                logger.debug("Parsed %s: %s (%s)", date_str, pw.workout_name, pw.workout_type)
 
         return sorted(workouts, key=lambda w: w.date_str)
 
@@ -314,8 +405,9 @@ class PlanParser:
     def _extract_duration_secs(self, text: str, default_mins: int = 40) -> float:
         """Find the first standalone duration in minutes and convert to seconds."""
         # Look for patterns like "45'", "45 min", "90 minutes"
+        # Fixed regex: do not assert \b after a single quote/prime character
         m = re.search(
-            r"(\d+)\s*(?:\'|′|min(?:utes?)?)\b",
+            r"(\d+)\s*(?:\'|′|\bmin(?:utes?)?\b)",
             text,
             re.IGNORECASE,
         )

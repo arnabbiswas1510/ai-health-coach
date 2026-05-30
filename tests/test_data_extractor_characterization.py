@@ -76,7 +76,9 @@ class TestTriathlonCoachDataExtractorCharacterization:
         TriathlonCoachDataExtractor("test@example.com", "password")
 
         mock_client.assert_called_once()
-        mock_instance.connect.assert_called_once_with("test@example.com", "password")
+        mock_instance.connect.assert_called_once()
+        args, kwargs = mock_instance.connect.call_args
+        assert args == ("test@example.com", "password")
 
     @patch("services.garmin.data_extractor.GarminConnectClient")
     def test_extract_data_base_data_always_included(self, mock_client):

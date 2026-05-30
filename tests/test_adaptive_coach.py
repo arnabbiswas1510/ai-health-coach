@@ -113,4 +113,4 @@ def test_suggest_next_run_missed_week_reset(sample_garmin_data):
     assert suggestion["duration_min"] == 51.0
     assert suggestion["new_accumulated_debt_km"] == 0.0
     assert "Safe Return" in suggestion["focus"]
-    assert "reset your mileage debt" in suggestion["notes"].lower()
+    assert "mileage debt has been reset" in suggestion["notes"].lower()

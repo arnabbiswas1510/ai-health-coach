@@ -71,15 +71,15 @@ credentials:
 
     await run_analysis_from_config(config_path)
 
-    analysis_path = output_directory / "analysis.html"
-    planning_path = output_directory / "planning.html"
-    summary_path = output_directory / "summary.json"
+    analysis_path = output_directory / "Test_A" / "analysis.html"
+    planning_path = output_directory / "Test_A" / "planning.html"
+    summary_path = output_directory / "Test_A" / "summary.json"
     assert analysis_path.exists()
     assert planning_path.exists()
     assert summary_path.exists()
 
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    assert summary["athlete"] == "Test A"
+    assert summary["athlete"] == "Test_A"
     assert summary["total_cost_usd"] == 0.0
 
 
@@ -152,9 +152,9 @@ credentials:
 
     await run_analysis_from_config(config_path)
 
-    analysis_path = output_directory / "analysis.html"
-    planning_path = output_directory / "planning.html"
-    summary_path = output_directory / "summary.json"
+    analysis_path = output_directory / "Test_Athlete_HITL" / "analysis.html"
+    planning_path = output_directory / "Test_Athlete_HITL" / "planning.html"
+    summary_path = output_directory / "Test_Athlete_HITL" / "summary.json"
 
     assert analysis_path.exists()
     assert planning_path.exists()
@@ -165,6 +165,6 @@ credentials:
     assert planning_path.read_text(encoding="utf-8").startswith("<html>")
 
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
-    assert summary["athlete"] == "Test Athlete HITL"
+    assert summary["athlete"] == "Test_Athlete_HITL"
     assert "total_cost_usd" in summary
     assert "total_tokens" in summary

@@ -41,47 +41,120 @@ logger = logging.getLogger(__name__)
 
 class ConfigParser:
 
-    def __init__(self, config_path: Path):
+    def __init__(self, config_path: Path | None):
         self.config_path = config_path
         self.config = self._load_config()
+        self.prioritize_config = config_path is not None
 
     def _load_config(self) -> dict[str, Any]:
-        if not self.config_path.exists():
-            raise FileNotFoundError(f"Config file not found: {self.config_path}")
+        if not self.config_path or not self.config_path.exists():
+            return {}
 
         content = self.config_path.read_text(encoding="utf-8")
 
         if self.config_path.suffix in [".yaml", ".yml"]:
-            return yaml.safe_load(content)
+            return yaml.safe_load(content) or {}
         elif self.config_path.suffix == ".json":
-            return json.loads(content)
+            return json.loads(content) or {}
         else:
             raise ValueError(f"Unsupported config format: {self.config_path.suffix}")
 
-    def get_athlete_info(self) -> tuple[str, str]:
-        if not (email := self.config.get("athlete", {}).get("email")):
-            raise ValueError("Athlete email is required in config file")
+    def _get_val(self, env_key: str, config_path_keys: tuple[str, ...], default: Any) -> Any:
+        config_val = self.config
+        for k in config_path_keys:
+            if isinstance(config_val, dict):
+                config_val = config_val.get(k)
+            else:
+                config_val = None
+                break
 
-        return self.config.get("athlete", {}).get("name", "Athlete"), email
+        env_val = os.getenv(env_key)
+
+        if self.prioritize_config:
+            if config_val is not None:
+                return config_val
+            if env_val is not None:
+                return env_val
+        else:
+            if env_val is not None:
+                return env_val
+            if config_val is not None:
+                return config_val
+
+        return default
+
+    def get_athlete_info(self) -> tuple[str, str]:
+        email = self._get_val("GARMIN_EMAIL", ("athlete", "email"), None)
+        if not email:
+            raise ValueError("Athlete email is required via GARMIN_EMAIL env var or config file")
+        name = self._get_val("ATHLETE_NAME", ("athlete", "name"), "Athlete")
+        return name, email
 
     def get_contexts(self) -> tuple[str, str]:
-        return (
-            self.config.get("context", {}).get("analysis", "").strip(),
-            self.config.get("context", {}).get("planning", "").strip()
-        )
+        analysis_context = os.getenv("CONTEXT_ANALYSIS") or os.getenv("ANALYSIS_CONTEXT")
+        if self.prioritize_config:
+            analysis_context = self.config.get("context", {}).get("analysis") or analysis_context
+        else:
+            analysis_context = analysis_context or self.config.get("context", {}).get("analysis")
+        
+        planning_context = os.getenv("CONTEXT_PLANNING") or os.getenv("PLANNING_CONTEXT")
+        if self.prioritize_config:
+            planning_context = self.config.get("context", {}).get("planning") or planning_context
+        else:
+            planning_context = planning_context or self.config.get("context", {}).get("planning")
+
+        return (analysis_context or "").strip(), (planning_context or "").strip()
 
     def get_extraction_config(self) -> dict[str, Any]:
+        def _to_int(val: Any) -> int | None:
+            if val is not None:
+                try:
+                    return int(val)
+                except ValueError:
+                    pass
+            return None
+
+        def _to_bool(val: Any) -> bool | None:
+            if val is not None:
+                if isinstance(val, bool):
+                    return val
+                return val.lower() in ("true", "1", "yes")
+            return None
+
+        act_days = self._get_val("ACTIVITIES_DAYS", ("extraction", "activities_days"), None)
+        met_days = self._get_val("METRICS_DAYS", ("extraction", "metrics_days"), None)
+        ai_mode = self._get_val("AI_MODE", ("extraction", "ai_mode"), "development")
+        plotting = self._get_val("ENABLE_PLOTTING", ("extraction", "enable_plotting"), None)
+        hitl = self._get_val("HITL_ENABLED", ("extraction", "hitl_enabled"), None)
+        skip = self._get_val("SKIP_SYNTHESIS", ("extraction", "skip_synthesis"), None)
+
         return {
-            "activities_days": self.config.get("extraction", {}).get("activities_days", 7),
-            "metrics_days": self.config.get("extraction", {}).get("metrics_days", 14),
-            "ai_mode": self.config.get("extraction", {}).get("ai_mode", "development"),
-            "enable_plotting": self.config.get("extraction", {}).get("enable_plotting", False),
-            "hitl_enabled": self.config.get("extraction", {}).get("hitl_enabled", True),
-            "skip_synthesis": self.config.get("extraction", {}).get("skip_synthesis", False),
+            "activities_days": _to_int(act_days) if act_days is not None else 7,
+            "metrics_days": _to_int(met_days) if met_days is not None else 14,
+            "ai_mode": ai_mode,
+            "enable_plotting": _to_bool(plotting) if plotting is not None else False,
+            "hitl_enabled": _to_bool(hitl) if hitl is not None else True,
+            "skip_synthesis": _to_bool(skip) if skip is not None else False,
         }
 
     def get_competitions(self) -> list[dict[str, Any]]:
-        competitions = self.config.get("competitions", [])
+        competitions = []
+        env_comps = os.getenv("COMPETITIONS")
+        config_comps = self.config.get("competitions")
+
+        if self.prioritize_config:
+            comps_source = config_comps or env_comps
+        else:
+            comps_source = env_comps or config_comps
+
+        if isinstance(comps_source, str):
+            try:
+                competitions = json.loads(comps_source)
+            except Exception as e:
+                logger.error("Failed to parse COMPETITIONS environment variable: %s", e)
+        elif isinstance(comps_source, list):
+            competitions = comps_source
+
         return [
             {
                 "name": comp.get("name", ""),
@@ -94,29 +167,60 @@ class ConfigParser:
         ]
 
     def get_output_directory(self) -> Path:
-        return Path(self.config.get("output", {}).get("directory", "./data"))
+        out_dir = self._get_val("OUTPUT_DIR", ("output", "directory"), "./data")
+        return Path(out_dir)
 
     def get_password(self) -> str:
-        return (
-            self.config.get("credentials", {}).get("password", "") or
-            os.getenv("GARMIN_PASSWORD", "") or
-            getpass.getpass("Enter Garmin Connect password: ")
-        )
+        pwd = self._get_val("GARMIN_PASSWORD", ("credentials", "password"), "")
+        if not pwd:
+            pwd = getpass.getpass("Enter Garmin Connect password: ")
+        return pwd
 
     def get_athlete_age(self) -> int:
-        return int(self.config.get("athlete", {}).get("age", 53))
+        def _to_int(val: Any) -> int | None:
+            if val is not None:
+                try:
+                    return int(val)
+                except ValueError:
+                    pass
+            return None
+        age = self._get_val("ATHLETE_AGE", ("athlete", "age"), 53)
+        return _to_int(age) if age is not None else 53
 
     def get_target_goal(self) -> str:
-        return self.config.get("athlete", {}).get("target_goal", "base_building")
+        return self._get_val("TARGET_GOAL", ("athlete", "target_goal"), "base_building")
 
     def get_sync_calendar(self) -> bool:
-        return bool(self.config.get("athlete", {}).get("sync_calendar", False))
+        def _to_bool(val: Any) -> bool:
+            if isinstance(val, bool):
+                return val
+            if val is not None:
+                return val.lower() in ("true", "1", "yes")
+            return False
+        sync = self._get_val("SYNC_CALENDAR", ("athlete", "sync_calendar"), False)
+        return _to_bool(sync)
 
     def get_missed_runs_count(self) -> int:
-        return int(self.config.get("athlete", {}).get("missed_runs_count", 0))
+        def _to_int(val: Any) -> int | None:
+            if val is not None:
+                try:
+                    return int(val)
+                except ValueError:
+                    pass
+            return None
+        count = self._get_val("MISSED_RUNS_COUNT", ("athlete", "missed_runs_count"), 0)
+        return _to_int(count) if count is not None else 0
 
     def get_accumulated_debt_km(self) -> float:
-        return float(self.config.get("athlete", {}).get("accumulated_debt_km", 0.0))
+        def _to_float(val: Any) -> float | None:
+            if val is not None:
+                try:
+                    return float(val)
+                except ValueError:
+                    pass
+            return None
+        debt = self._get_val("ACCUMULATED_DEBT_KM", ("athlete", "accumulated_debt_km"), 0.0)
+        return _to_float(debt) if debt is not None else 0.0
 
 
 def fetch_outside_competitions_from_config(config: dict[str, Any]) -> list[dict[str, Any]]:
@@ -152,6 +256,22 @@ def _save_html_outputs(output_dir: Path, result: dict[str, Any]) -> list[str]:
         if content := result.get(key):
             if isinstance(content, dict):
                 content = content.get("content", "")
+
+            if isinstance(content, str):
+                # Robustly extract clean HTML by discarding any leading/trailing markdown blocks or text
+                content_lower = content.lower()
+                start_idx = content_lower.find("<!doctype html>")
+                if start_idx == -1:
+                    start_idx = content_lower.find("<html")
+                if start_idx != -1:
+                    content = content[start_idx:]
+                    content_lower = content_lower[start_idx:]
+                
+                end_idx = content_lower.rfind("</html>")
+                if end_idx != -1:
+                    content = content[:end_idx + 7]
+                
+                content = content.strip()
 
             output_path = output_dir / filename
             output_path.write_text(content, encoding="utf-8")
@@ -203,7 +323,7 @@ def _save_plan_outputs(output_dir: Path, result: dict[str, Any]) -> list[str]:
     return files_generated
 
 
-async def run_analysis_from_config(config_path: Path) -> None:
+async def run_analysis_from_config(config_path: Path | None, output_dir_override: Path | None = None) -> None:
     config_parser = ConfigParser(config_path)
     athlete_name, email = config_parser.get_athlete_info()
     analysis_context, planning_context = config_parser.get_contexts()
@@ -214,10 +334,7 @@ async def run_analysis_from_config(config_path: Path) -> None:
     if outside_competitions:
         competitions.extend(outside_competitions)
 
-    output_dir = config_parser.get_output_directory()
-
-    logger.info("Starting analysis for %s", athlete_name)
-    logger.info("Output directory: %s", output_dir)
+    output_dir = output_dir_override or config_parser.get_output_directory()
 
     password = config_parser.get_password()
 
@@ -229,12 +346,37 @@ async def run_analysis_from_config(config_path: Path) -> None:
 
     logger.info("AI Mode: %s", os.environ["AI_MODE"])
 
-
-    output_dir.mkdir(parents=True, exist_ok=True)
-
     try:
         logger.info("Extracting Garmin Connect data...")
         extractor = TriathlonCoachDataExtractor(email, password)
+
+        # Dynamically fetch name from Garmin Connect profile
+        fetched_name = None
+        try:
+            fetched_name = extractor.garmin.client.get_full_name() or extractor.garmin.client.display_name
+        except Exception as e:
+            logger.warning("Could not retrieve profile name from Garmin Connect: %s", e)
+            try:
+                fetched_name = extractor.garmin.client.display_name
+            except Exception:
+                pass
+
+        if fetched_name and isinstance(fetched_name, str):
+            clean_name = "".join(c if c.isalnum() or c in ("-", "_", " ") else "_" for c in fetched_name).strip()
+            clean_name = clean_name.replace(" ", "_")
+            if clean_name:
+                logger.info("Dynamically retrieved athlete name: %s", clean_name)
+                athlete_name = clean_name
+
+        # Sanitize final athlete name to be safe for directory names and ID usage
+        athlete_name = "".join(c if c.isalnum() or c in ("-", "_", " ") else "_" for c in athlete_name).strip()
+        athlete_name = athlete_name.replace(" ", "_")
+
+        # Update output directory to be user-specific
+        output_dir = output_dir / athlete_name
+        logger.info("Starting analysis for %s", athlete_name)
+        logger.info("Output directory: %s", output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
 
         extraction_config = ExtractionConfig(
             activities_range=extraction_settings["activities_days"],
@@ -315,7 +457,7 @@ async def run_analysis_from_config(config_path: Path) -> None:
         logger.info("Running AI analysis and planning...")
 
         result = await run_complete_analysis_and_planning(
-            user_id="cli_user",
+            user_id=athlete_name,
             athlete_name=athlete_name,
             garmin_data=asdict(garmin_data),
             analysis_context=analysis_context,
@@ -446,10 +588,8 @@ def main():
         epilog="Example: python garmin_ai_coach_cli.py --config my_config.yaml",
     )
 
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--config", type=Path, help="Path to configuration file (YAML or JSON)")
-    group.add_argument("--init-config", type=Path, help="Create a configuration template file")
-
+    parser.add_argument("--config", type=Path, help="Path to configuration file (YAML or JSON)")
+    parser.add_argument("--init-config", type=Path, help="Create a configuration template file")
     parser.add_argument("--output-dir", type=Path, help="Override output directory from config")
 
     args = parser.parse_args()
@@ -458,14 +598,22 @@ def main():
         create_config_template(args.init_config)
         return
 
-    if args.config:
-        try:
-            asyncio.run(run_analysis_from_config(args.config))
-        except KeyboardInterrupt:
-            logger.info("❌ Analysis cancelled by user")
-        except Exception as e:
-            logger.error("❌ Analysis failed: %s", e)
-            sys.exit(1)
+    config_path = args.config
+    if not config_path:
+        default_config = Path("coach_config.yaml")
+        if default_config.exists():
+            config_path = default_config
+            logger.info("Using default config file: %s", config_path)
+        else:
+            logger.info("No config file specified or found. Using environment variables.")
+
+    try:
+        asyncio.run(run_analysis_from_config(config_path, args.output_dir))
+    except KeyboardInterrupt:
+        logger.info("❌ Analysis cancelled by user")
+    except Exception as e:
+        logger.error("❌ Analysis failed: %s", e)
+        sys.exit(1)
 
 
 if __name__ == "__main__":

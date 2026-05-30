@@ -28,7 +28,9 @@ class GarminConnectClient:
     ) -> None:
         try:
             logger.info("Initializing Garmin Connect client")
-            self._token_dir.mkdir(parents=True, exist_ok=True)
+            sanitized_email = email.replace("@", "_").replace(".", "_")
+            token_path = self._token_dir / sanitized_email
+            token_path.mkdir(parents=True, exist_ok=True)
 
             self._client = Garmin(
                 email=email,
@@ -36,8 +38,8 @@ class GarminConnectClient:
                 prompt_mfa=mfa_callback,
             )
 
-            logger.info("Logging in to Garmin Connect using tokenstore: %s", self._token_dir)
-            self._client.login(tokenstore=str(self._token_dir))
+            logger.info("Logging in to Garmin Connect using tokenstore: %s", token_path)
+            self._client.login(tokenstore=str(token_path))
             logger.info("Successfully connected to Garmin Connect")
         except Exception as exc:
             logger.error("Failed to connect to Garmin Connect: %s", exc)
