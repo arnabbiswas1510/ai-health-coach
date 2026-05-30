@@ -10,6 +10,7 @@ class TrainingAnalysisState(MessagesState):
     garmin_data: dict[str, Any]
     analysis_context: str
     planning_context: str
+    weight_context: str | None
 
     competitions: list[dict[str, Any]]
     current_date: dict[str, str]
@@ -62,6 +63,7 @@ def create_initial_state(
     garmin_data: dict[str, Any],
     analysis_context: str = "",
     planning_context: str = "",
+    weight_context: str = "",
     competitions: list[dict[str, Any]] | None = None,
     current_date: dict[str, str] | None = None,
     week_dates: list[dict[str, str]] | None = None,
@@ -77,6 +79,7 @@ def create_initial_state(
         garmin_data=garmin_data,
         analysis_context=analysis_context,
         planning_context=planning_context,
+        weight_context=weight_context,
         competitions=competitions or [],
         current_date=current_date or {},
         week_dates=week_dates or [],

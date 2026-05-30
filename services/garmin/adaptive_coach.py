@@ -6,11 +6,15 @@ from .models import Activity, GarminData
 logger = logging.getLogger(__name__)
 
 class AdaptiveRunningCoach:
-    def __init__(self, garmin_data: GarminData, goal: str = "base_building", age: int = 53):
+    def __init__(self, garmin_data: GarminData, goal: str = "base_building", age: int = 53, weight_goal: str | None = None, height: float | None = None):
         self.garmin_data = garmin_data
         self.goal = goal
         self.age = age
         self.max_hr = 220 - age  # Estimate max HR: 167 for age 53
+        
+        profile = garmin_data.user_profile if garmin_data else None
+        self.weight_goal = weight_goal or (profile.weight_goal if profile else None) or "maintain_lower_healthy_range"
+        self.height = height or (profile.height if profile else None)
         
         # Zone 2 is 60% to 72% of max HR, or 100-117 bpm (longevity/cardio focus)
         self.zone2_low = int(self.max_hr * 0.60)
@@ -192,6 +196,42 @@ class AdaptiveRunningCoach:
         run_duration_secs = int(target_duration * 60)
         
         workout_name = f"Coach: {focus.split(' ')[0]} {adjusted_dist:.1f}k"
+
+        # Append Weight Management Check to suggestion notes
+        if self.height:
+            current_weight = None
+            if self.garmin_data:
+                profile = self.garmin_data.user_profile
+                if profile and profile.weight:
+                    current_weight = profile.weight
+                elif self.garmin_data.body_metrics and self.garmin_data.body_metrics.weight:
+                    weight_entries = self.garmin_data.body_metrics.weight.get("data", [])
+                    if weight_entries:
+                        current_weight = weight_entries[-1].get("weight")
+                    if not current_weight:
+                        current_weight = self.garmin_data.body_metrics.weight.get("average")
+            
+            height_m = self.height / 100.0
+            min_weight = 18.5 * (height_m ** 2)
+            lower_target_weight_max = 22.0 * (height_m ** 2)
+            
+            weight_analysis_note = "\n\n### Weight Management Check\n"
+            if current_weight:
+                current_bmi = current_weight / (height_m ** 2)
+                weight_analysis_note += f"- **Current Weight**: {current_weight:.1f} kg ({current_weight * 2.20462:.1f} lbs)\n"
+                weight_analysis_note += f"- **BMI**: {current_bmi:.1f} (Target Range: 18.5 - 22.0)\n"
+                
+                if current_bmi < 18.5:
+                    weight_analysis_note += "- **Status**: Underweight. Priority: Avoid further weight loss. Focus on recovery and muscle preservation.\n"
+                elif current_bmi > 22.0:
+                    excess = current_weight - lower_target_weight_max
+                    weight_analysis_note += f"- **Status**: Above lower-side target. Priority: Emphasize Zone 2 aerobic running and walk-run intervals to safely optimize fat oxidation and protect joints from impact. Target reduction: {excess:.1f} kg ({excess * 2.20462:.1f} lbs).\n"
+                else:
+                    weight_analysis_note += "- **Status**: Within target lower-healthy-range. Priority: Maintain consistency and balance training volume with caloric intake to avoid under-recovery.\n"
+            else:
+                weight_analysis_note += f"- **Target weight range (BMI 18.5 - 22.0)**: {min_weight:.1f} kg - {lower_target_weight_max:.1f} kg\n- Waiting for Garmin Connect weight scale data sync.\n"
+            
+            notes += weight_analysis_note
         
         return {
             "workout_name": workout_name,

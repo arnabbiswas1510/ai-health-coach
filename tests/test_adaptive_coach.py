@@ -114,3 +114,34 @@ def test_suggest_next_run_missed_week_reset(sample_garmin_data):
     assert suggestion["new_accumulated_debt_km"] == 0.0
     assert "Safe Return" in suggestion["focus"]
     assert "mileage debt has been reset" in suggestion["notes"].lower()
+
+
+def test_adaptive_coach_weight_management(sample_garmin_data):
+    from services.garmin.models import UserProfile
+    
+    # Test case 1: Above target weight
+    sample_garmin_data.user_profile = UserProfile(weight=80.0, height=175.26)
+    coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53, height=175.26)
+    suggestion = coach.suggest_next_run()
+    notes = suggestion["notes"]
+    assert "Weight Management Check" in notes
+    assert "**Current Weight**: 80.0" in notes
+    assert "**BMI**: 26.0" in notes
+    assert "Above lower-side target" in notes
+    assert "Emphasize Zone 2" in notes
+
+    # Test case 2: Underweight
+    sample_garmin_data.user_profile.weight = 50.0
+    coach_under = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53, height=175.26)
+    suggestion_under = coach_under.suggest_next_run()
+    notes_under = suggestion_under["notes"]
+    assert "Underweight" in notes_under
+    assert "Avoid further weight loss" in notes_under
+
+    # Test case 3: Healthy lower range
+    sample_garmin_data.user_profile.weight = 62.0
+    coach_healthy = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53, height=175.26)
+    suggestion_healthy = coach_healthy.suggest_next_run()
+    notes_healthy = suggestion_healthy["notes"]
+    assert "Within target lower-healthy-range" in notes_healthy
+    assert "Maintain consistency" in notes_healthy

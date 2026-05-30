@@ -29,6 +29,7 @@ class UserProfile:
     gender: str | None = None
     weight: float | None = None
     height: float | None = None
+    weight_goal: str | None = None
     birth_date: str | None = None
     activity_level: str | None = None
     vo2max_running: float | None = None

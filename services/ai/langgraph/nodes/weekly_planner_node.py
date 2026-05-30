@@ -48,6 +48,7 @@ Create a detailed 28-day (4-week) training plan.
 - Upcoming Weeks: ```json {week_dates} ```
 - Competitions: ```json {competitions} ```
 - **User Context**: ``` {planning_context} ```
+- **Athlete Profile & Weight Goals**: {weight_context}
 
 ### Expert Analysis
 - Metrics: ``` {metrics_analysis} ```
@@ -112,6 +113,7 @@ async def weekly_planner_node(state: TrainingAnalysisState) -> dict[str, list | 
             metrics_analysis=extract_expert_output(state.get("metrics_outputs"), "for_weekly_planner"),
             activity_analysis=extract_expert_output(state.get("activity_outputs"), "for_weekly_planner"),
             physiology_analysis=extract_expert_output(state.get("physiology_outputs"), "for_weekly_planner"),
+            weight_context=state.get("weight_context", ""),
         ),
     }
     base_messages = [{"role": "system", "content": system_prompt}, user_message]

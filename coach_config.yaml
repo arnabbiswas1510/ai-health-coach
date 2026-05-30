@@ -7,6 +7,9 @@ athlete:
   sync_calendar: true            # Set to true to automatically sync the 28-day AI plan to your Garmin Calendar/watch
   missed_runs_count: 0           # Count of missed runs to trigger adaptive training adjustments
   accumulated_debt_km: 0.0       # Accumulated mileage debt carried forward (km)
+  height: "5'9\""                # Athlete height (Golden source is Garmin Connect, fallback to this value if unset)
+  weight: null                   # Current athlete weight in kg (Golden source is Garmin scale metrics, fallback to this if unset)
+  weight_goal: "maintain_lower_healthy_range" # Weight management preference: "maintain_lower_healthy_range" or "weight_loss"
 
 # Analysis Context
 context:

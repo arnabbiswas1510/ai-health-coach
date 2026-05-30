@@ -49,6 +49,8 @@ SYNTHESIS_USER_PROMPT_BASE = """Synthesize the expert analyses into a comprehens
 - Competitions: ```json {competitions} ```
 - Date: ```json {current_date} ```
 - Style: ```markdown {style_guide} ```
+- **Athlete Profile & Weight Goals**:
+{weight_context}
 
 ## Task
 1. **Integrate**: Connect load (metrics), execution (activity), and response (physiology).
@@ -99,6 +101,7 @@ async def synthesis_node(state: TrainingAnalysisState) -> dict[str, list | str]:
                             competitions=json.dumps(state["competitions"], indent=2),
                             current_date=json.dumps(state["current_date"], indent=2),
                             style_guide=state["style_guide"],
+                            weight_context=state.get("weight_context", ""),
                         ) + (SYNTHESIS_USER_PLOT_INSTRUCTIONS if plotting_enabled else "")
                     )},
                 ],

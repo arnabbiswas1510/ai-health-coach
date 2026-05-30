@@ -3,6 +3,7 @@
 import argparse
 import asyncio
 import getpass
+import re
 import json
 import logging
 import os
@@ -37,6 +38,46 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+
+def parse_height_to_cm(height_val: Any) -> float | None:
+    if height_val is None:
+        return None
+    if isinstance(height_val, (int, float)):
+        return float(height_val)
+    
+    val_str = str(height_val).strip()
+    if not val_str:
+        return None
+        
+    try:
+        return float(val_str)
+    except ValueError:
+        pass
+        
+    # Match feet and inches (e.g. 5'9", 5-9, 5 feet 9 inches, 5 ft 9)
+    m = re.match(r"^(\d+(?:\.\d+)?)\s*(?:feet|foot|ft|'|-)\s*(\d+(?:\.\d+)?)\s*(?:inches|inch|in|\")?$", val_str, re.IGNORECASE)
+    if m:
+        feet = float(m.group(1))
+        inches = float(m.group(2))
+        total_inches = feet * 12.0 + inches
+        return total_inches * 2.54
+        
+    # Match feet only (e.g. 5', 5 feet, 5 ft)
+    m_feet = re.match(r"^(\d+(?:\.\d+)?)\s*(?:feet|foot|ft|')$", val_str, re.IGNORECASE)
+    if m_feet:
+        feet = float(m_feet.group(1))
+        return feet * 12.0 * 2.54
+
+    # Match centimeters (e.g. 175cm, 175.26 cm)
+    m_cm = re.match(r"^(\d+(?:\.\d+)?)\s*(?:cm|centimeters)?$", val_str, re.IGNORECASE)
+    if m_cm:
+        try:
+            return float(m_cm.group(1))
+        except ValueError:
+            pass
+
+    return None
 
 
 class ConfigParser:
@@ -222,6 +263,24 @@ class ConfigParser:
         debt = self._get_val("ACCUMULATED_DEBT_KM", ("athlete", "accumulated_debt_km"), 0.0)
         return _to_float(debt) if debt is not None else 0.0
 
+    def get_athlete_height(self) -> float | None:
+        height_val = self._get_val("ATHLETE_HEIGHT", ("athlete", "height"), None)
+        return parse_height_to_cm(height_val)
+
+    def get_athlete_weight(self) -> float | None:
+        def _to_float(val: Any) -> float | None:
+            if val is not None:
+                try:
+                    return float(val)
+                except ValueError:
+                    pass
+            return None
+        weight_val = self._get_val("ATHLETE_WEIGHT", ("athlete", "weight"), None)
+        return _to_float(weight_val)
+
+    def get_weight_goal(self) -> str | None:
+        return self._get_val("WEIGHT_GOAL", ("athlete", "weight_goal"), None)
+
 
 def fetch_outside_competitions_from_config(config: dict[str, Any]) -> list[dict[str, Any]]:
     client = OutsideApiGraphQlClient()
@@ -323,6 +382,59 @@ def _save_plan_outputs(output_dir: Path, result: dict[str, Any]) -> list[str]:
     return files_generated
 
 
+def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: int, weight_goal: str) -> str:
+    height_m = height_cm / 100.0
+    min_bmi = 18.5
+    max_bmi = 24.9
+    
+    min_weight = min_bmi * (height_m ** 2)
+    max_weight = max_bmi * (height_m ** 2)
+    
+    # Target BMI range preferably on the lower side: 18.5 - 22.0
+    lower_target_bmi_max = 22.0
+    lower_target_weight_max = lower_target_bmi_max * (height_m ** 2)
+    
+    # Convert height to feet and inches for friendly display
+    feet = int(height_cm / 2.54 / 12)
+    inches = round((height_cm / 2.54) % 12)
+    if inches == 12:
+        feet += 1
+        inches = 0
+    height_ft_in = f"{feet}'{inches}\""
+    
+    msg = f"""
+## Athlete Physical Dimensions & Weight Goals
+- **Height**: {height_cm:.1f} cm ({height_ft_in}) [Golden source of truth: Garmin Connect]
+- **Age**: {age} years old
+- **Healthy BMI Range (18.5 - 24.9)**: {min_weight:.1f} kg - {max_weight:.1f} kg ({min_weight * 2.20462:.1f} lbs - {max_weight * 2.20462:.1f} lbs)
+- **Target Weight Range (preferably on the lower side, BMI 18.5 - 22.0)**: {min_weight:.1f} kg - {lower_target_weight_max:.1f} kg ({min_weight * 2.20462:.1f} lbs - {lower_target_weight_max * 2.20462:.1f} lbs)
+- **Weight Management Goal**: {weight_goal}
+"""
+    if weight_kg:
+        current_bmi = weight_kg / (height_m ** 2)
+        msg += f"- **Current Weight**: {weight_kg:.1f} kg ({weight_kg * 2.20462:.1f} lbs) [Source: Garmin Connect]\n"
+        msg += f"- **Current BMI**: {current_bmi:.1f}\n"
+        
+        if current_bmi < min_bmi:
+            msg += f"- **Status**: Underweight (BMI < 18.5). WARNING: Athlete is below the healthy range. Do NOT restrict calories or promote weight loss. Focus on muscle mass preservation, adequate recovery, and caloric sufficiency.\n"
+        elif current_bmi > lower_target_weight_max:
+            excess_weight = weight_kg - lower_target_weight_max
+            msg += f"- **Status**: Above target lower-healthy-range. Goal: Focus on gradual, safe weight loss ({excess_weight:.1f} kg / {excess_weight * 2.20462:.1f} lbs to reach target range upper limit). Emphasize aerobic fat oxidation workouts (Zone 2 running, walk-run intervals) and maintain a modest calorie deficit while ensuring adequate protein intake.\n"
+        else:
+            msg += f"- **Status**: Within target lower-healthy-range. Goal: Maintain current weight. Emphasize consistency in aerobic conditioning, balance training volume with caloric intake to avoid under-recovery.\n"
+    else:
+        msg += "- **Current Weight**: Not available (awaiting Garmin scale sync or manual entry).\n"
+        msg += "- **Status**: Pending current weight data. Maintain training routines focused on general aerobic base building.\n"
+        
+    msg += f"""
+- **Age {age} Training & Weight Considerations**:
+  - Focus on safe progression to avoid joint and tendon injury.
+  - Sarcopenia prevention: Ensure training plan allows room for strength training and includes recovery intervals.
+  - Weight loss must be gradual (max 0.5 kg or 1 lb per week) to preserve lean muscle mass.
+"""
+    return msg
+
+
 async def run_analysis_from_config(config_path: Path | None, output_dir_override: Path | None = None) -> None:
     config_parser = ConfigParser(config_path)
     athlete_name, email = config_parser.get_athlete_info()
@@ -388,6 +500,63 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         garmin_data = extractor.extract_data(extraction_config)
         logger.info("Data extraction completed")
 
+        # Resolve golden height and weight sources of truth
+        config_height = config_parser.get_athlete_height()
+        config_weight = config_parser.get_athlete_weight()
+        weight_goal = config_parser.get_weight_goal() or "maintain_lower_healthy_range"
+
+        if garmin_data.user_profile is None:
+            from services.garmin.models import UserProfile
+            garmin_data.user_profile = UserProfile()
+
+        # Height: golden source is garmin_data.user_profile.height
+        resolved_height = None
+        if garmin_data.user_profile.height and garmin_data.user_profile.height > 0:
+            resolved_height = garmin_data.user_profile.height
+            logger.info("Using Garmin Connect profile height: %.1f cm", resolved_height)
+        elif config_height is not None:
+            resolved_height = config_height
+            logger.info("Using configured athlete height: %.1f cm", resolved_height)
+        else:
+            resolved_height = 175.26  # default 5'9"
+            logger.info("Using default athlete height: %.1f cm (5'9\")", resolved_height)
+
+        garmin_data.user_profile.height = resolved_height
+
+        # Weight: golden source is Garmin scale metrics
+        latest_weight = None
+        if garmin_data.body_metrics and garmin_data.body_metrics.weight:
+            weight_entries = garmin_data.body_metrics.weight.get("data", [])
+            if weight_entries:
+                # get the weight of the last entry (most recent)
+                latest_weight = weight_entries[-1].get("weight")
+            if not latest_weight:
+                latest_weight = garmin_data.body_metrics.weight.get("average")
+
+        resolved_weight = None
+        if latest_weight is not None and latest_weight > 0:
+            resolved_weight = latest_weight
+            logger.info("Using Garmin scale weight: %.1f kg", resolved_weight)
+        elif garmin_data.user_profile.weight and garmin_data.user_profile.weight > 0:
+            resolved_weight = garmin_data.user_profile.weight
+            logger.info("Using Garmin Connect profile weight: %.1f kg", resolved_weight)
+        elif config_weight is not None:
+            resolved_weight = config_weight
+            logger.info("Using configured athlete weight: %.1f kg", resolved_weight)
+        else:
+            logger.info("Athlete weight is not available in Garmin Connect or config.")
+
+        garmin_data.user_profile.weight = resolved_weight
+        garmin_data.user_profile.weight_goal = weight_goal
+
+        # Generate the scientific weight analysis context
+        weight_context = get_weight_analysis_context(
+            height_cm=resolved_height,
+            weight_kg=resolved_weight,
+            age=config_parser.get_athlete_age(),
+            weight_goal=weight_goal
+        )
+
         # -------------------------------------------------------------
         # Adaptive Running Coach Integration
         # -------------------------------------------------------------
@@ -398,7 +567,7 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         sync_calendar = config_parser.get_sync_calendar()
 
         logger.info("Running Adaptive Running Coach (Age: %d, Goal: %s, Missed runs: %d, Acc Debt: %s km)...", age, goal, missed_runs, accumulated_debt)
-        coach = AdaptiveRunningCoach(garmin_data, goal=goal, age=age)
+        coach = AdaptiveRunningCoach(garmin_data, goal=goal, age=age, weight_goal=weight_goal, height=resolved_height)
         suggestion = coach.suggest_next_run(missed_runs_count=missed_runs, accumulated_debt_km=accumulated_debt)
 
         logger.info("Suggested Run distance: %s km", suggestion["distance_km"])
@@ -462,6 +631,7 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
             garmin_data=asdict(garmin_data),
             analysis_context=analysis_context,
             planning_context=planning_context,
+            weight_context=weight_context,
             competitions=competitions,
             current_date=current_date,
             week_dates=week_dates,

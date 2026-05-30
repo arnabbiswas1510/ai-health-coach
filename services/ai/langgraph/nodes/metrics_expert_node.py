@@ -68,6 +68,9 @@ Analyze the metrics summary to identify patterns and trends.
 - Focus on **how the training stimulus behaves over time**.
 
 ## Inputs
+### Athlete Profile & Weight Goals
+{weight_context}
+
 ### Metrics Summary
 {data}
 ### Context
@@ -153,6 +156,7 @@ async def metrics_expert_node(state: TrainingAnalysisState) -> dict[str, list | 
                     competitions=json.dumps(state["competitions"], indent=2),
                     current_date=json.dumps(state["current_date"], indent=2),
                     analysis_context=state["analysis_context"],
+                    weight_context=state.get("weight_context", ""),
                 ),
             },
         ]

@@ -43,6 +43,9 @@ Analyze the physiology summary to assess recovery and adaptation.
 - Focus on **how the body is handling stress**.
 
 ## Inputs
+### Athlete Profile & Weight Goals
+{weight_context}
+
 ### Physiology Summary
 {data}
 ### Context
@@ -126,6 +129,7 @@ async def physiology_expert_node(state: TrainingAnalysisState) -> dict[str, list
                     competitions=json.dumps(state["competitions"], indent=2),
                     current_date=json.dumps(state["current_date"], indent=2),
                     analysis_context=state["analysis_context"],
+                    weight_context=state.get("weight_context", ""),
                 ),
             },
         ]

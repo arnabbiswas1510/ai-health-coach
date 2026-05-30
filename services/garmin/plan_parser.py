@@ -173,10 +173,10 @@ class PlanParser:
             weekly_plan_list = json_data.get("weekly_plan", [])
             day_offset = 0
             for week_data in weekly_plan_list:
-                days = week_data.get("days", [])
+                days = week_data.get("days", []) or week_data.get("daily_workouts", [])
                 for day in days:
                     date_str = day.get("date") or day.get("date_str")
-                    day_text = day.get("day") or day.get("day_name") or ""
+                    day_text = day.get("day") or day.get("day_name") or day.get("day_date") or ""
                     
                     if not date_str:
                         # Extract the date part from day_text (e.g. "May 30" from "Sat, May 30")
