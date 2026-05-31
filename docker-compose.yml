@@ -1,7 +1,7 @@
 services:
   coach:
     build: .
-    image: ghcr.io/arnabbiswas1510/garmin-ai-coach:latest
+    image: ghcr.io/arnabbiswas1510/ai-health-coach:latest
     environment:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
@@ -48,7 +48,7 @@ services:
 
   chat-api:
     build: .
-    image: ghcr.io/arnabbiswas1510/garmin-ai-coach:latest
+    image: ghcr.io/arnabbiswas1510/ai-health-coach:latest
     container_name: garmin-ai-coach-chat-api
     restart: always
     entrypoint: ["python", "-m", "uvicorn", "services.chat_api.main:app",
@@ -70,7 +70,7 @@ services:
 
   poller-daemon:
     build: .
-    image: ghcr.io/arnabbiswas1510/garmin-ai-coach:latest
+    image: ghcr.io/arnabbiswas1510/ai-health-coach:latest
     container_name: garmin-ai-coach-poller-daemon
     restart: always
     environment:
