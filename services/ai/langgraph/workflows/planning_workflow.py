@@ -332,6 +332,22 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     padding: 0 !important;
     overflow: hidden !important; /* Prevent double scrollbars and layout loops */
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+
+    /* Override variable definitions of sub-documents to force dark mode */
+    --color-text: #c9d1d9 !important;
+    --color-dark: #f0f6fc !important;
+    --color-light: rgba(22, 27, 34, 0.4) !important;
+    --color-bg-light: rgba(22, 27, 34, 0.6) !important;
+    --color-bg-dark: transparent !important;
+    --color-border: rgba(240, 246, 252, 0.1) !important;
+    
+    --color-primary-text: #c9d1d9 !important;
+    --color-secondary-text: #8b949e !important;
+    --color-background-light: rgba(22, 27, 34, 0.4) !important;
+    --color-background-white: rgba(22, 27, 34, 0.6) !important;
+    
+    --retro-bg-card: rgba(255, 255, 255, 0.02) !important;
+    --retro-border-card: rgba(240, 246, 252, 0.05) !important;
   }
   
   body.in-iframe header, 
@@ -344,9 +360,13 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
   }
   
-  /* Styling card sections for schedule tab */
+  /* Unified Card Sections */
+  body.in-iframe section,
   body.in-iframe .card-section {
     background-color: rgba(22, 27, 34, 0.6) !important;
     border: 1px solid rgba(240, 246, 252, 0.1) !important;
@@ -356,11 +376,15 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     margin-bottom: 20px !important;
   }
   
+  body.in-iframe h1 { display: none !important; }
+  
   body.in-iframe h2 { 
     border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; 
     color: #f0f6fc !important; 
     font-size: 1.6em !important; 
     font-weight: 700 !important; 
+    padding-left: 0 !important;
+    border-left: none !important;
   }
   
   body.in-iframe h3 { 
@@ -385,25 +409,41 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     padding: 15px !important;
   }
   body.in-iframe .day-card h4 { color: #f0f6fc !important; }
+  body.in-iframe .day-card .day-focus {
+    background-color: rgba(88, 166, 255, 0.15) !important;
+    color: #58a6ff !important;
+  }
   body.in-iframe .day-card .focus { color: #bc8cff !important; }
   body.in-iframe .day-card .purpose, 
   body.in-iframe .day-card .adaptation { 
     color: #8b949e !important; 
     border-left: 2px solid rgba(240, 246, 252, 0.1) !important; 
   }
-  body.in-iframe .zone-definitions { 
+  body.in-iframe .zone-definitions,
+  body.in-iframe .zone-table { 
     background-color: rgba(255, 255, 255, 0.01) !important; 
     border: 1px solid rgba(240, 246, 252, 0.08) !important; 
   }
-  body.in-iframe .zone-definitions th { 
+  body.in-iframe .zone-definitions th,
+  body.in-iframe .zone-table th { 
     background-color: rgba(88, 166, 255, 0.08) !important; 
     color: #f0f6fc !important; 
     border-bottom: 1px solid rgba(240, 246, 252, 0.1) !important; 
   }
-  body.in-iframe .zone-definitions td { 
+  body.in-iframe .zone-definitions td,
+  body.in-iframe .zone-table td { 
     border-bottom: 1px solid rgba(240, 246, 252, 0.05) !important; 
   }
-  body.in-iframe .zone-definitions tr:nth-child(even) { 
+  body.in-iframe .zone-table .zone-1,
+  body.in-iframe .zone-table .zone-2,
+  body.in-iframe .zone-table .zone-3,
+  body.in-iframe .zone-table .zone-4,
+  body.in-iframe .zone-table .zone-5 {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    color: #c9d1d9 !important;
+  }
+  body.in-iframe .zone-definitions tr:nth-child(even),
+  body.in-iframe .zone-table tr:nth-child(even) { 
     background-color: rgba(255, 255, 255, 0.02) !important; 
   }
   body.in-iframe .week-plan { 
@@ -443,6 +483,15 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   }
   body.in-iframe #season-plan li strong { color: #f0f6fc !important; }
   body.in-iframe ul li { color: #c9d1d9 !important; }
+  body.in-iframe .workout-checkbox-wrapper {
+    border-top: 1px dashed rgba(240, 246, 252, 0.1) !important;
+  }
+  body.in-iframe .workout-checkbox-wrapper label {
+    color: #f0f6fc !important;
+  }
+  body.in-iframe .workout-checkbox-wrapper input[type="checkbox"]:checked + label {
+    color: #8b949e !important;
+  }
 
   /* Hide retro section inside standard schedule iframe */
   body.in-iframe:not(.retro-only) #retro-analysis { 
@@ -450,28 +499,6 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   }
 
   /* 2. Metrics Tab Styling (analysis.html) */
-  body.in-iframe .expert-opinion {
-    background-color: rgba(22, 27, 34, 0.6) !important;
-    border: 1px solid rgba(240, 246, 252, 0.1) !important;
-    box-shadow: none !important;
-    border-radius: 20px !important;
-    padding: 25px !important;
-    margin-bottom: 20px !important;
-  }
-  body.in-iframe .expert-opinion h4 { 
-    color: #f0f6fc !important; 
-    font-size: 1.1em !important; 
-    font-weight: 600 !important; 
-    margin-bottom: 15px !important; 
-  }
-  body.in-iframe .executive-summary {
-    background-color: rgba(188, 140, 255, 0.04) !important;
-    border-left: 5px solid #bc8cff !important;
-    border-radius: 12px !important;
-    padding: 20px !important;
-    margin-bottom: 25px !important;
-    color: #c9d1d9 !important;
-  }
   body.in-iframe table { 
     border-collapse: collapse !important; 
     width: 100% !important; 
@@ -491,7 +518,27 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   body.in-iframe tr:nth-child(even) { 
     background-color: rgba(255, 255, 255, 0.02) !important; 
   }
-  body.in-iframe h1 { display: none !important; }
+  body.in-iframe .category-header {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #f0f6fc !important;
+    font-weight: 700 !important;
+  }
+  body.in-iframe td:first-child {
+    color: #8b949e !important;
+  }
+  body.in-iframe ol li {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    border-left: 5px solid #28a745 !important;
+    color: #c9d1d9 !important;
+    box-shadow: none !important;
+  }
+  body.in-iframe ol li strong {
+    color: #58a6ff !important;
+  }
+  body.in-iframe .status-danger { color: #f85149 !important; font-weight: 600; }
+  body.in-iframe .status-warning { color: #d29922 !important; font-weight: 600; }
+  body.in-iframe .status-success { color: #3fb950 !important; font-weight: 600; }
+  body.in-iframe .status-info { color: #8b949e !important; }
 
   /* 3. Retro Tab Styling (planning.html?tab=retro) */
   body.retro-only .container > *:not(#retro-analysis) { 
@@ -510,6 +557,7 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     padding: 25px !important;
     color: #c9d1d9 !important;
   }
+  body.retro-only .retro-grid,
   body.retro-only .retro-analysis-grid {
     display: grid !important;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
@@ -518,10 +566,25 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   }
   body.retro-only .retro-card {
     background-color: rgba(255, 255, 255, 0.02) !important;
-    border: 1px solid rgba(240, 246, 252, 0.05) !important;
     border-radius: 12px !important;
     padding: 20px !important;
     color: #c9d1d9 !important;
+  }
+  body.retro-only .retro-card.info {
+    background-color: rgba(88, 166, 255, 0.08) !important;
+    border: 1px solid rgba(88, 166, 255, 0.3) !important;
+  }
+  body.retro-only .retro-card.positive {
+    background-color: rgba(63, 185, 80, 0.08) !important;
+    border: 1px solid rgba(63, 185, 80, 0.3) !important;
+  }
+  body.retro-only .retro-card.negative {
+    background-color: rgba(248, 81, 73, 0.08) !important;
+    border: 1px solid rgba(248, 81, 73, 0.3) !important;
+  }
+  body.retro-only .retro-card.warning {
+    background-color: rgba(210, 153, 34, 0.08) !important;
+    border: 1px solid rgba(210, 153, 34, 0.3) !important;
   }
   body.retro-only .retro-card h3 { 
     color: #f0f6fc !important; 
@@ -531,10 +594,15 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     padding-bottom: 8px !important; 
     margin-bottom: 12px !important; 
   }
+  body.retro-only .retro-card.info h3 { color: #58a6ff !important; }
+  body.retro-only .retro-card.positive h3 { color: #3fb950 !important; }
+  body.retro-only .retro-card.negative h3 { color: #f85149 !important; }
+  body.retro-only .retro-card.warning h3 { color: #d29922 !important; }
+  
   body.retro-only .retro-card li { 
     border-bottom: 1px dotted rgba(240, 246, 252, 0.1) !important; 
     padding: 10px 0 !important; 
-    color: #8b949e !important; 
+    color: #c9d1d9 !important; 
   }
   body.retro-only .retro-card li strong { color: #f0f6fc !important; }
   body.retro-only h2 { 
@@ -593,11 +661,14 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
 
 def _inject_chat_panel(html: str) -> str:
     """Inject the floating chat sidebar into an existing planning HTML page."""
-    if not html or "garmin-chat-panel" in html:
+    if not html:
         return html
 
     # First inject iframe helpers to planning.html
     html = _inject_iframe_helpers(html, is_planning=True)
+
+    if "garmin-chat-panel" in html:
+        return html
 
     chat_html = _get_chat_panel_html()
     # Inject before </body>

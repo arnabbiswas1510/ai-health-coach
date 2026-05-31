@@ -818,8 +818,7 @@
                 if (doc.getElementById('dashboard-style-overrides')) return;
 
                 const style = doc.createElement('style');
-                style.id = 'dashboard-style-overrides';
-                style.textContent = `
+                   style.textContent = `
                     /* General reset inside iframe for clean merge */
                     header, footer, #garmin-chat-panel { display: none !important; }
                     
@@ -830,28 +829,59 @@
                         margin: 0 !important;
                         padding: 0 !important;
                         font-family: 'Outfit', sans-serif !important;
+                        
+                        /* Override variable definitions of sub-documents to force dark mode */
+                        --color-text: #c9d1d9 !important;
+                        --color-dark: #f0f6fc !important;
+                        --color-light: rgba(22, 27, 34, 0.4) !important;
+                        --color-bg-light: rgba(22, 27, 34, 0.6) !important;
+                        --color-bg-dark: transparent !important;
+                        --color-border: rgba(240, 246, 252, 0.1) !important;
+                        
+                        --color-primary-text: #c9d1d9 !important;
+                        --color-secondary-text: #8b949e !important;
+                        --color-background-light: rgba(22, 27, 34, 0.4) !important;
+                        --color-background-white: rgba(22, 27, 34, 0.6) !important;
+                        
+                        --retro-bg-card: rgba(255, 255, 255, 0.02) !important;
+                        --retro-border-card: rgba(240, 246, 252, 0.05) !important;
                     }
 
                     .container {
                         max-width: 100% !important;
                         margin: 0 !important;
                         padding: 0 !important;
+                        background: transparent !important;
+                        background-color: transparent !important;
+                        box-shadow: none !important;
                     }
 
-                    /* 1. Schedule Tab Styling */
+                    /* Unified Card Sections */
+                    section, .card-section {
+                        background-color: rgba(22, 27, 34, 0.6) !important;
+                        border: 1px solid rgba(240, 246, 252, 0.1) !important;
+                        box-shadow: none !important;
+                        border-radius: 20px !important;
+                        padding: 25px !important;
+                        margin-bottom: 20px !important;
+                    }
+
+                    h1 { display: none !important; }
+                    h2 { 
+                        border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; 
+                        color: #f0f6fc !important; 
+                        font-size: 1.6em !important; 
+                        font-weight: 700 !important;
+                        padding-left: 0 !important;
+                        border-left: none !important;
+                    }
+                    h3 { color: #58a6ff !important; font-size: 1.3em !important; font-weight: 600 !important; }
+                    h4 { color: #f0f6fc !important; font-size: 1.1em !important; font-weight: 600 !important; }
+
+                    /* 1. Schedule Tab Styling overrides */
                     ${type === 'schedule' ? `
                         .container { gap: 20px !important; }
-                        .card-section {
-                            background-color: rgba(22, 27, 34, 0.6) !important;
-                            border: 1px solid rgba(240, 246, 252, 0.1) !important;
-                            box-shadow: none !important;
-                            border-radius: 20px !important;
-                            padding: 25px !important;
-                            margin-bottom: 20px !important;
-                        }
                         #retro-analysis { display: none !important; }
-                        h2 { border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; color: #f0f6fc !important; font-size: 1.6em !important; font-weight: 700 !important; }
-                        h3 { color: #58a6ff !important; font-size: 1.3em !important; font-weight: 600 !important; }
                         .day-card {
                             background-color: rgba(255, 255, 255, 0.02) !important;
                             border: 1px solid rgba(240, 246, 252, 0.05) !important;
@@ -860,13 +890,23 @@
                             border-radius: 12px !important;
                             padding: 15px !important;
                         }
-                        .day-card h4 { color: #f0f6fc !important; font-size: 1.1em !important; font-weight: 600 !important; }
+                        .day-card h4 { color: #f0f6fc !important; }
+                        .day-card .day-focus {
+                            background-color: rgba(88, 166, 255, 0.15) !important;
+                            color: #58a6ff !important;
+                        }
                         .day-card .focus { color: #bc8cff !important; }
                         .day-card .purpose, .day-card .adaptation { color: #8b949e !important; border-left: 2px solid rgba(240, 246, 252, 0.1) !important; }
-                        .zone-definitions { background-color: rgba(255, 255, 255, 0.01) !important; box-shadow: none !important; border: 1px solid rgba(240, 246, 252, 0.08) !important; }
-                        .zone-definitions th { background-color: rgba(88, 166, 255, 0.08) !important; color: #f0f6fc !important; border-bottom: 1px solid rgba(240, 246, 252, 0.1) !important; }
-                        .zone-definitions td { border-bottom: 1px solid rgba(240, 246, 252, 0.05) !important; }
-                        .zone-definitions tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.02) !important; }
+                        
+                        .zone-definitions, .zone-table { background-color: rgba(255, 255, 255, 0.01) !important; box-shadow: none !important; border: 1px solid rgba(240, 246, 252, 0.08) !important; }
+                        .zone-definitions th, .zone-table th { background-color: rgba(88, 166, 255, 0.08) !important; color: #f0f6fc !important; border-bottom: 1px solid rgba(240, 246, 252, 0.1) !important; }
+                        .zone-definitions td, .zone-table td { border-bottom: 1px solid rgba(240, 246, 252, 0.05) !important; }
+                        .zone-table .zone-1, .zone-table .zone-2, .zone-table .zone-3, .zone-table .zone-4, .zone-table .zone-5 {
+                            background-color: rgba(255, 255, 255, 0.02) !important;
+                            color: #c9d1d9 !important;
+                        }
+                        .zone-definitions tr:nth-child(even), .zone-table tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.02) !important; }
+                        
                         .week-plan { background-color: rgba(255, 255, 255, 0.01) !important; box-shadow: none !important; border: 1px solid rgba(240, 246, 252, 0.05) !important; border-radius: 16px !important; padding: 20px !important; }
                         .week-plan > h3 { color: #f0f6fc !important; border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; font-size: 1.4em !important; }
                         .week-plan .week-notes { background-color: rgba(188, 140, 255, 0.04) !important; border-left: 5px solid #bc8cff !important; color: #c9d1d9 !important; border-radius: 8px !important; padding: 12px !important; }
@@ -874,41 +914,29 @@
                         .expert-rationale div p, .qualitative-constraints ul li { color: #c9d1d9 !important; }
                         #season-plan li { background-color: rgba(255, 255, 255, 0.01) !important; border-left: 5px solid #3498db !important; border-radius: 8px !important; color: #c9d1d9 !important; }
                         #season-plan li strong { color: #f0f6fc !important; }
+                        .workout-checkbox-wrapper { border-top: 1px dashed rgba(240, 246, 252, 0.1) !important; }
+                        .workout-checkbox-wrapper label { color: #f0f6fc !important; }
+                        .workout-checkbox-wrapper input[type="checkbox"]:checked + label { color: #8b949e !important; }
                     ` : ''}
 
-                    /* 2. Metrics Tab Styling */
+                    /* 2. Metrics Tab Styling overrides */
                     ${type === 'metrics' ? `
-                        .container {
-                            background-color: transparent !important;
-                            box-shadow: none !important;
-                        }
-                        h1 { display: none !important; }
-                        h2 { border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; color: #f0f6fc !important; font-size: 1.6em !important; font-weight: 700 !important; margin-top: 1.5em !important; }
-                        h3 { color: #bc8cff !important; font-size: 1.3em !important; font-weight: 600 !important; }
-                        .expert-opinion {
-                            background-color: rgba(22, 27, 34, 0.6) !important;
-                            border: 1px solid rgba(240, 246, 252, 0.1) !important;
-                            box-shadow: none !important;
-                            border-radius: 20px !important;
-                            padding: 25px !important;
-                            margin-bottom: 20px !important;
-                        }
-                        .expert-opinion h4 { color: #f0f6fc !important; font-size: 1.1em !important; font-weight: 600 !important; margin-bottom: 15px !important; }
-                        .executive-summary {
-                            background-color: rgba(188, 140, 255, 0.04) !important;
-                            border-left: 5px solid #bc8cff !important;
-                            border-radius: 12px !important;
-                            padding: 20px !important;
-                            margin-bottom: 25px !important;
-                            color: #c9d1d9 !important;
-                        }
+                        h3 { color: #bc8cff !important; }
                         table { border-collapse: collapse !important; width: 100% !important; margin-bottom: 20px !important; }
                         th, td { border: 1px solid rgba(240, 246, 252, 0.1) !important; padding: 12px 15px !important; text-align: left !important; color: #c9d1d9 !important; }
                         th { background-color: rgba(188, 140, 255, 0.08) !important; color: #f0f6fc !important; font-weight: 600 !important; }
                         tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.02) !important; }
+                        .category-header { background-color: rgba(255, 255, 255, 0.05) !important; color: #f0f6fc !important; font-weight: 700 !important; }
+                        td:first-child { color: #8b949e !important; }
+                        ol li { background-color: rgba(255, 255, 255, 0.02) !important; border-left: 5px solid #28a745 !important; color: #c9d1d9 !important; box-shadow: none !important; }
+                        ol li strong { color: #58a6ff !important; }
+                        .status-danger { color: #f85149 !important; font-weight: 600; }
+                        .status-warning { color: #d29922 !important; font-weight: 600; }
+                        .status-success { color: #3fb950 !important; font-weight: 600; }
+                        .status-info { color: #8b949e !important; }
                     ` : ''}
 
-                    /* 3. Retro Tab Styling */
+                    /* 3. Retro Tab Styling overrides */
                     ${type === 'retro' ? `
                         .container > *:not(#retro-analysis) { display: none !important; }
                         .container { gap: 0 !important; }
@@ -921,7 +949,7 @@
                             padding: 25px !important;
                             color: #c9d1d9 !important;
                         }
-                        .retro-analysis-grid {
+                        .retro-grid, .retro-analysis-grid {
                             display: grid !important;
                             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
                             gap: 20px !important;
@@ -929,13 +957,22 @@
                         }
                         .retro-card {
                             background-color: rgba(255, 255, 255, 0.02) !important;
-                            border: 1px solid rgba(240, 246, 252, 0.05) !important;
                             border-radius: 12px !important;
                             padding: 20px !important;
                             color: #c9d1d9 !important;
                         }
+                        .retro-card.info { background-color: rgba(88, 166, 255, 0.08) !important; border: 1px solid rgba(88, 166, 255, 0.3) !important; }
+                        .retro-card.positive { background-color: rgba(63, 185, 80, 0.08) !important; border: 1px solid rgba(63, 185, 80, 0.3) !important; }
+                        .retro-card.negative { background-color: rgba(248, 81, 73, 0.08) !important; border: 1px solid rgba(248, 81, 73, 0.3) !important; }
+                        .retro-card.warning { background-color: rgba(210, 153, 34, 0.08) !important; border: 1px solid rgba(210, 153, 34, 0.3) !important; }
+                        
                         .retro-card h3 { color: #f0f6fc !important; font-size: 1.25em !important; font-weight: 600 !important; border-bottom: 1px solid rgba(240, 246, 252, 0.08) !important; padding-bottom: 8px !important; margin-bottom: 12px !important; }
-                        .retro-card li { border-bottom: 1px dotted rgba(240, 246, 252, 0.1) !important; padding: 10px 0 !important; color: #8b949e !important; }
+                        .retro-card.info h3 { color: #58a6ff !important; }
+                        .retro-card.positive h3 { color: #3fb950 !important; }
+                        .retro-card.negative h3 { color: #f85149 !important; }
+                        .retro-card.warning h3 { color: #d29922 !important; }
+                        
+                        .retro-card li { border-bottom: 1px dotted rgba(240, 246, 252, 0.1) !important; padding: 10px 0 !important; color: #c9d1d9 !important; }
                         .retro-card li strong { color: #f0f6fc !important; }
                         h2 { border-bottom: 2px solid #d35400 !important; color: #f0f6fc !important; font-size: 1.6em !important; font-weight: 700 !important; }
                     ` : ''}
