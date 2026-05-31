@@ -330,6 +330,7 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     color: #c9d1d9 !important;
     margin: 0 !important;
     padding: 0 !important;
+    overflow: hidden !important; /* Prevent double scrollbars and layout loops */
     font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
   }
   
@@ -563,7 +564,15 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
       }
       
       window.addEventListener('load', sendHeight);
-      window.addEventListener('resize', sendHeight);
+      
+      // Only send height on horizontal resize to avoid feedback loops
+      let lastWidth = window.innerWidth;
+      window.addEventListener('resize', function() {
+        if (window.innerWidth !== lastWidth) {
+          lastWidth = window.innerWidth;
+          sendHeight();
+        }
+      });
       
       // Monitor DOM updates and clicks to resize instantly
       document.body.addEventListener('click', function() {

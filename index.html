@@ -962,9 +962,11 @@
             try {
                 const doc = iframe.contentDocument || iframe.contentWindow.document;
                 if (doc && doc.documentElement) {
-                    // Set iframe height to content height + small buffer to prevent nested scrolling
                     const height = doc.documentElement.scrollHeight;
-                    iframe.style.height = (height + 20) + 'px';
+                    const currentHeight = parseFloat(iframe.style.height) || 0;
+                    if (Math.abs(currentHeight - height) > 3) {
+                        iframe.style.height = height + 'px';
+                    }
                 }
             } catch (e) {
                 // Ignore same-origin policy errors during local development if any
@@ -984,7 +986,11 @@
                 const iframes = document.querySelectorAll('iframe');
                 for (let iframe of iframes) {
                     if (iframe.contentWindow === e.source) {
-                        iframe.style.height = (e.data.height + 20) + 'px';
+                        const newHeight = e.data.height;
+                        const currentHeight = parseFloat(iframe.style.height) || 0;
+                        if (Math.abs(currentHeight - newHeight) > 3) {
+                            iframe.style.height = newHeight + 'px';
+                        }
                         break;
                     }
                 }
