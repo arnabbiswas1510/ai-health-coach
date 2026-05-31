@@ -330,6 +330,12 @@ def _save_html_outputs(output_dir: Path, result: dict[str, Any]) -> list[str]:
                     content = content[:end_idx + 7]
 
                 content = content.strip()
+                if filename == "analysis.html":
+                    try:
+                        from services.ai.langgraph.workflows.planning_workflow import _inject_iframe_helpers
+                        content = _inject_iframe_helpers(content, is_planning=False)
+                    except Exception as e:
+                        logger.warning("Failed to inject iframe helpers to analysis.html: %s", e)
 
             output_path = output_dir / filename
             output_path.write_text(content, encoding="utf-8")

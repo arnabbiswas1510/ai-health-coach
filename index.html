@@ -977,6 +977,19 @@
                 resizeIframe(iframe);
             });
         }, 1500);
+
+        // Handle cross-origin or file:// height adjustment messages from iframes
+        window.addEventListener('message', function(e) {
+            if (e.data && e.data.type === 'resize') {
+                const iframes = document.querySelectorAll('iframe');
+                for (let iframe of iframes) {
+                    if (iframe.contentWindow === e.source) {
+                        iframe.style.height = (e.data.height + 20) + 'px';
+                        break;
+                    }
+                }
+            }
+        });
     </script>
 
     <!-- Scripts for Global Floating Chat Panel -->

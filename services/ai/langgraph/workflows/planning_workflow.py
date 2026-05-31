@@ -315,10 +315,280 @@ async def run_weekly_planning_with_context(
     return {"weekly_plan_md": weekly_plan_md, "planning_html": planning_html}
 
 
+def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
+    """Inject styling and scripts to support seamless iframe embedding and resizing."""
+    if not html or "iframe-helper-injected" in html:
+        return html
+
+    css_overrides = r"""
+<!-- ========== Iframe Embed Helper Styles ========== -->
+<style id="iframe-helper-injected">
+  /* General resets when loaded inside an iframe */
+  body.in-iframe {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #c9d1d9 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+  }
+  
+  body.in-iframe header, 
+  body.in-iframe footer, 
+  body.in-iframe #garmin-chat-panel { 
+    display: none !important; 
+  }
+  
+  body.in-iframe .container {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Styling card sections for schedule tab */
+  body.in-iframe .card-section {
+    background-color: rgba(22, 27, 34, 0.6) !important;
+    border: 1px solid rgba(240, 246, 252, 0.1) !important;
+    box-shadow: none !important;
+    border-radius: 20px !important;
+    padding: 25px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  body.in-iframe h2 { 
+    border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; 
+    color: #f0f6fc !important; 
+    font-size: 1.6em !important; 
+    font-weight: 700 !important; 
+  }
+  
+  body.in-iframe h3 { 
+    color: #58a6ff !important; 
+    font-size: 1.3em !important; 
+    font-weight: 600 !important; 
+  }
+  
+  body.in-iframe h4 { 
+    color: #f0f6fc !important; 
+    font-size: 1.1em !important; 
+    font-weight: 600 !important; 
+  }
+
+  /* Target schedule-specific styles */
+  body.in-iframe .day-card {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(240, 246, 252, 0.05) !important;
+    border-top: 5px solid #58a6ff !important;
+    color: #c9d1d9 !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+  }
+  body.in-iframe .day-card h4 { color: #f0f6fc !important; }
+  body.in-iframe .day-card .focus { color: #bc8cff !important; }
+  body.in-iframe .day-card .purpose, 
+  body.in-iframe .day-card .adaptation { 
+    color: #8b949e !important; 
+    border-left: 2px solid rgba(240, 246, 252, 0.1) !important; 
+  }
+  body.in-iframe .zone-definitions { 
+    background-color: rgba(255, 255, 255, 0.01) !important; 
+    border: 1px solid rgba(240, 246, 252, 0.08) !important; 
+  }
+  body.in-iframe .zone-definitions th { 
+    background-color: rgba(88, 166, 255, 0.08) !important; 
+    color: #f0f6fc !important; 
+    border-bottom: 1px solid rgba(240, 246, 252, 0.1) !important; 
+  }
+  body.in-iframe .zone-definitions td { 
+    border-bottom: 1px solid rgba(240, 246, 252, 0.05) !important; 
+  }
+  body.in-iframe .zone-definitions tr:nth-child(even) { 
+    background-color: rgba(255, 255, 255, 0.02) !important; 
+  }
+  body.in-iframe .week-plan { 
+    background-color: rgba(255, 255, 255, 0.01) !important; 
+    border: 1px solid rgba(240, 246, 252, 0.05) !important; 
+    border-radius: 16px !important; 
+    padding: 20px !important; 
+  }
+  body.in-iframe .week-plan > h3 { 
+    color: #f0f6fc !important; 
+    border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; 
+  }
+  body.in-iframe .week-plan .week-notes { 
+    background-color: rgba(188, 140, 255, 0.04) !important; 
+    border-left: 5px solid #bc8cff !important; 
+    color: #c9d1d9 !important; 
+    border-radius: 8px !important; 
+    padding: 12px !important; 
+  }
+  body.in-iframe .expert-rationale div, 
+  body.in-iframe .qualitative-constraints ul { 
+    background-color: rgba(255, 255, 255, 0.02) !important; 
+    border: 1px solid rgba(240, 246, 252, 0.05) !important; 
+    border-left: 4px solid #e67e22 !important; 
+    border-radius: 8px !important; 
+    padding: 15px !important; 
+  }
+  body.in-iframe .expert-rationale div p, 
+  body.in-iframe .qualitative-constraints ul li { 
+    color: #c9d1d9 !important; 
+  }
+  body.in-iframe #season-plan li { 
+    background-color: rgba(255, 255, 255, 0.01) !important; 
+    border-left: 5px solid #3498db !important; 
+    border-radius: 8px !important; 
+    color: #c9d1d9 !important; 
+  }
+  body.in-iframe #season-plan li strong { color: #f0f6fc !important; }
+  body.in-iframe ul li { color: #c9d1d9 !important; }
+
+  /* Hide retro section inside standard schedule iframe */
+  body.in-iframe:not(.retro-only) #retro-analysis { 
+    display: none !important; 
+  }
+
+  /* 2. Metrics Tab Styling (analysis.html) */
+  body.in-iframe .expert-opinion {
+    background-color: rgba(22, 27, 34, 0.6) !important;
+    border: 1px solid rgba(240, 246, 252, 0.1) !important;
+    box-shadow: none !important;
+    border-radius: 20px !important;
+    padding: 25px !important;
+    margin-bottom: 20px !important;
+  }
+  body.in-iframe .expert-opinion h4 { 
+    color: #f0f6fc !important; 
+    font-size: 1.1em !important; 
+    font-weight: 600 !important; 
+    margin-bottom: 15px !important; 
+  }
+  body.in-iframe .executive-summary {
+    background-color: rgba(188, 140, 255, 0.04) !important;
+    border-left: 5px solid #bc8cff !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    margin-bottom: 25px !important;
+    color: #c9d1d9 !important;
+  }
+  body.in-iframe table { 
+    border-collapse: collapse !important; 
+    width: 100% !important; 
+    margin-bottom: 20px !important; 
+  }
+  body.in-iframe th, 
+  body.in-iframe td { 
+    border: 1px solid rgba(240, 246, 252, 0.1) !important; 
+    padding: 12px 15px !important; 
+    color: #c9d1d9 !important; 
+  }
+  body.in-iframe th { 
+    background-color: rgba(188, 140, 255, 0.08) !important; 
+    color: #f0f6fc !important; 
+    font-weight: 600 !important; 
+  }
+  body.in-iframe tr:nth-child(even) { 
+    background-color: rgba(255, 255, 255, 0.02) !important; 
+  }
+  body.in-iframe h1 { display: none !important; }
+
+  /* 3. Retro Tab Styling (planning.html?tab=retro) */
+  body.retro-only .container > *:not(#retro-analysis) { 
+    display: none !important; 
+  }
+  body.retro-only .container { 
+    gap: 0 !important; 
+  }
+  body.retro-only #retro-analysis {
+    display: block !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: 1px solid rgba(240, 246, 252, 0.1) !important;
+    background-color: rgba(22, 27, 34, 0.6) !important;
+    border-radius: 20px !important;
+    padding: 25px !important;
+    color: #c9d1d9 !important;
+  }
+  body.retro-only .retro-analysis-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    gap: 20px !important;
+    margin-top: 20px !important;
+  }
+  body.retro-only .retro-card {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(240, 246, 252, 0.05) !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    color: #c9d1d9 !important;
+  }
+  body.retro-only .retro-card h3 { 
+    color: #f0f6fc !important; 
+    font-size: 1.25em !important; 
+    font-weight: 600 !important; 
+    border-bottom: 1px solid rgba(240, 246, 252, 0.08) !important; 
+    padding-bottom: 8px !important; 
+    margin-bottom: 12px !important; 
+  }
+  body.retro-only .retro-card li { 
+    border-bottom: 1px dotted rgba(240, 246, 252, 0.1) !important; 
+    padding: 10px 0 !important; 
+    color: #8b949e !important; 
+  }
+  body.retro-only .retro-card li strong { color: #f0f6fc !important; }
+  body.retro-only h2 { 
+    border-bottom: 2px solid #d35400 !important; 
+    color: #f0f6fc !important; 
+    font-size: 1.6em !important; 
+    font-weight: 700 !important; 
+  }
+</style>
+
+<script>
+  (function() {
+    if (window.self !== window.top) {
+      document.body.classList.add('in-iframe');
+      if (window.location.hash === '#retro-analysis' || window.location.search.includes('tab=retro')) {
+        document.body.classList.add('retro-only');
+      }
+      
+      // Auto height communication via postMessage
+      function sendHeight() {
+        if (document.documentElement) {
+          window.parent.postMessage({
+            type: 'resize',
+            height: document.documentElement.scrollHeight
+          }, '*');
+        }
+      }
+      
+      window.addEventListener('load', sendHeight);
+      window.addEventListener('resize', sendHeight);
+      
+      // Monitor DOM updates and clicks to resize instantly
+      document.body.addEventListener('click', function() {
+        setTimeout(sendHeight, 50);
+      });
+      
+      const observer = new MutationObserver(sendHeight);
+      observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+    }
+  })();
+</script>
+<!-- ========== End Iframe Embed Helper ========== -->
+"""
+    if "</body>" in html:
+        return html.replace("</body>", css_overrides + "\n</body>")
+    return html + css_overrides
+
+
 def _inject_chat_panel(html: str) -> str:
     """Inject the floating chat sidebar into an existing planning HTML page."""
     if not html or "garmin-chat-panel" in html:
         return html
+
+    # First inject iframe helpers to planning.html
+    html = _inject_iframe_helpers(html, is_planning=True)
 
     chat_html = _get_chat_panel_html()
     # Inject before </body>
