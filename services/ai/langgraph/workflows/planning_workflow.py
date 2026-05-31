@@ -328,7 +328,7 @@ def _inject_chat_panel(html: str) -> str:
 
 
 def _get_chat_panel_html() -> str:
-    return """
+    return r"""
 <!-- ========== Garmin AI Coach Chat Panel ========== -->
 <style>
   #garmin-chat-panel {
