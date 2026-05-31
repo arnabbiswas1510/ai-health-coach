@@ -87,6 +87,16 @@ async def plan_formatter_node(state: TrainingAnalysisState) -> dict[str, list | 
             call_plan_formatting, AI_ANALYSIS_CONFIG, "Plan Formatter"
         )
 
+        if planning_html:
+            planning_html = planning_html.strip()
+            if planning_html.startswith("```"):
+                lines = planning_html.splitlines()
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines and lines[-1].strip() == "```":
+                    lines = lines[:-1]
+                planning_html = "\n".join(lines).strip()
+
         execution_time = (datetime.now() - agent_start_time).total_seconds()
         logger.info("Plan formatting completed in %.2fs", execution_time)
 
