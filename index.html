@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garmin AI Coach - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: rgba(22, 27, 34, 0.6);
+            --border-color: rgba(240, 246, 252, 0.1);
+            --accent-primary: #58a6ff;
+            --accent-secondary: #bc8cff;
+            --text-primary: #c9d1d9;
+            --text-muted: #8b949e;
+            --text-light: #f0f6fc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(88, 166, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(188, 140, 255, 0.05) 0%, transparent 40%);
+        }
+
+        header {
+            width: 100%;
+            max-width: 1200px;
+            padding: 2.5rem 1.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+            font-weight: 800;
+            color: var(--bg-color);
+            font-size: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-light) 30%, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            font-weight: 300;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1200px;
+            padding: 2rem 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(88, 166, 255, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(88, 166, 255, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.08) rotate(2deg);
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .card-action {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            box-shadow: 0 6px 20px rgba(88, 166, 255, 0.35);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent-secondary), #8b5cf6);
+            color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(188, 140, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            opacity: 0.95;
+            box-shadow: 0 6px 20px rgba(188, 140, 255, 0.35);
+        }
+
+        .btn-retro {
+            background: linear-gradient(135deg, #d35400, #f39c12);
+            color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(211, 84, 0, 0.2);
+        }
+
+        .btn-retro:hover {
+            opacity: 0.95;
+            box-shadow: 0 6px 20px rgba(211, 84, 0, 0.35);
+        }
+
+        /* 3-Tab Layout Styling */
+        .tabs-nav-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            width: fit-content;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            color: var(--text-muted);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-light);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab-btn.active[data-tab="schedule"] {
+            background: linear-gradient(135deg, var(--accent-primary), #3b82f6);
+            color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.25);
+        }
+
+        .tab-btn.active[data-tab="metrics"] {
+            background: linear-gradient(135deg, var(--accent-secondary), #8b5cf6);
+            color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(188, 140, 255, 0.25);
+        }
+
+        .tab-btn.active[data-tab="retro"] {
+            background: linear-gradient(135deg, #d35400, #f39c12);
+            color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(211, 84, 0, 0.25);
+        }
+
+        .tab-content {
+            display: none;
+            width: 100%;
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-iframe {
+            width: 100%;
+            border: none;
+            background: transparent;
+            overflow: hidden;
+            display: block;
+            min-height: 400px;
+            transition: height 0.2s ease;
+        }
+
+        .quick-links {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+            margin-top: 1rem;
+        }
+
+        .quick-links-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .links-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .link-item a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .link-item a:hover {
+            color: var(--accent-primary);
+            border-color: rgba(88, 166, 255, 0.3);
+            background: rgba(88, 166, 255, 0.03);
+            transform: translateX(3px);
+        }
+
+        .file-icon {
+            font-size: 1.1rem;
+        }
+
+        footer {
+            width: 100%;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        /* Floating Chat Panel Styling */
+        #garmin-chat-panel {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 380px;
+            max-height: 600px;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(99, 179, 237, 0.25);
+            border-radius: 20px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 9999;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #garmin-chat-panel.collapsed {
+            max-height: 56px;
+            width: 220px;
+        }
+
+        #chat-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.3));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        #chat-header .chat-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        #chat-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e2e8f0;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #chat-toggle-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            transition: color 0.2s, background 0.2s;
+        }
+
+        #chat-toggle-btn:hover {
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #chat-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+            transition: opacity 0.2s;
+        }
+
+        #garmin-chat-panel.collapsed #chat-body {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 380px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(99, 179, 237, 0.3) transparent;
+        }
+
+        .chat-msg {
+            display: flex;
+            flex-direction: column;
+            max-width: 88%;
+            animation: msgIn 0.25s ease;
+        }
+
+        @keyframes msgIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-msg.user {
+            align-self: flex-end;
+        }
+
+        .chat-msg.assistant {
+            align-self: flex-start;
+        }
+
+        .msg-bubble {
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #e2e8f0;
+            word-break: break-word;
+        }
+
+        .chat-msg.user .msg-bubble {
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            border-bottom-right-radius: 4px;
+        }
+
+        .chat-msg.assistant .msg-bubble {
+            background: rgba(51, 65, 85, 0.8);
+            border: 1px solid rgba(99, 179, 237, 0.15);
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-label {
+            font-size: 10px;
+            color: #64748b;
+            margin-bottom: 4px;
+            padding: 0 4px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .chat-msg.user .msg-label {
+            text-align: right;
+        }
+
+        #chat-thinking {
+            display: none;
+            align-self: flex-start;
+            padding: 10px 14px;
+            background: rgba(51, 65, 85, 0.8);
+            border: 1px solid rgba(99, 179, 237, 0.15);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            font-size: 13px;
+            color: #94a3b8;
+            gap: 6px;
+            align-items: center;
+        }
+
+        #chat-thinking.visible {
+            display: flex;
+        }
+
+        .thinking-dots span {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            background: #64b5f6;
+            border-radius: 50%;
+            animation: dot-bounce 1.2s infinite;
+            margin: 0 1px;
+        }
+
+        .thinking-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .thinking-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes dot-bounce {
+            0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+            40% { transform: translateY(-5px); opacity: 1; }
+        }
+
+        #chat-plan-reload {
+            display: none;
+            margin: 8px 14px;
+            padding: 9px 14px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2));
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            border-radius: 10px;
+            color: #34d399;
+            font-size: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+
+        #chat-plan-reload.visible {
+            display: block;
+        }
+
+        #chat-plan-reload:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(6, 182, 212, 0.35));
+        }
+
+        #chat-input-area {
+            display: flex;
+            gap: 8px;
+            padding: 12px 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(15, 23, 42, 0.6);
+            flex-shrink: 0;
+        }
+
+        #chat-input {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.9);
+            border: 1px solid rgba(99, 179, 237, 0.2);
+            border-radius: 12px;
+            padding: 9px 13px;
+            color: #e2e8f0;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            resize: none;
+            min-height: 38px;
+            max-height: 120px;
+            overflow-y: auto;
+            line-height: 1.4;
+            transition: border-color 0.2s;
+        }
+
+        #chat-input:focus {
+            border-color: rgba(99, 179, 237, 0.5);
+        }
+
+        #chat-input::placeholder {
+            color: #475569;
+        }
+
+        #chat-send-btn {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #3b82f6, #6366f1);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: opacity 0.2s, transform 0.1s;
+            align-self: flex-end;
+        }
+
+        #chat-send-btn:hover {
+            opacity: 0.85;
+        }
+
+        #chat-send-btn:active {
+            transform: scale(0.95);
+        }
+
+        #chat-send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        #chat-clear-btn {
+            font-size: 10px;
+            color: #475569;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 6px;
+            transition: color 0.2s;
+        }
+
+        #chat-clear-btn:hover {
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">▲</div>
+            <h1>Garmin AI Coach</h1>
+        </div>
+        <div class="subtitle">Adaptive training plans powered by your physiological Garmin metrics</div>
+    </header>
+
+    <main>
+        <!-- Tab Navigation Bar -->
+        <div class="tabs-nav-container">
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="schedule" onclick="switchTab('schedule')">
+                    <span>📅</span> Training Schedule
+                </button>
+                <button class="tab-btn" data-tab="metrics" onclick="switchTab('metrics')">
+                    <span>⚡</span> Physiology & Metrics
+                </button>
+                <button class="tab-btn" data-tab="retro" onclick="switchTab('retro')">
+                    <span>📈</span> Run Retro & Analysis
+                </button>
+            </div>
+        </div>
+
+        <!-- Tab Content Containers -->
+        <div class="tab-content active" id="tab-schedule">
+            <iframe id="iframe-schedule" src="planning.html" class="tab-iframe" onload="styleIframe(this, 'schedule')"></iframe>
+        </div>
+        <div class="tab-content" id="tab-metrics">
+            <iframe id="iframe-metrics" src="analysis.html" class="tab-iframe" onload="styleIframe(this, 'metrics')"></iframe>
+        </div>
+        <div class="tab-content" id="tab-retro">
+            <iframe id="iframe-retro" src="planning.html" class="tab-iframe" onload="styleIframe(this, 'retro')"></iframe>
+        </div>
+
+        <!-- Quick Links for raw files -->
+        <div class="quick-links">
+            <h3 class="quick-links-title">📄 Raw Reports & Data</h3>
+            <ul class="links-list">
+                <li class="link-item">
+                    <a href="suggested_run.md" target="_blank">
+                        <span class="file-icon">🏃</span>
+                        <span>Suggested Run (MD)</span>
+                    </a>
+                </li>
+                <li class="link-item">
+                    <a href="suggested_run.json" target="_blank">
+                        <span class="file-icon">⚙️</span>
+                        <span>Suggested Run (JSON)</span>
+                    </a>
+                </li>
+                <li class="link-item">
+                    <a href="weekly_plan.md" target="_blank">
+                        <span class="file-icon">🗓️</span>
+                        <span>Weekly Plan (MD)</span>
+                    </a>
+                </li>
+                <li class="link-item">
+                    <a href="season_plan.md" target="_blank">
+                        <span class="file-icon">🗺️</span>
+                        <span>Season Plan (MD)</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Global Floating AI Chat Panel -->
+    <div id="garmin-chat-panel" class="collapsed">
+        <div id="chat-header" onclick="toggleChatPanel()">
+            <div class="chat-icon">🤖</div>
+            <h3>AI Coach Chat</h3>
+            <button id="chat-toggle-btn" title="Expand">+</button>
+        </div>
+        <div id="chat-body">
+            <div id="chat-messages">
+                <div class="chat-msg assistant">
+                    <div class="msg-label">Coach</div>
+                    <div class="msg-bubble">
+                        👋 Hi! I'm your AI coach. Tell me how you'd like to adjust your training plan — e.g. <em>"I can't train on Wednesdays"</em> or <em>"Make week 3 a recovery week"</em>.
+                    </div>
+                </div>
+            </div>
+            <div id="chat-thinking">
+                <span>🧠 Re-planning</span>
+                <div class="thinking-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div id="chat-plan-reload" onclick="location.reload()">
+                🔄 Plan updated! Click to refresh the page
+            </div>
+            <div id="chat-input-area">
+                <textarea id="chat-input" placeholder="Ask your coach anything…" rows="1"
+                    onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
+                <button id="chat-send-btn" onclick="sendChatMessage()" title="Send">➤</button>
+            </div>
+            <div style="display:flex;justify-content:flex-end;padding:0 14px 10px;">
+                <button id="chat-clear-btn" onclick="clearChatHistory()">Clear history</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Garmin AI Coach Dashboard © 2026. Made with ❤️ for your running adaptation.</p>
+    </footer>
+
+    <!-- Scripts for Tab Management and Seamless Iframe Display -->
+    <script>
+        function switchTab(tabId) {
+            // Update active tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-tab') === tabId);
+            });
+
+            // Update active tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === `tab-${tabId}`);
+            });
+
+            // Resize the active tab's iframe
+            const activeIframe = document.querySelector(`#tab-${tabId} iframe`);
+            if (activeIframe) {
+                resizeIframe(activeIframe);
+                // Also trigger style override again to ensure elements render correctly
+                styleIframe(activeIframe, tabId);
+            }
+        }
+
+        function styleIframe(iframe, type) {
+            try {
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                if (!doc || !doc.head || !doc.body) return;
+
+                // Check if our custom style is already injected
+                if (doc.getElementById('dashboard-style-overrides')) return;
+
+                const style = doc.createElement('style');
+                style.id = 'dashboard-style-overrides';
+                style.textContent = `
+                    /* General reset inside iframe for clean merge */
+                    header, footer, #garmin-chat-panel { display: none !important; }
+                    
+                    body {
+                        background: transparent !important;
+                        background-color: transparent !important;
+                        color: #c9d1d9 !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        font-family: 'Outfit', sans-serif !important;
+                    }
+
+                    .container {
+                        max-width: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+
+                    /* 1. Schedule Tab Styling */
+                    ${type === 'schedule' ? `
+                        .container { gap: 20px !important; }
+                        .card-section {
+                            background-color: rgba(22, 27, 34, 0.6) !important;
+                            border: 1px solid rgba(240, 246, 252, 0.1) !important;
+                            box-shadow: none !important;
+                            border-radius: 20px !important;
+                            padding: 25px !important;
+                            margin-bottom: 20px !important;
+                        }
+                        #retro-analysis { display: none !important; }
+                        h2 { border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; color: #f0f6fc !important; font-size: 1.6em !important; font-weight: 700 !important; }
+                        h3 { color: #58a6ff !important; font-size: 1.3em !important; font-weight: 600 !important; }
+                        .day-card {
+                            background-color: rgba(255, 255, 255, 0.02) !important;
+                            border: 1px solid rgba(240, 246, 252, 0.05) !important;
+                            border-top: 5px solid #58a6ff !important;
+                            color: #c9d1d9 !important;
+                            border-radius: 12px !important;
+                            padding: 15px !important;
+                        }
+                        .day-card h4 { color: #f0f6fc !important; font-size: 1.1em !important; font-weight: 600 !important; }
+                        .day-card .focus { color: #bc8cff !important; }
+                        .day-card .purpose, .day-card .adaptation { color: #8b949e !important; border-left: 2px solid rgba(240, 246, 252, 0.1) !important; }
+                        .zone-definitions { background-color: rgba(255, 255, 255, 0.01) !important; box-shadow: none !important; border: 1px solid rgba(240, 246, 252, 0.08) !important; }
+                        .zone-definitions th { background-color: rgba(88, 166, 255, 0.08) !important; color: #f0f6fc !important; border-bottom: 1px solid rgba(240, 246, 252, 0.1) !important; }
+                        .zone-definitions td { border-bottom: 1px solid rgba(240, 246, 252, 0.05) !important; }
+                        .zone-definitions tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.02) !important; }
+                        .week-plan { background-color: rgba(255, 255, 255, 0.01) !important; box-shadow: none !important; border: 1px solid rgba(240, 246, 252, 0.05) !important; border-radius: 16px !important; padding: 20px !important; }
+                        .week-plan > h3 { color: #f0f6fc !important; border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; font-size: 1.4em !important; }
+                        .week-plan .week-notes { background-color: rgba(188, 140, 255, 0.04) !important; border-left: 5px solid #bc8cff !important; color: #c9d1d9 !important; border-radius: 8px !important; padding: 12px !important; }
+                        .expert-rationale div, .qualitative-constraints ul { background-color: rgba(255, 255, 255, 0.02) !important; border: 1px solid rgba(240, 246, 252, 0.05) !important; border-left: 4px solid #e67e22 !important; border-radius: 8px !important; padding: 15px !important; }
+                        .expert-rationale div p, .qualitative-constraints ul li { color: #c9d1d9 !important; }
+                        #season-plan li { background-color: rgba(255, 255, 255, 0.01) !important; border-left: 5px solid #3498db !important; border-radius: 8px !important; color: #c9d1d9 !important; }
+                        #season-plan li strong { color: #f0f6fc !important; }
+                    ` : ''}
+
+                    /* 2. Metrics Tab Styling */
+                    ${type === 'metrics' ? `
+                        .container {
+                            background-color: transparent !important;
+                            box-shadow: none !important;
+                        }
+                        h1 { display: none !important; }
+                        h2 { border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; color: #f0f6fc !important; font-size: 1.6em !important; font-weight: 700 !important; margin-top: 1.5em !important; }
+                        h3 { color: #bc8cff !important; font-size: 1.3em !important; font-weight: 600 !important; }
+                        .expert-opinion {
+                            background-color: rgba(22, 27, 34, 0.6) !important;
+                            border: 1px solid rgba(240, 246, 252, 0.1) !important;
+                            box-shadow: none !important;
+                            border-radius: 20px !important;
+                            padding: 25px !important;
+                            margin-bottom: 20px !important;
+                        }
+                        .expert-opinion h4 { color: #f0f6fc !important; font-size: 1.1em !important; font-weight: 600 !important; margin-bottom: 15px !important; }
+                        .executive-summary {
+                            background-color: rgba(188, 140, 255, 0.04) !important;
+                            border-left: 5px solid #bc8cff !important;
+                            border-radius: 12px !important;
+                            padding: 20px !important;
+                            margin-bottom: 25px !important;
+                            color: #c9d1d9 !important;
+                        }
+                        table { border-collapse: collapse !important; width: 100% !important; margin-bottom: 20px !important; }
+                        th, td { border: 1px solid rgba(240, 246, 252, 0.1) !important; padding: 12px 15px !important; text-align: left !important; color: #c9d1d9 !important; }
+                        th { background-color: rgba(188, 140, 255, 0.08) !important; color: #f0f6fc !important; font-weight: 600 !important; }
+                        tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.02) !important; }
+                    ` : ''}
+
+                    /* 3. Retro Tab Styling */
+                    ${type === 'retro' ? `
+                        .container > *:not(#retro-analysis) { display: none !important; }
+                        .container { gap: 0 !important; }
+                        #retro-analysis {
+                            margin: 0 !important;
+                            box-shadow: none !important;
+                            border: 1px solid rgba(240, 246, 252, 0.1) !important;
+                            background-color: rgba(22, 27, 34, 0.6) !important;
+                            border-radius: 20px !important;
+                            padding: 25px !important;
+                            color: #c9d1d9 !important;
+                        }
+                        .retro-analysis-grid {
+                            display: grid !important;
+                            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+                            gap: 20px !important;
+                            margin-top: 20px !important;
+                        }
+                        .retro-card {
+                            background-color: rgba(255, 255, 255, 0.02) !important;
+                            border: 1px solid rgba(240, 246, 252, 0.05) !important;
+                            border-radius: 12px !important;
+                            padding: 20px !important;
+                            color: #c9d1d9 !important;
+                        }
+                        .retro-card h3 { color: #f0f6fc !important; font-size: 1.25em !important; font-weight: 600 !important; border-bottom: 1px solid rgba(240, 246, 252, 0.08) !important; padding-bottom: 8px !important; margin-bottom: 12px !important; }
+                        .retro-card li { border-bottom: 1px dotted rgba(240, 246, 252, 0.1) !important; padding: 10px 0 !important; color: #8b949e !important; }
+                        .retro-card li strong { color: #f0f6fc !important; }
+                        h2 { border-bottom: 2px solid #d35400 !important; color: #f0f6fc !important; font-size: 1.6em !important; font-weight: 700 !important; }
+                    ` : ''}
+                `;
+                doc.head.appendChild(style);
+
+                // Setup dynamic resizing and mutations inside iframe
+                resizeIframe(iframe);
+
+                const observer = new MutationObserver(() => resizeIframe(iframe));
+                observer.observe(doc.body, { attributes: true, childList: true, subtree: true });
+
+                // Also attach click listeners to all labels and checkboxes to force recalculation on interaction
+                doc.body.addEventListener('click', () => {
+                    setTimeout(() => resizeIframe(iframe), 50);
+                });
+
+            } catch (e) {
+                console.warn("Failed to inject styles into iframe:", e);
+            }
+        }
+
+        function resizeIframe(iframe) {
+            try {
+                const doc = iframe.contentDocument || iframe.contentWindow.document;
+                if (doc && doc.documentElement) {
+                    // Set iframe height to content height + small buffer to prevent nested scrolling
+                    const height = doc.documentElement.scrollHeight;
+                    iframe.style.height = (height + 20) + 'px';
+                }
+            } catch (e) {
+                // Ignore same-origin policy errors during local development if any
+            }
+        }
+
+        // Periodically verify iframe heights to adapt to slow-loading images/charts
+        setInterval(() => {
+            document.querySelectorAll('.tab-content.active iframe').forEach(iframe => {
+                resizeIframe(iframe);
+            });
+        }, 1500);
+    </script>
+
+    <!-- Scripts for Global Floating Chat Panel -->
+    <script>
+        (function() {
+            const CHAT_API = '/api/chat';
+            const USER_ID = 'Arnabbiswas';
+            let isThinking = false;
+
+            function toggleChatPanel() {
+                const panel = document.getElementById('garmin-chat-panel');
+                const btn = document.getElementById('chat-toggle-btn');
+                panel.classList.toggle('collapsed');
+                btn.textContent = panel.classList.contains('collapsed') ? '+' : '−';
+                btn.title = panel.classList.contains('collapsed') ? 'Expand' : 'Minimize';
+            }
+
+            function autoResize(el) {
+                el.style.height = 'auto';
+                el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+            }
+
+            function handleChatKey(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendChatMessage();
+                }
+            }
+
+            function appendMessage(role, content) {
+                const container = document.getElementById('chat-messages');
+                const div = document.createElement('div');
+                div.className = 'chat-msg ' + role;
+                div.innerHTML = '<div class="msg-label">' + (role === 'user' ? 'You' : 'Coach') + '</div>'
+                    + '<div class="msg-bubble">' + escapeHtml(content) + '</div>';
+                container.appendChild(div);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            function escapeHtml(s) {
+                return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                        .replace(/"/g,'&quot;').replace(/\n/g,'<br>').replace(/\*(.*?)\*/g,'<em>$1</em>');
+            }
+
+            function setThinking(on) {
+                isThinking = on;
+                const el = document.getElementById('chat-thinking');
+                el.classList.toggle('visible', on);
+                document.getElementById('chat-send-btn').disabled = on;
+                document.getElementById('chat-input').disabled = on;
+                if (on) el.scrollIntoView({behavior:'smooth'});
+            }
+
+            function showReloadBanner() {
+                document.getElementById('chat-plan-reload').classList.add('visible');
+            }
+
+            async function sendChatMessage() {
+                if (isThinking) return;
+                const input = document.getElementById('chat-input');
+                const message = input.value.trim();
+                if (!message) return;
+
+                input.value = '';
+                input.style.height = 'auto';
+                appendMessage('user', message);
+                setThinking(true);
+                document.getElementById('chat-plan-reload').classList.remove('visible');
+
+                try {
+                    const resp = await fetch(CHAT_API, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({user_id: USER_ID, message: message}),
+                    });
+
+                    if (!resp.ok) {
+                        const err = await resp.text();
+                        throw new Error('Server error ' + resp.status + ': ' + err);
+                    }
+
+                    const data = await resp.json();
+                    appendMessage('assistant', data.reply || 'Plan updated.');
+                    if (data.plan_updated) showReloadBanner();
+
+                } catch(e) {
+                    appendMessage('assistant', '❌ Error: ' + e.message);
+                } finally {
+                    setThinking(false);
+                }
+            }
+
+            async function clearChatHistory() {
+                try {
+                    await fetch(CHAT_API.replace('/chat', '/chat/' + USER_ID + '/history'), {method: 'DELETE'});
+                } catch(e) { /* ignore */ }
+                const container = document.getElementById('chat-messages');
+                container.innerHTML = '<div class="chat-msg assistant"><div class="msg-label">Coach</div>'
+                    + '<div class="msg-bubble">Chat history cleared. How can I help with your training plan?</div></div>';
+                document.getElementById('chat-plan-reload').classList.remove('visible');
+            }
+
+            // Expose chat functions to window
+            window.toggleChatPanel = toggleChatPanel;
+            window.sendChatMessage = sendChatMessage;
+            window.handleChatKey = handleChatKey;
+            window.autoResize = autoResize;
+            window.clearChatHistory = clearChatHistory;
+        })();
+    </script>
+</body>
+</html>
