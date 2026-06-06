@@ -87,7 +87,7 @@ class AdaptiveRunningCoach:
         last_7_days = datetime.now() - timedelta(days=7)
         weekly_dist_m = 0.0
         for run in runs:
-            if not run.start_time:
+            if not run.start_time or not run.summary:
                 continue
             try:
                 run_date = datetime.fromisoformat(run.start_time.replace("Z", "+00:00"))

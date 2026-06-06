@@ -180,7 +180,7 @@ explicit_package_bases = true
 exclude = "^(\\.pixi|\\.venv|venv|build|dist|data|logs)/"
 
 [[tool.mypy.overrides]]
-module = ["garminconnect", "garth"]
+module = ["garminconnect", "garminconnect.*", "garth"]
 ignore_missing_imports = true
 
 [tool.ruff.format]

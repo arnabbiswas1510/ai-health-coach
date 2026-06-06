@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
@@ -22,6 +22,9 @@ from services.ai.langgraph.nodes.synthesis_node import synthesis_node
 from services.ai.langgraph.nodes.weekly_planner_node import weekly_planner_node
 from services.ai.langgraph.state.training_analysis_state import TrainingAnalysisState, create_initial_state
 from services.ai.langgraph.utils.workflow_cost_tracker import ProgressIntegratedCostTracker
+
+if TYPE_CHECKING:
+    from langchain_core.runnables import RunnableConfig
 
 logger = logging.getLogger(__name__)
 
@@ -252,7 +255,7 @@ async def run_weekly_planning_with_context(
       - ``planning_html``: the rendered HTML plan page
     """
     execution_id = f"{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}_chat"
-    config = {"configurable": {"thread_id": execution_id}}
+    config: RunnableConfig = {"configurable": {"thread_id": execution_id}}
 
     # Build minimal workflow: data_integration → weekly_planner → plan_formatter
     LangSmithConfig.setup_langsmith()
