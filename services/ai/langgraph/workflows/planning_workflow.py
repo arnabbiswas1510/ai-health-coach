@@ -340,22 +340,22 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     --color-bg-light: rgba(22, 27, 34, 0.6) !important;
     --color-bg-dark: transparent !important;
     --color-border: rgba(240, 246, 252, 0.1) !important;
-    
+
     --color-primary-text: #c9d1d9 !important;
     --color-secondary-text: #8b949e !important;
     --color-background-light: rgba(22, 27, 34, 0.4) !important;
     --color-background-white: rgba(22, 27, 34, 0.6) !important;
-    
+
     --retro-bg-card: rgba(255, 255, 255, 0.02) !important;
     --retro-border-card: rgba(240, 246, 252, 0.05) !important;
   }
-  
-  body.in-iframe header, 
-  body.in-iframe footer, 
-  body.in-iframe #garmin-chat-panel { 
-    display: none !important; 
+
+  body.in-iframe header,
+  body.in-iframe footer,
+  body.in-iframe #garmin-chat-panel {
+    display: none !important;
   }
-  
+
   body.in-iframe .container {
     max-width: 100% !important;
     margin: 0 !important;
@@ -364,7 +364,7 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     background-color: transparent !important;
     box-shadow: none !important;
   }
-  
+
   /* Unified Card Sections */
   body.in-iframe section,
   body.in-iframe .card-section {
@@ -375,28 +375,28 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     padding: 25px !important;
     margin-bottom: 20px !important;
   }
-  
+
   body.in-iframe h1 { display: none !important; }
-  
-  body.in-iframe h2 { 
-    border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; 
-    color: #f0f6fc !important; 
-    font-size: 1.6em !important; 
-    font-weight: 700 !important; 
+
+  body.in-iframe h2 {
+    border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important;
+    color: #f0f6fc !important;
+    font-size: 1.6em !important;
+    font-weight: 700 !important;
     padding-left: 0 !important;
     border-left: none !important;
   }
-  
-  body.in-iframe h3 { 
-    color: #58a6ff !important; 
-    font-size: 1.3em !important; 
-    font-weight: 600 !important; 
+
+  body.in-iframe h3 {
+    color: #58a6ff !important;
+    font-size: 1.3em !important;
+    font-weight: 600 !important;
   }
-  
-  body.in-iframe h4 { 
-    color: #f0f6fc !important; 
-    font-size: 1.1em !important; 
-    font-weight: 600 !important; 
+
+  body.in-iframe h4 {
+    color: #f0f6fc !important;
+    font-size: 1.1em !important;
+    font-weight: 600 !important;
   }
 
   /* Target schedule-specific styles */
@@ -414,25 +414,25 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     color: #58a6ff !important;
   }
   body.in-iframe .day-card .focus { color: #bc8cff !important; }
-  body.in-iframe .day-card .purpose, 
-  body.in-iframe .day-card .adaptation { 
-    color: #8b949e !important; 
-    border-left: 2px solid rgba(240, 246, 252, 0.1) !important; 
+  body.in-iframe .day-card .purpose,
+  body.in-iframe .day-card .adaptation {
+    color: #8b949e !important;
+    border-left: 2px solid rgba(240, 246, 252, 0.1) !important;
   }
   body.in-iframe .zone-definitions,
-  body.in-iframe .zone-table { 
-    background-color: rgba(255, 255, 255, 0.01) !important; 
-    border: 1px solid rgba(240, 246, 252, 0.08) !important; 
+  body.in-iframe .zone-table {
+    background-color: rgba(255, 255, 255, 0.01) !important;
+    border: 1px solid rgba(240, 246, 252, 0.08) !important;
   }
   body.in-iframe .zone-definitions th,
-  body.in-iframe .zone-table th { 
-    background-color: rgba(88, 166, 255, 0.08) !important; 
-    color: #f0f6fc !important; 
-    border-bottom: 1px solid rgba(240, 246, 252, 0.1) !important; 
+  body.in-iframe .zone-table th {
+    background-color: rgba(88, 166, 255, 0.08) !important;
+    color: #f0f6fc !important;
+    border-bottom: 1px solid rgba(240, 246, 252, 0.1) !important;
   }
   body.in-iframe .zone-definitions td,
-  body.in-iframe .zone-table td { 
-    border-bottom: 1px solid rgba(240, 246, 252, 0.05) !important; 
+  body.in-iframe .zone-table td {
+    border-bottom: 1px solid rgba(240, 246, 252, 0.05) !important;
   }
   body.in-iframe .zone-table .zone-1,
   body.in-iframe .zone-table .zone-2,
@@ -443,25 +443,25 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     color: #c9d1d9 !important;
   }
   body.in-iframe .zone-definitions tr:nth-child(even),
-  body.in-iframe .zone-table tr:nth-child(even) { 
-    background-color: rgba(255, 255, 255, 0.02) !important; 
+  body.in-iframe .zone-table tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02) !important;
   }
-  body.in-iframe .week-plan { 
-    background-color: rgba(255, 255, 255, 0.01) !important; 
-    border: 1px solid rgba(240, 246, 252, 0.05) !important; 
-    border-radius: 16px !important; 
-    padding: 20px !important; 
+  body.in-iframe .week-plan {
+    background-color: rgba(255, 255, 255, 0.01) !important;
+    border: 1px solid rgba(240, 246, 252, 0.05) !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
   }
-  body.in-iframe .week-plan > h3 { 
-    color: #f0f6fc !important; 
-    border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important; 
+  body.in-iframe .week-plan > h3 {
+    color: #f0f6fc !important;
+    border-bottom: 2px solid rgba(240, 246, 252, 0.1) !important;
   }
-  body.in-iframe .week-plan .week-notes { 
-    background-color: rgba(188, 140, 255, 0.04) !important; 
-    border-left: 5px solid #bc8cff !important; 
-    color: #c9d1d9 !important; 
-    border-radius: 8px !important; 
-    padding: 12px !important; 
+  body.in-iframe .week-plan .week-notes {
+    background-color: rgba(188, 140, 255, 0.04) !important;
+    border-left: 5px solid #bc8cff !important;
+    color: #c9d1d9 !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
   }
   body.in-iframe [style*="background-color: white"],
   body.in-iframe [style*="background-color: #fff"],
@@ -473,17 +473,17 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   body.in-iframe [style*="background: #ffffff"],
   body.in-iframe [style*="background: rgb(255, 255, 255)"],
   body.in-iframe .expert-card,
-  body.in-iframe .expert-rationale div, 
+  body.in-iframe .expert-rationale div,
   body.in-iframe .qualitative-constraints div,
   body.in-iframe .qualitative-constraints ul,
-  body.in-iframe .card { 
-    background-color: rgba(22, 27, 34, 0.6) !important; 
-    background: rgba(22, 27, 34, 0.6) !important; 
-    border: 1px solid rgba(240, 246, 252, 0.1) !important; 
-    border-radius: 8px !important; 
-    padding: 15px !important; 
+  body.in-iframe .card {
+    background-color: rgba(22, 27, 34, 0.6) !important;
+    background: rgba(22, 27, 34, 0.6) !important;
+    border: 1px solid rgba(240, 246, 252, 0.1) !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
   }
-  
+
   body.in-iframe [style*="background-color: white"] p,
   body.in-iframe [style*="background-color: white"] li,
   body.in-iframe [style*="background-color: white"] span,
@@ -509,12 +509,12 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   body.in-iframe [style*="background: #ffffff"] span,
   body.in-iframe [style*="background: #ffffff"] div,
   body.in-iframe .expert-card *,
-  body.in-iframe .expert-rationale div *, 
+  body.in-iframe .expert-rationale div *,
   body.in-iframe .qualitative-constraints div *,
-  body.in-iframe .qualitative-constraints ul li { 
-    color: #c9d1d9 !important; 
+  body.in-iframe .qualitative-constraints ul li {
+    color: #c9d1d9 !important;
   }
-  
+
   body.in-iframe [style*="background-color: white"] strong,
   body.in-iframe [style*="background-color: #fff"] strong,
   body.in-iframe [style*="background-color: #ffffff"] strong,
@@ -523,11 +523,11 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   body.in-iframe [style*="background: #ffffff"] strong {
     color: #f0f6fc !important;
   }
-  body.in-iframe #season-plan li { 
-    background-color: rgba(255, 255, 255, 0.01) !important; 
-    border-left: 5px solid #3498db !important; 
-    border-radius: 8px !important; 
-    color: #c9d1d9 !important; 
+  body.in-iframe #season-plan li {
+    background-color: rgba(255, 255, 255, 0.01) !important;
+    border-left: 5px solid #3498db !important;
+    border-radius: 8px !important;
+    color: #c9d1d9 !important;
   }
   body.in-iframe #season-plan li strong { color: #f0f6fc !important; }
   body.in-iframe ul li { color: #c9d1d9 !important; }
@@ -542,29 +542,29 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   }
 
   /* Hide retro section inside standard schedule iframe */
-  body.in-iframe:not(.retro-only) #retro-analysis { 
-    display: none !important; 
+  body.in-iframe:not(.retro-only) #retro-analysis {
+    display: none !important;
   }
 
   /* 2. Metrics Tab Styling (analysis.html) */
-  body.in-iframe table { 
-    border-collapse: collapse !important; 
-    width: 100% !important; 
-    margin-bottom: 20px !important; 
+  body.in-iframe table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin-bottom: 20px !important;
   }
-  body.in-iframe th, 
-  body.in-iframe td { 
-    border: 1px solid rgba(240, 246, 252, 0.1) !important; 
-    padding: 12px 15px !important; 
-    color: #c9d1d9 !important; 
+  body.in-iframe th,
+  body.in-iframe td {
+    border: 1px solid rgba(240, 246, 252, 0.1) !important;
+    padding: 12px 15px !important;
+    color: #c9d1d9 !important;
   }
-  body.in-iframe th { 
-    background-color: rgba(188, 140, 255, 0.08) !important; 
-    color: #f0f6fc !important; 
-    font-weight: 600 !important; 
+  body.in-iframe th {
+    background-color: rgba(188, 140, 255, 0.08) !important;
+    color: #f0f6fc !important;
+    font-weight: 600 !important;
   }
-  body.in-iframe tr:nth-child(even) { 
-    background-color: rgba(255, 255, 255, 0.02) !important; 
+  body.in-iframe tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02) !important;
   }
   body.in-iframe .category-header {
     background-color: rgba(255, 255, 255, 0.05) !important;
@@ -589,11 +589,11 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
   body.in-iframe .status-info { color: #8b949e !important; }
 
   /* 3. Retro Tab Styling (planning.html?tab=retro) */
-  body.retro-only .container > *:not(#retro-analysis) { 
-    display: none !important; 
+  body.retro-only .container > *:not(#retro-analysis) {
+    display: none !important;
   }
-  body.retro-only .container { 
-    gap: 0 !important; 
+  body.retro-only .container {
+    gap: 0 !important;
   }
   body.retro-only #retro-analysis {
     display: block !important;
@@ -634,30 +634,30 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     background-color: rgba(210, 153, 34, 0.08) !important;
     border: 1px solid rgba(210, 153, 34, 0.3) !important;
   }
-  body.retro-only .retro-card h3 { 
-    color: #f0f6fc !important; 
-    font-size: 1.25em !important; 
-    font-weight: 600 !important; 
-    border-bottom: 1px solid rgba(240, 246, 252, 0.08) !important; 
-    padding-bottom: 8px !important; 
-    margin-bottom: 12px !important; 
+  body.retro-only .retro-card h3 {
+    color: #f0f6fc !important;
+    font-size: 1.25em !important;
+    font-weight: 600 !important;
+    border-bottom: 1px solid rgba(240, 246, 252, 0.08) !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 12px !important;
   }
   body.retro-only .retro-card.info h3 { color: #58a6ff !important; }
   body.retro-only .retro-card.positive h3 { color: #3fb950 !important; }
   body.retro-only .retro-card.negative h3 { color: #f85149 !important; }
   body.retro-only .retro-card.warning h3 { color: #d29922 !important; }
-  
-  body.retro-only .retro-card li { 
-    border-bottom: 1px dotted rgba(240, 246, 252, 0.1) !important; 
-    padding: 10px 0 !important; 
-    color: #c9d1d9 !important; 
+
+  body.retro-only .retro-card li {
+    border-bottom: 1px dotted rgba(240, 246, 252, 0.1) !important;
+    padding: 10px 0 !important;
+    color: #c9d1d9 !important;
   }
   body.retro-only .retro-card li strong { color: #f0f6fc !important; }
-  body.retro-only h2 { 
-    border-bottom: 2px solid #d35400 !important; 
-    color: #f0f6fc !important; 
-    font-size: 1.6em !important; 
-    font-weight: 700 !important; 
+  body.retro-only h2 {
+    border-bottom: 2px solid #d35400 !important;
+    color: #f0f6fc !important;
+    font-size: 1.6em !important;
+    font-weight: 700 !important;
   }
 </style>
 
@@ -668,7 +668,7 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
       if (window.location.hash === '#retro-analysis' || window.location.search.includes('tab=retro')) {
         document.body.classList.add('retro-only');
       }
-      
+
       // Auto height communication via postMessage
       function sendHeight() {
         if (document.documentElement) {
@@ -678,9 +678,9 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
           }, '*');
         }
       }
-      
+
       window.addEventListener('load', sendHeight);
-      
+
       // Only send height on horizontal resize to avoid feedback loops
       let lastWidth = window.innerWidth;
       window.addEventListener('resize', function() {
@@ -689,12 +689,12 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
           sendHeight();
         }
       });
-      
+
       // Monitor DOM updates and clicks to resize instantly
       document.body.addEventListener('click', function() {
         setTimeout(sendHeight, 50);
       });
-      
+
       const observer = new MutationObserver(sendHeight);
       observer.observe(document.body, { attributes: true, childList: true, subtree: true });
     }
@@ -950,7 +950,7 @@ def _get_chat_panel_html() -> str:
   <div id="chat-header" onclick="toggleChatPanel()">
     <div class="chat-icon">🤖</div>
     <h3>AI Coach Chat</h3>
-    <button id="chat-toggle-btn" title="Minimize">−</button>
+    <button id="chat-toggle-btn" title="Minimize">-</button>
   </div>
   <div id="chat-body">
     <div id="chat-messages">
@@ -989,7 +989,7 @@ def _get_chat_panel_html() -> str:
     const panel = document.getElementById('garmin-chat-panel');
     const btn = document.getElementById('chat-toggle-btn');
     panel.classList.toggle('collapsed');
-    btn.textContent = panel.classList.contains('collapsed') ? '+' : '−';
+    btn.textContent = panel.classList.contains('collapsed') ? '+' : '-';
   }
 
   function autoResize(el) {

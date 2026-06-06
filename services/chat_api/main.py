@@ -16,7 +16,6 @@ from typing import Any
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
@@ -170,7 +169,7 @@ def _summarise_change(old_plan: str, new_plan: str, user_message: str) -> str:
     return (
         "✅ I've updated your 4-week training plan based on your request. "
         "The plan has been refreshed on this page — scroll down to see the changes. "
-        f"(Your request: *\"{user_message}\"*)"
+        f'(Your request: *"{user_message}"*)'
     )
 
 
@@ -184,7 +183,7 @@ async def health() -> dict[str, str]:
 
 
 @app.post("/chat", response_model=ChatResponse)
-async def chat(req: ChatRequest) -> ChatResponse:  # noqa: C901
+async def chat(req: ChatRequest) -> ChatResponse:
     user_id = req.user_id.strip() or "Arnabbiswas"
     message = req.message.strip()
 

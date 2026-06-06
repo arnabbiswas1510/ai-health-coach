@@ -77,7 +77,7 @@ Convert the markdown and analysis content into a single, self-contained HTML doc
 """
 
 
-async def plan_formatter_node(state: TrainingAnalysisState) -> dict[str, list | str]:
+async def plan_formatter_node(state: TrainingAnalysisState) -> dict[str, list | str]:  # noqa: C901
     logger.info("Starting plan formatter node")
 
     try:
