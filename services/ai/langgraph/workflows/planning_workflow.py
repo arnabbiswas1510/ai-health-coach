@@ -463,17 +463,65 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
     border-radius: 8px !important; 
     padding: 12px !important; 
   }
+  body.in-iframe [style*="background-color: white"],
+  body.in-iframe [style*="background-color: #fff"],
+  body.in-iframe [style*="background-color: #ffffff"],
+  body.in-iframe [style*="background-color: #f8f9fa"],
+  body.in-iframe [style*="background-color: rgb(255, 255, 255)"],
+  body.in-iframe [style*="background: white"],
+  body.in-iframe [style*="background: #fff"],
+  body.in-iframe [style*="background: #ffffff"],
+  body.in-iframe [style*="background: rgb(255, 255, 255)"],
+  body.in-iframe .expert-card,
   body.in-iframe .expert-rationale div, 
-  body.in-iframe .qualitative-constraints ul { 
-    background-color: rgba(255, 255, 255, 0.02) !important; 
-    border: 1px solid rgba(240, 246, 252, 0.05) !important; 
-    border-left: 4px solid #e67e22 !important; 
+  body.in-iframe .qualitative-constraints div,
+  body.in-iframe .qualitative-constraints ul,
+  body.in-iframe .card { 
+    background-color: rgba(22, 27, 34, 0.6) !important; 
+    background: rgba(22, 27, 34, 0.6) !important; 
+    border: 1px solid rgba(240, 246, 252, 0.1) !important; 
     border-radius: 8px !important; 
     padding: 15px !important; 
   }
-  body.in-iframe .expert-rationale div p, 
+  
+  body.in-iframe [style*="background-color: white"] p,
+  body.in-iframe [style*="background-color: white"] li,
+  body.in-iframe [style*="background-color: white"] span,
+  body.in-iframe [style*="background-color: white"] div,
+  body.in-iframe [style*="background-color: #fff"] p,
+  body.in-iframe [style*="background-color: #fff"] li,
+  body.in-iframe [style*="background-color: #fff"] span,
+  body.in-iframe [style*="background-color: #fff"] div,
+  body.in-iframe [style*="background-color: #ffffff"] p,
+  body.in-iframe [style*="background-color: #ffffff"] li,
+  body.in-iframe [style*="background-color: #ffffff"] span,
+  body.in-iframe [style*="background-color: #ffffff"] div,
+  body.in-iframe [style*="background: white"] p,
+  body.in-iframe [style*="background: white"] li,
+  body.in-iframe [style*="background: white"] span,
+  body.in-iframe [style*="background: white"] div,
+  body.in-iframe [style*="background: #fff"] p,
+  body.in-iframe [style*="background: #fff"] li,
+  body.in-iframe [style*="background: #fff"] span,
+  body.in-iframe [style*="background: #fff"] div,
+  body.in-iframe [style*="background: #ffffff"] p,
+  body.in-iframe [style*="background: #ffffff"] li,
+  body.in-iframe [style*="background: #ffffff"] span,
+  body.in-iframe [style*="background: #ffffff"] div,
+  body.in-iframe .expert-card *,
+  body.in-iframe .expert-rationale div *, 
+  body.in-iframe .qualitative-constraints div *,
   body.in-iframe .qualitative-constraints ul li { 
     color: #c9d1d9 !important; 
+  }
+  
+  body.in-iframe [style*="background-color: white"] strong,
+  body.in-iframe [style*="background-color: #fff"] strong,
+  body.in-iframe [style*="background-color: #ffffff"] strong,
+  body.in-iframe [style*="background: white"] strong,
+  body.in-iframe [style*="background: #fff"] strong,
+  body.in-iframe [style*="background: #ffffff"] strong {
+    color: #f0f6fc !important;
   }
   body.in-iframe #season-plan li { 
     background-color: rgba(255, 255, 255, 0.01) !important; 
