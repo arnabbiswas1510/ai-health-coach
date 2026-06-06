@@ -4,6 +4,7 @@ import os
 import subprocess
 import time
 from pathlib import Path
+from typing import Any
 
 import yaml
 from garminconnect import Garmin
@@ -22,7 +23,7 @@ def check_and_run():  # noqa: C901
 
     # 1. Parse athlete email from environment variable or config
     email = os.getenv("GARMIN_EMAIL")
-    config = {}
+    config: dict[str, Any] = {}
     if config_path.exists():
         try:
             with open(config_path, encoding="utf-8") as f:

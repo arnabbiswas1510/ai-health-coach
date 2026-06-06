@@ -100,7 +100,7 @@ class ConfigParser:
             raise ValueError(f"Unsupported config format: {self.config_path.suffix}")
 
     def _get_val(self, env_key: str, config_path_keys: tuple[str, ...], default: Any) -> Any:
-        config_val = self.config
+        config_val: Any = self.config
         for k in config_path_keys:
             if isinstance(config_val, dict):
                 config_val = config_val.get(k)
@@ -225,7 +225,8 @@ class ConfigParser:
                     pass
             return None
         age = self._get_val("ATHLETE_AGE", ("athlete", "age"), 53)
-        return _to_int(age) if age is not None else 53
+        val = _to_int(age)
+        return val if val is not None else 53
 
     def get_target_goal(self) -> str:
         return self._get_val("TARGET_GOAL", ("athlete", "target_goal"), "base_building")
@@ -249,7 +250,8 @@ class ConfigParser:
                     pass
             return None
         count = self._get_val("MISSED_RUNS_COUNT", ("athlete", "missed_runs_count"), 0)
-        return _to_int(count) if count is not None else 0
+        val = _to_int(count)
+        return val if val is not None else 0
 
     def get_accumulated_debt_km(self) -> float:
         def _to_float(val: Any) -> float | None:
@@ -260,7 +262,8 @@ class ConfigParser:
                     pass
             return None
         debt = self._get_val("ACCUMULATED_DEBT_KM", ("athlete", "accumulated_debt_km"), 0.0)
-        return _to_float(debt) if debt is not None else 0.0
+        val = _to_float(debt)
+        return val if val is not None else 0.0
 
     def get_athlete_height(self) -> float | None:
         height_val = self._get_val("ATHLETE_HEIGHT", ("athlete", "height"), None)

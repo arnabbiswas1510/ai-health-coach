@@ -79,7 +79,7 @@ def _read_text(path: Path) -> str:
     return ""
 
 
-def _build_week_dates(start: date, n_weeks: int = 4) -> list[dict[str, str]]:
+def _build_week_dates(start: date, n_weeks: int = 4) -> list[dict[str, Any]]:
     weeks = []
     for i in range(n_weeks):
         week_start = start + timedelta(weeks=i)

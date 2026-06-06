@@ -358,9 +358,10 @@ class TriathlonCoachDataExtractor(DataExtractor):
 
         lt_speed_ms = self.convert_lactate_threshold_speed(user_data.get("lactateThresholdSpeed"))
 
+        weight_val = _to_float(user_data.get("weight"))
         return UserProfile(
             gender=user_data.get("gender"),
-            weight=_round(_to_float(user_data.get("weight")) / 1000.0, 2) if user_data.get("weight") is not None else None,
+            weight=_round(weight_val / 1000.0, 2) if weight_val is not None else None,
             height=_to_float(user_data.get("height")),
             birth_date=user_data.get("birthDate"),
             activity_level=user_data.get("activityLevel"),
@@ -471,7 +472,7 @@ class TriathlonCoachDataExtractor(DataExtractor):
 
     def get_recent_activities(self, start_date: date, end_date: date) -> list[Activity]:  # noqa: C901
         logger.info("Fetching activities between %s and %s", start_date, end_date)
-        raw_activities = []
+        raw_activities: list[dict[str, Any]] = []
         current_start = start_date
         while current_start <= end_date:
             current_end = min(current_start + timedelta(days=30), end_date)
@@ -497,9 +498,6 @@ class TriathlonCoachDataExtractor(DataExtractor):
 
         focused_activities: list[Activity | dict | None] = []
         for activity in activities:
-            if not isinstance(activity, Mapping):
-                continue
-
             activity_id = activity.get("activityId") or activity.get("activityUUID")
             if not activity_id:
                 logger.warning("Activity missing activityId, skipping. Keys: %s", list(activity.keys()))
