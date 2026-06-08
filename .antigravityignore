@@ -1,0 +1,11 @@
+# Exclude heavy folders to prevent agent freezes
+.git/
+.github/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+data/
+docs/
+notebooks/
+tests/
