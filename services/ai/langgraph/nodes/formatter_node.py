@@ -16,7 +16,8 @@ Create beautiful, functional HTML documents for athletic performance data.
 ## Principles
 - Clarity: Design for instant understanding.
 - Hierarchy: Use visual structure to guide attention.
-- Aesthetics: Balance beauty with function."""
+- Aesthetics: Balance beauty with function.
+- **Theme (Dark Mode by default)**: Use a premium dark theme matching GitHub/Garmin dashboards. Use background color `#0d1117` (or transparent if loaded in iframe), card background `rgba(22, 27, 34, 0.6)`, borders `rgba(240, 246, 252, 0.1)`, primary text `#c9d1d9`, secondary text `#8b949e`, and titles `#f0f6fc`. Ensure there are no white/light backgrounds, and no hardcoded dark text on dark backgrounds."""
 
 FORMATTER_USER_PROMPT_BASE = """Transform this content into a beautiful HTML document.
 

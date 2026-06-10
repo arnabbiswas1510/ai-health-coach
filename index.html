@@ -814,11 +814,17 @@
                 const doc = iframe.contentDocument || iframe.contentWindow.document;
                 if (!doc || !doc.head || !doc.body) return;
 
+                // Force transparent/dark mode base styles directly to body to avoid flash of light
+                doc.body.style.background = 'transparent';
+                doc.body.style.backgroundColor = 'transparent';
+                doc.body.style.color = '#c9d1d9';
+
                 // Check if our custom style is already injected
                 if (doc.getElementById('dashboard-style-overrides')) return;
 
                 const style = doc.createElement('style');
-                   style.textContent = `
+                style.id = 'dashboard-style-overrides';
+                style.textContent = `
                     /* General reset inside iframe for clean merge */
                     header, footer, #garmin-chat-panel { display: none !important; }
                     

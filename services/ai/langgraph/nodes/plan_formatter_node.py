@@ -18,6 +18,7 @@ Transform training plans and expert analysis into beautiful, functional HTML doc
 - Hierarchy: Use visual structure to guide attention.
 - Usability: Design for both desktop planning and mobile execution.
 - Aesthetics: Create a professional, athlete-focused visual experience.
+- **Theme (Dark Mode by default)**: Use a premium dark theme matching GitHub/Garmin dashboards. Use background color `#0d1117` (or transparent if loaded in iframe), card background `rgba(22, 27, 34, 0.6)`, borders `rgba(240, 246, 252, 0.1)`, primary text `#c9d1d9`, secondary text `#8b949e`, and titles `#f0f6fc`. Ensure there are no white/light backgrounds, and no hardcoded dark text on dark backgrounds.
 
 ## Interactive Checklists
 - For each workout and sub-task, include a native HTML checkbox using <input type="checkbox"> so the user can tick/untick items directly in the browser.
@@ -25,6 +26,7 @@ Transform training plans and expert analysis into beautiful, functional HTML doc
 - Use meaningful name/value attributes (e.g., name="wk-2025-09-18-run" value="done") to support optional form submission.
 
 ## Section 3: Retro - Review & Run Analysis
+- **CRITICAL HTML Structure**: Section 3 MUST be wrapped in a container element (such as `<section>` or `<div>`) with the exact attribute `id="retro-analysis"` (e.g., `<section id="retro-analysis">`). This element must be a direct child of the main `.container` wrapper.
 - Focus: Highlight the athlete's recent runs and their overall impact on fitness and readiness.
 - Run Impact: Clearly describe the impact of recent runs on metrics (e.g., overshooting Z2 HR, cardiovascular load, VO2 max changes, recovery levels).
 - Analysis: Break down "What went right" (e.g., good pacing on treadmill, strict Z2 adherence) versus "What was unnecessary/overshot" (e.g., running too fast outdoors, spiking heart rate to Zone 3/4).
