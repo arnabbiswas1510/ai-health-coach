@@ -108,5 +108,18 @@ services:
       - ./coach_config.yaml:/app/coach_config.yaml
     entrypoint: ["python", "-u", "daemon.py"]
 
-
-
+  garmin-sync:
+    image: ghcr.io/mirecekd/xmtg:latest
+    container_name: garmin_scale_sync
+    restart: unless-stopped
+    environment:
+      - MQTT_BROKER=192.168.1.52
+      - MQTT_PORT=1883
+      - MQTT_USER=arnabbiswas
+      - MQTT_PASS=Paro2478!
+      - MQTT_TOPIC=miscale/garmin_sync
+      - MQTT_TTL=60
+      - GARMIN_USER=${GARMIN_EMAIL}
+      - GARMIN_PASS=${GARMIN_PASSWORD}
+    volumes:
+      - ./tokens:/data/garminconnect
