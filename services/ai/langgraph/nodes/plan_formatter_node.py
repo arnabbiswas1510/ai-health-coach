@@ -28,6 +28,19 @@ Transform training plans and expert analysis into beautiful, functional HTML doc
 ## Section 3: Retro - Review & Run Analysis
 - **CRITICAL HTML Structure**: Section 3 MUST be wrapped in a container element (such as `<section>` or `<div>`) with the exact attribute `id="retro-analysis"` (e.g., `<section id="retro-analysis">`). This element must be a direct child of the main `.container` wrapper.
 - Focus: Highlight the athlete's recent runs and their overall impact on fitness and readiness.
+- **Paginated Last 15 Runs Split Breakdown**:
+  - Extract and present a detailed split-by-split breakdown for the last 15 running activities (newest first) based on the raw activities summary.
+  - Implement client-side pagination (5 runs per page) using simple, highly performant inline vanilla JS and CSS. Write clean pagination controls (Previous, Page numbers, Next) styled beautifully. Active/inactive button states should have clear styling.
+  - Page changes must use instant state switching (e.g., adding/removing a `.hidden` class with `display: none !important;` and a brief fade animation like `transition: opacity 0.2s;`).
+  - For each of the 15 runs, display a card containing:
+    - **Header info**: Date, Run Title/Name, Total Distance (km & converted miles), Total Duration, Avg HR.
+    - **Interactive Split Breakdown Table**:
+      - Columns: Lap #, Distance (show both km and converted miles, e.g. "1.00 km (0.62 mi)"), Split Time (min:sec), Pace (show both min/km and converted min/mile, e.g. "6:15/km (10:04/mi)"), Avg HR (bpm), and **Split Review**.
+      - Under **Split Review**, analyze if it was a success:
+        - Write "✅ Good Zone 2" (in green) if Avg HR is in Zone 2 (100 to 120 bpm, or under 120 bpm).
+        - Write "⚠️ Pace Overshot / HR Spike" (in amber/red) if Avg HR is above 120 bpm (spiked into Zone 3/4) or if the pace was unsustainably fast.
+        - Point out any cardiovascular drift (HR rising over subsequent splits despite steady/slower pace).
+  - Ensure the table is responsive, visually clean, and adheres strictly to the premium dark mode styling.
 - Run Impact: Clearly describe the impact of recent runs on metrics (e.g., overshooting Z2 HR, cardiovascular load, VO2 max changes, recovery levels).
 - Analysis: Break down "What went right" (e.g., good pacing on treadmill, strict Z2 adherence) versus "What was unnecessary/overshot" (e.g., running too fast outdoors, spiking heart rate to Zone 3/4).
 - Future Recommendations: Detail actionable advice on how to improve next runs (e.g., walk-run ratios, pacing rules, HR alarms).
@@ -57,6 +70,10 @@ PLAN_FORMATTER_USER_PROMPT = """Transform the training plan and activity analysi
 ```markdown
 {physiology_analysis}
 ```
+### Raw Activity Data & Splits
+```markdown
+{activity_summary}
+```
 
 ## Task
 Convert the markdown and analysis content into a single, self-contained HTML document.
@@ -69,10 +86,10 @@ Convert the markdown and analysis content into a single, self-contained HTML doc
 
 ## Output Requirements
 1. **Structure**:
-   - Header: Athlete name and period.
-   - Section 1: Season Plan Overview (High level).
-   - Section 2: 4-Week Plan (Detailed but compact).
-   - Section 3: Retro - Review & Run Analysis (Review and analysis of the runs done so far: what impact the last n runs had on fitness, what was done right, what was unnecessary, and suggested future improvements based on the expert analysis).
+    - Header: Athlete name and period.
+    - Section 1: Season Plan Overview (High level).
+    - Section 2: 4-Week Plan (Detailed but compact).
+    - Section 3: Retro - Review & Run Analysis (Review and analysis of the runs done so far: what impact the last n runs had on fitness, what was done right, what was unnecessary, and suggested future improvements based on the expert analysis).
 2. **Format**: Complete HTML5 document with embedded CSS.
 3. **Content**: Preserve all workout details but format them densely.
 4. **Return**: ONLY the HTML code.
@@ -116,7 +133,8 @@ async def plan_formatter_node(state: TrainingAnalysisState) -> dict[str, list | 
                     weekly_plan=get_content("weekly_plan"),
                     activity_analysis=get_expert_analysis("activity_outputs"),
                     metrics_analysis=get_expert_analysis("metrics_outputs"),
-                    physiology_analysis=get_expert_analysis("physiology_outputs")
+                    physiology_analysis=get_expert_analysis("physiology_outputs"),
+                    activity_summary=get_content("activity_summary")
                 )},
             ])
             return extract_text_content(response)

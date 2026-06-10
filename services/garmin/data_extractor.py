@@ -496,21 +496,43 @@ class TriathlonCoachDataExtractor(DataExtractor):
             logger.warning("No activities found between %s and %s", start_date, end_date)
             return []
 
+        # Sort activities descending by start time (newest first) to find the 15 most recent runs
+        def get_start_time_key(act):
+            st = self.extract_start_time(act)
+            return st if st else ""
+        sorted_activities = sorted(activities, key=get_start_time_key, reverse=True)
+
+        # Identify the activity IDs of the 15 most recent runs
+        recent_run_ids = set()
+        run_count = 0
+        for activity in sorted_activities:
+            activity_id = activity.get("activityId") or activity.get("activityUUID")
+            if not activity_id:
+                continue
+            activity_type = self.extract_activity_type(activity)
+            is_run = (activity_type == "running" or "running" in activity_type or activity_type.endswith("run"))
+            if is_run and run_count < 15:
+                recent_run_ids.add(activity_id)
+                run_count += 1
+
         focused_activities: list[Activity | dict | None] = []
-        for activity in activities:
+        for activity in sorted_activities:
             activity_id = activity.get("activityId") or activity.get("activityUUID")
             if not activity_id:
                 logger.warning("Activity missing activityId, skipping. Keys: %s", list(activity.keys()))
                 continue
 
             # Optimize: Only fetch detailed info (weather, laps, full details) for activities in the last 14 days
-            # For older activities, construct the Activity summary using data already retrieved in the search list.
+            # OR if it's one of the last 15 runs (even if older than 14 days)
             activity_date = self._parse_local_date(self.extract_start_time(activity))
             is_recent = False
             if activity_date:
                 days_ago = (date.today() - activity_date).days
                 if days_ago <= 14:
                     is_recent = True
+
+            if activity_id in recent_run_ids:
+                is_recent = True
 
             if is_recent:
                 detailed_activity = self._get_activity_details(activity_id)
@@ -550,6 +572,8 @@ class TriathlonCoachDataExtractor(DataExtractor):
             focused_activities.append(focused)
 
         valid_activities = self._coerce_activities(focused_activities)
+        # Sort back to chronological ascending order to preserve timeline expectations in other modules
+        valid_activities.sort(key=lambda x: x.start_time or "")
         logger.info("Successfully processed %d out of %d activities", len(valid_activities), len(activities))
         return valid_activities
 

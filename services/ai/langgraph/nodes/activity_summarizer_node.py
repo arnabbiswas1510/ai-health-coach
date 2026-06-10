@@ -21,6 +21,7 @@ Objectively describe the athlete's recent training activities.
 1. **All Activities Table**: compact table for every activity (date, type, duration, distance, elevation, avg HR, avg pace/power).
 2. **Key Sessions**: deep dives ONLY for key sessions (intensity/novelty/anomaly).
 3. **Zone Distributions**: summarize distributions in tables.
+4. **Last 15 Runs Split Breakdown**: Provide a separate section for each of the last 15 runs (newest first). Include the date, name, overall distance/time/HR/pace, and a markdown table detailing every split/lap from Garmin.
 
 ## Input Data
 ```json
@@ -39,7 +40,16 @@ Objectively describe the athlete's recent training activities.
 ## Lap Details
 | Lap | Dist | Time | Pace | Avg HR | Max HR | ... |
 |-----|------|------|------|--------|--------|-----|
-| 1   | ...  | ...  | ...  | ...    | ...    | ... |"""
+| 1   | ...  | ...  | ...  | ...    | ...    | ... |
+
+## Last 15 Runs Split Breakdown Template
+### Run: [Date - Name/Type]
+* Overview: Distance: [distance], Duration: [time], Avg HR: [HR], Avg Pace: [pace]
+* Splits/Laps Table:
+| Lap | Dist (km) | Time (min) | Pace (min/km) | Avg HR | Max HR |
+|-----|-----------|------------|---------------|--------|--------|
+| 1   | ...       | ...        | ...           | ...    | ...    |
+"""
 
 
 def extract_activity_data(state: TrainingAnalysisState) -> dict:
