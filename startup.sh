@@ -53,23 +53,42 @@ echo -e "${CYAN}${BOLD}         🏃  Garmin AI Coach — Container Startup     
 echo -e "${CYAN}${BOLD}════════════════════════════════════════════════════════════════${RESET}"
 echo -e ""
 
-# ── Step 1: Clean stale HTML artifacts ────────────────────────────────────────
-log "Step 1/5 — Cleaning stale HTML artifacts..."
-DELETED=$(find /app/data -maxdepth 3 -name "*.html" -print -delete 2>/dev/null | wc -l)
-ok "Removed ${DELETED} HTML file(s) from /app/data"
+# ── Step 1: Check if analytics are already persisted ─────────────────────────
+FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
+SKIP_INITIAL_RUN=false
 
-# ── Step 2: Run initial coach analysis ────────────────────────────────────────
-log "Step 2/5 — Running AI coach analysis (this takes 2–5 minutes)..."
-echo -e ""
-
-python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml
-COACH_EXIT=$?
-if [ $COACH_EXIT -ne 0 ]; then
-    die "Coach analysis failed (exit code ${COACH_EXIT}). See error output above."
+if [ "$FORCE_ANALYTICS" = "true" ]; then
+    log "Step 1/5 — FORCE_ANALYTICS=true: Cleaning old HTML files to force regeneration..."
+    find /app/data -maxdepth 3 -name "*.html" -print -delete 2>/dev/null || true
+    ok "Stale HTML artifacts cleaned."
+else
+    # Check if planning.html and analysis.html exist and are not empty
+    if [ -s "/app/data/planning.html" ] && [ -s "/app/data/analysis.html" ]; then
+        SKIP_INITIAL_RUN=true
+        log "Step 1/5 — Found existing analytics in /app/data (planning.html and analysis.html)."
+        ok "Skipping initial HTML cleaning."
+    else
+        log "Step 1/5 — Existing analytics missing or empty. Cleaning stale HTML files..."
+        find /app/data -maxdepth 3 -name "*.html" -print -delete 2>/dev/null || true
+        ok "Stale HTML artifacts cleaned."
+    fi
 fi
 
-echo -e ""
-ok "Coach analysis completed — fresh HTML artifacts generated."
+# ── Step 2: Run initial coach analysis ────────────────────────────────────────
+if [ "$SKIP_INITIAL_RUN" = "true" ]; then
+    log "Step 2/5 — Skipping initial AI coach analysis (using persisted filesystem reports)."
+    ok "Using cached reports on filesystem (to force regeneration, delete planning.html or set FORCE_ANALYTICS=true)."
+else
+    log "Step 2/5 — Running initial AI coach analysis (this takes 2–5 minutes)..."
+    echo -e ""
+    python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml
+    COACH_EXIT=$?
+    if [ $COACH_EXIT -ne 0 ]; then
+        die "Coach analysis failed (exit code ${COACH_EXIT}). See error output above."
+    fi
+    echo -e ""
+    ok "Initial coach analysis completed — fresh HTML artifacts generated."
+fi
 
 # ── Step 3: Start nginx ───────────────────────────────────────────────────────
 log "Step 3/5 — Starting nginx..."

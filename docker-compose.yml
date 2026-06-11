@@ -55,6 +55,7 @@ services:
       - ENABLE_PLOTTING=${ENABLE_PLOTTING:-false}
       - HITL_ENABLED=${HITL_ENABLED:-true}
       - SKIP_SYNTHESIS=${SKIP_SYNTHESIS:-false}
+      - FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
       # ── Paths & Daemon ─────────────────────────────────────────────────────
       - OUTPUT_DIR=/app/data
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
