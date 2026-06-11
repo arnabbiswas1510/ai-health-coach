@@ -1,8 +1,8 @@
 # =============================================================================
-# docker-compose.nas.yml — Single-Container NAS Deployment
+# docker-compose.yml — Single-Container NAS Deployment
 # =============================================================================
 # Usage:
-#   docker compose -f docker-compose.nas.yml up -d --build
+#   docker compose up -d        # pulls image from GHCR, no source code needed
 #
 # On every `up`, the container automatically:
 #   1. Deletes stale HTML artifacts
@@ -14,13 +14,12 @@
 
 services:
   ai-health-coach:
-    build: .
-    image: ghcr.io/arnabbiswas1510/ai-health-coach:nas
+    image: ghcr.io/arnabbiswas1510/ai-health-coach:latest
     container_name: ai-health-coach
     restart: unless-stopped
     ports:
-      - "8085:80"     # Dashboard (nginx)
-      - "8001:8001"   # Chat API  (optional direct access)
+      - "8085:80" # Dashboard (nginx)
+      - "8001:8001" # Chat API  (optional direct access)
     environment:
       # ── LLM Keys ───────────────────────────────────────────────────────────
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
@@ -58,6 +57,6 @@ services:
       - OUTPUT_DIR=/app/data
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
     volumes:
-      - ./tokens:/app/tokens                          # Garmin auth tokens (persisted)
-      - ./data:/app/data                              # Generated HTML + JSON (persisted)
-      - ./coach_config.yaml:/app/coach_config.yaml   # Athlete config
+      - ./tokens:/app/tokens # Garmin auth tokens (persisted)
+      - ./data:/app/data # Generated HTML + JSON (persisted)
+      - ./coach_config.yaml:/app/coach_config.yaml # Athlete config
