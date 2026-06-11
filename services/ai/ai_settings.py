@@ -13,6 +13,8 @@ class AgentRole(Enum):
     WORKOUT = "workout"
     SEASON_PLANNER = "season_planner"
     FORMATTER = "formatter"
+    COMBINED_SUMMARIZER = "combined_summarizer"
+    COMBINED_ANALYST = "combined_analyst"
 
 
 @dataclass
@@ -30,6 +32,8 @@ class AISettings:
                 AgentRole.SYNTHESIS: "gemini-2.5-flash",
                 AgentRole.WORKOUT: "gemini-2.5-flash",
                 AgentRole.SEASON_PLANNER: "gemini-2.5-flash",
+                AgentRole.COMBINED_SUMMARIZER: "gemini-2.5-flash",
+                AgentRole.COMBINED_ANALYST: "gemini-2.5-flash",
             },
             AIMode.COST_EFFECTIVE: {
                 AgentRole.SUMMARIZER: "gemini-2.5-flash",
@@ -40,6 +44,8 @@ class AISettings:
                 AgentRole.SYNTHESIS: "gemini-2.5-flash",
                 AgentRole.WORKOUT: "gemini-2.5-flash",
                 AgentRole.SEASON_PLANNER: "gemini-2.5-flash",
+                AgentRole.COMBINED_SUMMARIZER: "gemini-2.5-flash",
+                AgentRole.COMBINED_ANALYST: "gemini-2.5-flash",
             },
             AIMode.DEVELOPMENT: {
                 AgentRole.SUMMARIZER: "gemini-2.5-flash",
@@ -50,6 +56,8 @@ class AISettings:
                 AgentRole.SYNTHESIS: "gemini-2.5-flash",
                 AgentRole.WORKOUT: "gemini-2.5-flash",
                 AgentRole.SEASON_PLANNER: "gemini-2.5-flash",
+                AgentRole.COMBINED_SUMMARIZER: "gemini-2.5-flash",
+                AgentRole.COMBINED_ANALYST: "gemini-2.5-flash",
             },
             AIMode.PRO: {
                 AgentRole.SUMMARIZER: "gemini-2.5-flash",
@@ -60,6 +68,8 @@ class AISettings:
                 AgentRole.SYNTHESIS: "gemini-2.5-flash",
                 AgentRole.WORKOUT: "gemini-2.5-flash",
                 AgentRole.SEASON_PLANNER: "gemini-2.5-flash",
+                AgentRole.COMBINED_SUMMARIZER: "gemini-2.5-flash",
+                AgentRole.COMBINED_ANALYST: "gemini-2.5-flash",
             },
         }
     )

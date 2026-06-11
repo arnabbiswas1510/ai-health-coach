@@ -24,8 +24,8 @@ context:
 
 # Data Extraction Settings
 extraction:
-  activities_days: 180      # Extract last 180 days of activities (6 months)
-  metrics_days: 28         # Extract last 28 days of metrics (prevents API rate limits/timeouts)
+  activities_days: 90      # Extract last 90 days of activities (3 months)
+  metrics_days: 14         # Extract last 14 days of metrics (prevents API rate limits/timeouts)
   ai_mode: "pro"
   enable_plotting: false   # Disable plots to save cost/time
   hitl_enabled: false      # Disable human-in-the-loop in docker non-interactive mode

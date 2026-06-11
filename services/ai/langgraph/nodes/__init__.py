@@ -1,5 +1,7 @@
 from .activity_expert_node import activity_expert_node
 from .activity_summarizer_node import activity_summarizer_node
+from .combined_analyst_node import combined_analyst_node
+from .combined_summarizer_node import combined_summarizer_node
 from .data_integration_node import data_integration_node
 from .formatter_node import formatter_node
 from .metrics_expert_node import metrics_expert_node
@@ -14,6 +16,8 @@ from .weekly_planner_node import weekly_planner_node
 __all__ = [
     "activity_expert_node",
     "activity_summarizer_node",
+    "combined_analyst_node",
+    "combined_summarizer_node",
     "data_integration_node",
     "formatter_node",
     "metrics_expert_node",
@@ -25,3 +29,4 @@ __all__ = [
     "synthesis_node",
     "weekly_planner_node",
 ]
+

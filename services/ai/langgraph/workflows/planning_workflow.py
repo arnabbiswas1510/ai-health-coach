@@ -6,19 +6,14 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 
 from services.ai.langgraph.config.langsmith_config import LangSmithConfig
-from services.ai.langgraph.nodes.activity_expert_node import activity_expert_node
-from services.ai.langgraph.nodes.activity_summarizer_node import activity_summarizer_node
+from services.ai.langgraph.nodes.combined_analyst_node import combined_analyst_node
+from services.ai.langgraph.nodes.combined_summarizer_node import combined_summarizer_node
 from services.ai.langgraph.nodes.data_integration_node import data_integration_node
 from services.ai.langgraph.nodes.formatter_node import formatter_node
-from services.ai.langgraph.nodes.metrics_expert_node import metrics_expert_node
-from services.ai.langgraph.nodes.metrics_summarizer_node import metrics_summarizer_node
 from services.ai.langgraph.nodes.orchestrator_node import master_orchestrator_node
-from services.ai.langgraph.nodes.physiology_expert_node import physiology_expert_node
-from services.ai.langgraph.nodes.physiology_summarizer_node import physiology_summarizer_node
 from services.ai.langgraph.nodes.plan_formatter_node import plan_formatter_node
 from services.ai.langgraph.nodes.plot_resolution_node import plot_resolution_node
 from services.ai.langgraph.nodes.season_planner_node import season_planner_node
-from services.ai.langgraph.nodes.synthesis_node import synthesis_node
 from services.ai.langgraph.nodes.weekly_planner_node import weekly_planner_node
 from services.ai.langgraph.state.training_analysis_state import TrainingAnalysisState, create_initial_state
 from services.ai.langgraph.utils.workflow_cost_tracker import ProgressIntegratedCostTracker
@@ -112,15 +107,9 @@ def create_integrated_analysis_and_planning_workflow():
 
     workflow = StateGraph(TrainingAnalysisState)
 
-    workflow.add_node("metrics_summarizer", metrics_summarizer_node)
-    workflow.add_node("physiology_summarizer", physiology_summarizer_node)
-    workflow.add_node("activity_summarizer", activity_summarizer_node)
+    workflow.add_node("combined_summarizer", combined_summarizer_node)
+    workflow.add_node("combined_analyst", combined_analyst_node)
 
-    workflow.add_node("metrics_expert", metrics_expert_node)
-    workflow.add_node("physiology_expert", physiology_expert_node)
-    workflow.add_node("activity_expert", activity_expert_node)
-
-    workflow.add_node("synthesis", synthesis_node)
     workflow.add_node("formatter", formatter_node)
     workflow.add_node("plot_resolution", plot_resolution_node)
 
@@ -132,20 +121,16 @@ def create_integrated_analysis_and_planning_workflow():
 
     workflow.add_node("finalize", lambda state: state, defer=True)
 
-    workflow.add_edge(START, "metrics_summarizer")
-    workflow.add_edge(START, "physiology_summarizer")
-    workflow.add_edge(START, "activity_summarizer")
+    workflow.add_edge(START, "combined_summarizer")
+    workflow.add_edge("combined_summarizer", "combined_analyst")
 
-    workflow.add_edge("metrics_summarizer", "metrics_expert")
-    workflow.add_edge("physiology_summarizer", "physiology_expert")
-    workflow.add_edge("activity_summarizer", "activity_expert")
+    # The combined analyst generates synthesis_result and outputs synthesis_complete=True.
+    # Therefore, the analysis stage is complete, so we can route:
+    # 1. to the formatting branch (which runs in parallel to formatting the synthesis result)
+    # 2. to the season_planner node (which starts the planning stage)
+    workflow.add_edge("combined_analyst", "formatter")
+    workflow.add_edge("combined_analyst", "season_planner")
 
-    workflow.add_edge(["metrics_expert", "physiology_expert", "activity_expert"], "master_orchestrator")
-
-    # Master orchestrator uses ONLY Command(goto=...) for dynamic routing
-    # NO unconditional edges from orchestrator - it routes dynamically based on stage
-
-    workflow.add_edge("synthesis", "formatter")
     workflow.add_edge("formatter", "plot_resolution")
 
     # Season planner routes back to orchestrator for HITL handling
