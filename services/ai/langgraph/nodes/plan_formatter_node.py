@@ -47,9 +47,8 @@ Transform training plans and expert analysis into beautiful, functional HTML doc
         - Point out any cardiovascular drift (HR rising over subsequent splits despite steady/slower pace).
   - Ensure the table is responsive, visually clean, and adheres strictly to the premium dark mode styling.
   - **Robust Client-side JS Parsing**:
-    - Handle variations in keys and table headers safely. Normalize headers by replacing non-alphanumeric characters (like slashes, spaces) with underscores, or explicitly check both `run.avg_pace` and `run['avg_pace/power']`.
-    - Check if values exist before calling string methods like `.split()`, `.replace()`, etc. (e.g., `if (run && run.avg_pace) { ... } else { ... }`).
-    - Parse raw activities table markdown lines using `split(/\r?\n/)` to handle CRLF and LF line endings correctly.
+    - The generated JavaScript MUST include a robust helper function `getRowValueByKeyword(row, keyword)` that searches the keys of `row` for a substring match of `keyword` (case-insensitive) and returns the value, or an empty string if not found.
+    - ALWAYS use `getRowValueByKeyword` to extract values from rows of the activities table and the laps table (e.g., searching for `'dist'`, `'dur'` or `'time'`, `'hr'`, `'pace'` or `'power'`). Never hardcode exact header lookups like `run['Distance (km)']` or `lap['dist_km']` which are fragile when the summarizer LLM non-deterministically modifies table column headers.
     - Provide fallback values (like "N/A" or "0:00") if any duration, pace, or heart rate values are missing or malformed, ensuring that a single parsing failure does not break the entire page loading or execution.
 - Run Impact: Clearly describe the impact of recent runs on metrics (e.g., overshooting Z2 HR, cardiovascular load, VO2 max changes, recovery levels).
 - Analysis: Break down "What went right" (e.g., good pacing on treadmill, strict Z2 adherence) versus "What was unnecessary/overshot" (e.g., running too fast outdoors, spiking heart rate to Zone 3/4).
