@@ -30,13 +30,18 @@ die()  {
     echo -e "${RED}${BOLD}  ERROR: $*${RESET}"
     echo -e ""
     echo -e "${YELLOW}  Possible causes:${RESET}"
-    echo -e "    • Garmin tokens expired → run interactive login (see README)"
+    echo -e "    • Garmin MFA triggered (new IP) → run interactive login below"
+    echo -e "    • Garmin tokens expired → run interactive login below"
     echo -e "    • No network / Garmin Connect unreachable"
     echo -e "    • AI API key missing or quota exceeded (check GOOGLE_API_KEY)"
     echo -e "    • coach_config.yaml missing or invalid"
     echo -e ""
-    echo -e "${YELLOW}  To recover:${RESET}"
-    echo -e "    docker compose -f docker-compose.nas.yml run --rm ai-health-coach \\"
+    echo -e "${YELLOW}  Interactive login (run this on the NAS, then restart the container):${RESET}"
+    echo -e "    docker run -it --rm \\"
+    echo -e "      -v \$(pwd)/tokens:/app/tokens \\"
+    echo -e "      -v \$(pwd)/coach_config.yaml:/app/coach_config.yaml \\"
+    echo -e "      --env-file \$(pwd)/.env \\"
+    echo -e "      ghcr.io/arnabbiswas1510/ai-health-coach:latest \\"
     echo -e "      python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml"
     echo -e ""
     exit 1
@@ -57,8 +62,10 @@ ok "Removed ${DELETED} HTML file(s) from /app/data"
 log "Step 2/5 — Running AI coach analysis (this takes 2–5 minutes)..."
 echo -e ""
 
-if ! python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml; then
-    die "Coach analysis failed (exit code $?). See error output above."
+python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml
+COACH_EXIT=$?
+if [ $COACH_EXIT -ne 0 ]; then
+    die "Coach analysis failed (exit code ${COACH_EXIT}). See error output above."
 fi
 
 echo -e ""
