@@ -25,9 +25,14 @@ Transform training plans and expert analysis into beautiful, functional HTML doc
 - Wrap each checkbox in a <label> (or associate via for/id) for tap-friendly, accessible interaction.
 - Use meaningful name/value attributes (e.g., name="wk-2025-09-18-run" value="done") to support optional form submission.
 
+## Section 2: Today's Autoregulated Workout
+- **Today's Suggested Workout Hero Card**: Put today's suggested workout at the very top of Section 2 in a premium, high-impact hero card layout. Display Target Distance (km and converted miles), Target Duration (mins), Target Pace (min/km and converted min/mile), and Target HR Zone in large, highly readable text with icons or badges. Include the step-by-step segments (Warmup, Run/Walk intervals, Cooldown) as checklist items using `<input type="checkbox">` and `<label>`. Ensure that metric item blocks are allowed to wrap (`flex-wrap: wrap`) on all screen widths, preventing layout overflow/clipping when cards share rows in multi-column grids.
+- **Garmin Recovery Check & Feedback Card**: Render a dedicated card displaying the athlete's key Garmin recovery indicators (Sleep overall score/quality, Overnight HRV, Average Stress, Weight) alongside their latest typed persistent feedback (e.g., soreness, fatigue, missed runs) and a summary of how the system scaled today's run.
+- **7-Day Provisional Forecast Accordion**: Render the provisional 7-day forecast in a collapsible HTML `<details>` and `<summary>` element. When collapsed, the summary should display a clean title (e.g., "🔮 7-Day Provisional Forecast (Day 2 - 7)"). When expanded, it should show a neat day-by-day table/grid outlining Focus and provisional workouts. Include a clear disclaimer: *"Provisional — Will dynamically recalculate tomorrow based on your body's recovery."*
+
 ## Section 3: Retro - Review & Run Analysis
 - **CRITICAL HTML Structure**: Section 3 MUST be wrapped in a container element (such as `<section>` or `<div>`) with the exact attribute `id="retro-analysis"` (e.g., `<section id="retro-analysis">`). This element must be a direct child of the main `.container` wrapper.
-- Focus: Highlight the athlete's recent runs and their overall impact on fitness and readiness.
+- **Season Progression & Alignment Card**: Include a beautiful strategic feedback card at the very top of Section 3 (inside `#retro-analysis`). This card compares completed volume against the Season Plan target, tracks aerobic pace-to-HR trends, flags Acute-to-Chronic Workload Ratio (ACWR) ratings, and provides macro strategic advice to keep the runner on track despite daily autoregulation adjustments.
 - **Paginated Last 15 Runs Split Breakdown**:
   - Extract and present a detailed split-by-split breakdown for the last 15 running activities (newest first) based on the raw activities summary.
   - Implement client-side pagination (5 runs per page) using simple, highly performant inline vanilla JS and CSS. Write clean pagination controls (Previous, Page numbers, Next) styled beautifully. Active/inactive button states should have clear styling.
@@ -41,6 +46,11 @@ Transform training plans and expert analysis into beautiful, functional HTML doc
         - Write "⚠️ Pace Overshot / HR Spike" (in amber/red) if Avg HR is above 120 bpm (spiked into Zone 3/4) or if the pace was unsustainably fast.
         - Point out any cardiovascular drift (HR rising over subsequent splits despite steady/slower pace).
   - Ensure the table is responsive, visually clean, and adheres strictly to the premium dark mode styling.
+  - **Robust Client-side JS Parsing**:
+    - Handle variations in keys and table headers safely. Normalize headers by replacing non-alphanumeric characters (like slashes, spaces) with underscores, or explicitly check both `run.avg_pace` and `run['avg_pace/power']`.
+    - Check if values exist before calling string methods like `.split()`, `.replace()`, etc. (e.g., `if (run && run.avg_pace) { ... } else { ... }`).
+    - Parse raw activities table markdown lines using `split(/\r?\n/)` to handle CRLF and LF line endings correctly.
+    - Provide fallback values (like "N/A" or "0:00") if any duration, pace, or heart rate values are missing or malformed, ensuring that a single parsing failure does not break the entire page loading or execution.
 - Run Impact: Clearly describe the impact of recent runs on metrics (e.g., overshooting Z2 HR, cardiovascular load, VO2 max changes, recovery levels).
 - Analysis: Break down "What went right" (e.g., good pacing on treadmill, strict Z2 adherence) versus "What was unnecessary/overshot" (e.g., running too fast outdoors, spiking heart rate to Zone 3/4).
 - Future Recommendations: Detail actionable advice on how to improve next runs (e.g., walk-run ratios, pacing rules, HR alarms).
@@ -54,7 +64,7 @@ PLAN_FORMATTER_USER_PROMPT = """Transform the training plan and activity analysi
 ```markdown
 {season_plan}
 ```
-### 4-Week Plan
+### Suggested Workout & Forecast
 ```markdown
 {weekly_plan}
 ```
@@ -80,18 +90,18 @@ Convert the markdown and analysis content into a single, self-contained HTML doc
 
 ## Constraints
 - **Compactness**: The user must see the "big picture" easily. Avoid excessive scrolling.
-- **Layout**: Use a dense, information-rich layout (e.g., grid or compact cards) for the 4-week plan.
+- **Layout**: Use a premium, responsive layout (grid/cards) matching GitHub/Garmin dashboards.
 - **Usability**: Include interactive checkboxes for every workout item.
 - **Design**: Professional, athlete-focused aesthetic with clear visual hierarchy.
 
 ## Output Requirements
 1. **Structure**:
-    - Header: Athlete name and period.
+    - Header: Athlete name and training horizon.
     - Section 1: Season Plan Overview (High level).
-    - Section 2: 4-Week Plan (Detailed but compact).
-    - Section 3: Retro - Review & Run Analysis (Review and analysis of the runs done so far: what impact the last n runs had on fitness, what was done right, what was unnecessary, and suggested future improvements based on the expert analysis).
+    - Section 2: Today's Autoregulated Workout (Suggested Run of the Day hero card + Garmin Recovery Check & Feedback card + Collapsible 7-Day Provisional Forecast accordion).
+    - Section 3: Retro - Review & Run Analysis (Review and analysis of the runs done so far. This section MUST start with a Season Progression & Alignment strategic feedback card at the top, followed by the paginated split cards for the last 15 runs).
 2. **Format**: Complete HTML5 document with embedded CSS.
-3. **Content**: Preserve all workout details but format them densely.
+3. **Content**: Preserve all workout and forecast details but format them densely.
 4. **Return**: ONLY the HTML code.
 """
 

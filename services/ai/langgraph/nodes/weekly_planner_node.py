@@ -29,14 +29,14 @@ Create detailed, practical training plans that balance stress and recovery.
 - Individualization: Adapt to the athlete's current state and history."""
 
 WEEKLY_PLANNER_USER_PROMPT = """## Task
-Create a detailed 28-day (4-week) training plan.
+Create today's custom, autoregulated running workout prescription and a provisional 7-day training forecast.
 
 ## Constraints
-- **Honor the Phase**: Prioritize the Season Plan's phase intent.
-- **Respect Readiness**: Adjust intensity based on Physiology/Metrics signals (e.g., pull back if recovery is low).
-- **Integrate Signals**: Use Activity Expert advice for session structure.
-- **Brevity**: Use standard notation (e.g., "4x(5' Z4, 2' r)") to keep the plan compact.
-- **Weekend Schedule**: Schedule aerobic base training (long runs / base building sessions) on treadmill on Saturdays, and active recovery / rest on Sundays.
+- **Prioritize Athlete Feedback**: Carefully check the "Recent athlete feedback & coaching history" inside the **User Context** (e.g. sore muscles, busy day, missed runs). Make this the primary constraint when prescribing today's run.
+  - If they mention soreness, injury risk, or severe fatigue: scale down the volume/intensity significantly, or prescribe a rest day.
+  - If they missed a run due to a busy schedule: do not overcompensate with excessive volume. Hold steady or adjust.
+- **Respect Physiological Readiness**: Check the Metrics, Activity, and Physiology Expert analyses (sleep duration, sleep quality, stress levels, HRV, ACWR). Scale today's run according to their warnings or limits.
+- **Today's Run Focus**: Focus heavily on Base Building / Zone 2 running, walk-run intervals, or active recovery as appropriate.
 
 ## Inputs
 ### Season Plan
@@ -57,26 +57,26 @@ Create a detailed 28-day (4-week) training plan.
 - Physiology: ``` {physiology_analysis} ```
 
 ## Output Requirements
-1. **Zones Table**: Define intensity zones first.
-2. **Structure**: Group by Week (1-4).
-3. **Daily Format**:
-   - **DAY & DATE**: e.g., "Mon, Nov 24"
-   - **FOCUS**: 1-2 words (e.g., "Recovery", "VO2max")
-   - **WORKOUT**: Concise structure string.
-   - **PURPOSE**: One short sentence.
-   - **ADAPTATION**: "If tired: ..."
+Your output MUST contain exactly two sections:
 
-**Important:**
-- Use recent activity data to continue the current training flow and don't start a new phase.
-- Use the Season Plan as a guide, but don't force it.
-- place sessions smartly to avoid back to back high intensity sessions or strength sessions etc.
+1. **TODAY'S SUGGESTED WORKOUT (Run of the Day)**:
+   - **Workout Details**: Target Distance (km), Target Duration (mins), Target Pace (min/km), Target HR Zone.
+   - **Structured segments**: Step-by-step instructions (Warmup, Run/Walk intervals, Cooldown).
+   - **Purpose**: Why this workout is prescribed today.
+   - **Why This Prescription? (Autoregulation Check)**: A dedicated explanation of how the user's Garmin recovery metrics (Sleep score, stress, HRV) AND their typed feedback (soreness, busy schedule) directly determined this workout's structure, pacing, or distance.
+
+2. **7-DAY PROVISIONAL FORECAST**:
+   - Provide a concise day-by-day outline for the next 7 days (Day 2 to Day 7).
+   - For each day, list Day, Date, Focus (e.g. Z2 Aerobic, Strength, Rest), and a very brief provisional workout.
+   - Explicitly add this disclaimer at the top of the forecast: *"Provisional — Will dynamically recalculate tomorrow based on your body's recovery."*
 """
 
 WEEKLY_PLANNER_FINAL_CHECKLIST = """
 ## Final Checklist
-- Follow 28-day horizon and week grouping.
-- Do not contradict expert constraints.
-- Keep output compact and structured.
+- Generate only Today's Workout and a 7-day provisional forecast.
+- Factor in and directly respond to the athlete's latest feedback/comments in the planning context.
+- Adhere strictly to the physiological limits specified by the experts.
+- Keep output concise and structured.
 """
 
 

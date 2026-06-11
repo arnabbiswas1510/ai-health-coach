@@ -1,125 +1,63 @@
+# =============================================================================
+# docker-compose.nas.yml — Single-Container NAS Deployment
+# =============================================================================
+# Usage:
+#   docker compose -f docker-compose.nas.yml up -d --build
+#
+# On every `up`, the container automatically:
+#   1. Deletes stale HTML artifacts
+#   2. Runs the AI coach analysis (aborts with clear error if it fails)
+#   3. Starts nginx (dashboard on port 8085)
+#   4. Starts the chat-api (feedback panel on port 8001)
+#   5. Starts the Garmin poller daemon (re-runs analysis on new activities)
+# =============================================================================
+
 services:
-  coach:
+  ai-health-coach:
     build: .
-    image: ghcr.io/arnabbiswas1510/ai-health-coach:latest
-    environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
-      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
-      - GARMIN_EMAIL=${GARMIN_EMAIL:-}
-      - GARMIN_PASSWORD=${GARMIN_PASSWORD}
-      - AI_MODE=${AI_MODE:-cost_effective}
-      - ATHLETE_NAME=${ATHLETE_NAME:-}
-      - ATHLETE_AGE=${ATHLETE_AGE:-53}
-      - TARGET_GOAL=${TARGET_GOAL:-base_building}
-      - SYNC_CALENDAR=${SYNC_CALENDAR:-false}
-      - MISSED_RUNS_COUNT=${MISSED_RUNS_COUNT:-0}
-      - ACCUMULATED_DEBT_KM=${ACCUMULATED_DEBT_KM:-0.0}
-      - ATHLETE_HEIGHT=${ATHLETE_HEIGHT:-}
-      - ATHLETE_WEIGHT=${ATHLETE_WEIGHT:-}
-      - WEIGHT_GOAL=${WEIGHT_GOAL:-}
-      - CONTEXT_ANALYSIS=${CONTEXT_ANALYSIS:-}
-      - CONTEXT_PLANNING=${CONTEXT_PLANNING:-}
-      - ACTIVITIES_DAYS=${ACTIVITIES_DAYS:-7}
-      - METRICS_DAYS=${METRICS_DAYS:-14}
-      - ENABLE_PLOTTING=${ENABLE_PLOTTING:-false}
-      - HITL_ENABLED=${HITL_ENABLED:-true}
-      - SKIP_SYNTHESIS=${SKIP_SYNTHESIS:-false}
-      - OUTPUT_DIR=${OUTPUT_DIR:-./data}
-      - COMPETITIONS=${COMPETITIONS:-}
-    volumes:
-      - ./tokens:/app/tokens
-      - ./data:/app/data
-      - ./coach_config.yaml:/app/coach_config.yaml
-    command: ["--config", "/app/coach_config.yaml"]
-
-  web:
-    image: nginx:alpine
-    ports:
-      - "8085:80"
-    volumes:
-      - ./data:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-    depends_on:
-      - chat-api
-
-  chat-api:
-    build: .
-    image: ghcr.io/arnabbiswas1510/ai-health-coach:latest
-    container_name: garmin-ai-coach-chat-api
-    restart: always
-    entrypoint: ["python", "-m", "uvicorn", "services.chat_api.main:app",
-                 "--host", "0.0.0.0", "--port", "8001", "--log-level", "info"]
-    environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
-      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
-      - AI_MODE=${AI_MODE:-cost_effective}
-      - OUTPUT_DIR=${OUTPUT_DIR:-/app/data}
-    volumes:
-      - ./tokens:/app/tokens
-      - ./data:/app/data
-    ports:
-      - "8001:8001"
-
-  poller-daemon:
-    build: .
-    image: ghcr.io/arnabbiswas1510/ai-health-coach:latest
-    container_name: garmin-ai-coach-poller-daemon
-    restart: always
-    environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
-      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
-      - GARMIN_EMAIL=${GARMIN_EMAIL:-}
-      - GARMIN_PASSWORD=${GARMIN_PASSWORD}
-      - AI_MODE=${AI_MODE:-cost_effective}
-      - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
-      - ATHLETE_NAME=${ATHLETE_NAME:-}
-      - ATHLETE_AGE=${ATHLETE_AGE:-53}
-      - TARGET_GOAL=${TARGET_GOAL:-base_building}
-      - SYNC_CALENDAR=${SYNC_CALENDAR:-false}
-      - MISSED_RUNS_COUNT=${MISSED_RUNS_COUNT:-0}
-      - ACCUMULATED_DEBT_KM=${ACCUMULATED_DEBT_KM:-0.0}
-      - ATHLETE_HEIGHT=${ATHLETE_HEIGHT:-}
-      - ATHLETE_WEIGHT=${ATHLETE_WEIGHT:-}
-      - WEIGHT_GOAL=${WEIGHT_GOAL:-}
-      - CONTEXT_ANALYSIS=${CONTEXT_ANALYSIS:-}
-      - CONTEXT_PLANNING=${CONTEXT_PLANNING:-}
-      - ACTIVITIES_DAYS=${ACTIVITIES_DAYS:-7}
-      - METRICS_DAYS=${METRICS_DAYS:-14}
-      - ENABLE_PLOTTING=${ENABLE_PLOTTING:-false}
-      - HITL_ENABLED=${HITL_ENABLED:-true}
-      - SKIP_SYNTHESIS=${SKIP_SYNTHESIS:-false}
-      - OUTPUT_DIR=${OUTPUT_DIR:-./data}
-      - COMPETITIONS=${COMPETITIONS:-}
-    volumes:
-      - ./tokens:/app/tokens
-      - ./data:/app/data
-      - ./coach_config.yaml:/app/coach_config.yaml
-    entrypoint: ["python", "-u", "daemon.py"]
-
-  garmin-sync:
-    image: ghcr.io/mirecekd/xmtg:latest
-    container_name: garmin_scale_sync
+    image: ghcr.io/arnabbiswas1510/ai-health-coach:nas
+    container_name: ai-health-coach
     restart: unless-stopped
+    ports:
+      - "8085:80"     # Dashboard (nginx)
+      - "8001:8001"   # Chat API  (optional direct access)
     environment:
-      - MQTT_BROKER=192.168.1.52
-      - MQTT_PORT=1883
-      - MQTT_USER=arnabbiswas
-      - MQTT_PASS=Paro2478!
-      - MQTT_TOPIC=miscale/garmin_sync
-      - MQTT_TTL=60
-      - GARMIN_USER=${GARMIN_EMAIL}
-      - GARMIN_PASS=${GARMIN_PASSWORD}
+      # ── LLM Keys ───────────────────────────────────────────────────────────
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY:-}
+      # ── Garmin Credentials ─────────────────────────────────────────────────
+      - GARMIN_EMAIL=${GARMIN_EMAIL}
+      - GARMIN_PASSWORD=${GARMIN_PASSWORD}
+      # ── AI Mode ────────────────────────────────────────────────────────────
+      - AI_MODE=${AI_MODE:-cost_effective}
+      # ── Athlete Profile ────────────────────────────────────────────────────
+      - ATHLETE_NAME=${ATHLETE_NAME:-}
+      - ATHLETE_AGE=${ATHLETE_AGE:-53}
+      - TARGET_GOAL=${TARGET_GOAL:-base_building}
+      - ATHLETE_HEIGHT=${ATHLETE_HEIGHT:-}
+      - ATHLETE_WEIGHT=${ATHLETE_WEIGHT:-}
+      - WEIGHT_GOAL=${WEIGHT_GOAL:-}
+      # ── Training Context ───────────────────────────────────────────────────
+      - CONTEXT_ANALYSIS=${CONTEXT_ANALYSIS:-}
+      - CONTEXT_PLANNING=${CONTEXT_PLANNING:-}
+      - ACTIVITIES_DAYS=${ACTIVITIES_DAYS:-7}
+      - METRICS_DAYS=${METRICS_DAYS:-14}
+      - MISSED_RUNS_COUNT=${MISSED_RUNS_COUNT:-0}
+      - ACCUMULATED_DEBT_KM=${ACCUMULATED_DEBT_KM:-0.0}
+      - COMPETITIONS=${COMPETITIONS:-}
+      # ── Feature Flags ──────────────────────────────────────────────────────
+      - SYNC_CALENDAR=${SYNC_CALENDAR:-false}
+      - ENABLE_PLOTTING=${ENABLE_PLOTTING:-false}
+      - HITL_ENABLED=${HITL_ENABLED:-true}
+      - SKIP_SYNTHESIS=${SKIP_SYNTHESIS:-false}
+      # ── Paths & Daemon ─────────────────────────────────────────────────────
+      - OUTPUT_DIR=/app/data
+      - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
     volumes:
-      - ./tokens:/data/garminconnect
+      - ./tokens:/app/tokens                          # Garmin auth tokens (persisted)
+      - ./data:/app/data                              # Generated HTML + JSON (persisted)
+      - ./coach_config.yaml:/app/coach_config.yaml   # Athlete config

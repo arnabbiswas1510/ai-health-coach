@@ -1,30 +1,53 @@
-# Use an official Python runtime as a parent image
+# =============================================================================
+# Garmin AI Coach — Multi-purpose Dockerfile
+#
+# Supports two deployment modes:
+#
+#   1. Classic multi-container (docker-compose.yml):
+#      Each service overrides ENTRYPOINT at compose level.
+#
+#   2. Single-container NAS (docker-compose.nas.yml):
+#      Uses startup.sh which runs: cleanup → coach analysis → nginx →
+#      chat-api → daemon. nginx.nas.conf proxies /api/ to localhost:8001.
+# =============================================================================
+
 FROM python:3.13-slim
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies required for building some python packages
+# Install system dependencies:
+#   build-essential — needed for some Python packages (e.g. numpy C extensions)
+#   nginx           — serves the generated HTML dashboard in NAS mode
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    nginx \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file into the container
+# Install Python dependencies first (layer-cached unless requirements.txt changes)
 COPY requirements.txt .
-
-# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code
+# Copy application source
 COPY . .
 
-# Create the data and tokens directories
+# Ensure data and token directories exist inside the image
 RUN mkdir -p /app/data /app/tokens
 
-# Set environment variables
+# ── NAS single-container assets ───────────────────────────────────────────────
+# Install the NAS nginx config (proxies /api/ → localhost:8001 since
+# chat-api lives in the same container, not a separate Docker host).
+COPY nginx.nas.conf /etc/nginx/nginx.conf
+
+# Install and make executable the container startup script
+COPY startup.sh /app/startup.sh
+RUN chmod +x /app/startup.sh
+
+# ── Environment defaults ──────────────────────────────────────────────────────
 ENV PYTHONUNBUFFERED=1
 ENV GARMINCONNECT_TOKENS=/app/tokens
 
-# Set entrypoint to run the CLI
+# Default entrypoint for classic mode (coach one-shot run).
+# docker-compose.nas.yml overrides this via its `command` / entrypoint.
+# startup.sh is the entrypoint for NAS single-container mode.
 ENTRYPOINT ["python", "cli/garmin_ai_coach_cli.py"]
 CMD ["--help"]

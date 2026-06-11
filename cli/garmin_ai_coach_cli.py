@@ -624,6 +624,21 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         logger.info("HITL enabled: %s", hitl_enabled)
         logger.info("Skip synthesis: %s", skip_synthesis)
 
+        # Append persistent user feedback history to planning_context if available
+        feedback_path = output_dir / "feedback_history.json"
+        if feedback_path.exists():
+            try:
+                feedback_data = json.loads(feedback_path.read_text(encoding="utf-8"))
+                if isinstance(feedback_data, list) and feedback_data:
+                    logger.info("Found persistent user feedback history, appending to planning context")
+                    lines = ["## Recent athlete feedback & coaching history:"]
+                    for turn in feedback_data[-6:]:
+                        role = "Athlete" if turn.get("role") == "user" else "Coach"
+                        lines.append(f"- **{role}**: {turn.get('content')}")
+                    planning_context = planning_context + "\n\n" + "\n".join(lines)
+            except Exception as e:
+                logger.warning("Could not load/append user feedback history: %s", e)
+
         current_date = {"date": now.strftime("%Y-%m-%d"), "day_name": now.strftime("%A")}
         week_dates = [
             {"date": (now + timedelta(days=offset)).strftime("%Y-%m-%d"),

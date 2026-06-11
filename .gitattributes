@@ -1,0 +1,3 @@
+# Force LF line endings for shell scripts so they work correctly on Linux/NAS
+startup.sh text eol=lf
+*.sh       text eol=lf

@@ -752,8 +752,8 @@
     <!-- Global Floating AI Chat Panel -->
     <div id="garmin-chat-panel" class="collapsed">
         <div id="chat-header" onclick="toggleChatPanel()">
-            <div class="chat-icon">🤖</div>
-            <h3>AI Coach Chat</h3>
+            <div class="chat-icon">📝</div>
+            <h3>Daily Coach Feedback</h3>
             <button id="chat-toggle-btn" title="Expand">+</button>
         </div>
         <div id="chat-body">
@@ -761,19 +761,25 @@
                 <div class="chat-msg assistant">
                     <div class="msg-label">Coach</div>
                     <div class="msg-bubble">
-                        👋 Hi! I'm your AI coach. Tell me how you'd like to adjust your training plan — e.g. <em>"I can't train on Wednesdays"</em> or <em>"Make week 3 a recovery week"</em>.
+                        👋 Tell me how your body feels today (e.g., muscle soreness, fatigue) or if you missed a run due to a busy day. I will automatically recalculate and adapt your next workout suggestions!
                     </div>
                 </div>
             </div>
             <div id="chat-thinking">
-                <span>🧠 Re-planning</span>
+                <span>🧠 Adapting Plan</span>
                 <div class="thinking-dots"><span></span><span></span><span></span></div>
             </div>
             <div id="chat-plan-reload" onclick="location.reload()">
-                🔄 Plan updated! Click to refresh the page
+                🔄 Plan adapted! Click to refresh the page
+            </div>
+            <div id="chat-quick-feedback" style="display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; border-top: 1px solid var(--border-color); background: rgba(255,255,255,0.01);">
+                <button class="feedback-quick-btn" onclick="addQuickFeedback('My muscles feel sore and tight today, please make today\'s workout easy.')" style="background: rgba(210, 153, 34, 0.15); border: 1px solid rgba(210, 153, 34, 0.3); color: #d29922; padding: 4px 8px; border-radius: 6px; font-size: 0.8em; cursor: pointer; transition: background 0.2s;">Soreness ⚠️</button>
+                <button class="feedback-quick-btn" onclick="addQuickFeedback('I completed the run and feel completely rested, strong, and ready!')" style="background: rgba(63, 185, 80, 0.15); border: 1px solid rgba(63, 185, 80, 0.3); color: #3fb950; padding: 4px 8px; border-radius: 6px; font-size: 0.8em; cursor: pointer; transition: background 0.2s;">Felt Great 🏃</button>
+                <button class="feedback-quick-btn" onclick="addQuickFeedback('I missed yesterday\'s run because of a busy schedule and meetings.')" style="background: rgba(88, 166, 255, 0.15); border: 1px solid rgba(88, 166, 255, 0.3); color: #58a6ff; padding: 4px 8px; border-radius: 6px; font-size: 0.8em; cursor: pointer; transition: background 0.2s;">Missed Run 🗓️</button>
+                <button class="feedback-quick-btn" onclick="addQuickFeedback('I had poor sleep and feel very tired / sluggish today.')" style="background: rgba(188, 140, 255, 0.15); border: 1px solid rgba(188, 140, 255, 0.3); color: #bc8cff; padding: 4px 8px; border-radius: 6px; font-size: 0.8em; cursor: pointer; transition: background 0.2s;">Tired 😴</button>
             </div>
             <div id="chat-input-area">
-                <textarea id="chat-input" placeholder="Ask your coach anything…" rows="1"
+                <textarea id="chat-input" placeholder="Type how your body feels or notes..." rows="1"
                     onkeydown="handleChatKey(event)" oninput="autoResize(this)"></textarea>
                 <button id="chat-send-btn" onclick="sendChatMessage()" title="Send">➤</button>
             </div>

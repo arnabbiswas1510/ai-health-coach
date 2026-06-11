@@ -31,9 +31,30 @@ app.add_middleware(
 )
 
 # ---------------------------------------------------------------------------
-# In-memory conversation history (per-user, resets on server restart)
+# Persistent conversation / feedback history (saved to data directory)
 # ---------------------------------------------------------------------------
-_conversation_history: dict[str, list[dict[str, str]]] = {}
+
+def _get_feedback_history_path(user_id: str) -> Path:
+    return DATA_DIR / user_id / "feedback_history.json"
+
+
+def _load_feedback_history(user_id: str) -> list[dict[str, str]]:
+    path = _get_feedback_history_path(user_id)
+    if path.exists():
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            logger.warning("Could not load feedback history from %s: %s", path, exc)
+    return []
+
+
+def _save_feedback_history(user_id: str, history: list[dict[str, str]]) -> None:
+    path = _get_feedback_history_path(user_id)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(history, indent=2), encoding="utf-8")
+    except Exception as exc:
+        logger.error("Could not save feedback history to %s: %s", path, exc)
 
 # ---------------------------------------------------------------------------
 # Data directory (shared volume with the coach container)
@@ -164,12 +185,12 @@ async def _run_weekly_replan(
 def _summarise_change(old_plan: str, new_plan: str, user_message: str) -> str:
     """Return a short coach-style reply summarising what changed."""
     if not new_plan:
-        return "I've updated your training plan based on your feedback."
+        return "I've updated Today's Run based on your feedback."
 
     return (
-        "✅ I've updated your 4-week training plan based on your request. "
-        "The plan has been refreshed on this page — scroll down to see the changes. "
-        f'(Your request: *"{user_message}"*)'
+        "✅ I've updated Today's Run based on your feedback. "
+        "The suggested run has been refreshed on this page — refresh the page to see the changes. "
+        f'(Your feedback: *"{user_message}"*)'
     )
 
 
@@ -191,11 +212,12 @@ async def chat(req: ChatRequest) -> ChatResponse:
         return ChatResponse(
             reply="Please send a non-empty message.",
             plan_updated=False,
-            history=_conversation_history.get(user_id, []),
+            history=_load_feedback_history(user_id),
         )
 
-    history = _conversation_history.setdefault(user_id, [])
+    history = _load_feedback_history(user_id)
     history.append({"role": "user", "content": message})
+    _save_feedback_history(user_id, history)
 
     user_data_dir = DATA_DIR / user_id
 
@@ -234,12 +256,20 @@ async def chat(req: ChatRequest) -> ChatResponse:
         logger.exception("Weekly re-plan failed for user=%s: %s", user_id, exc)
         reply = f"❌ An error occurred while updating the plan: {exc!s}"
 
+    # Load fresh history before appending response to make sure we stay in sync
+    history = _load_feedback_history(user_id)
     history.append({"role": "assistant", "content": reply})
+    _save_feedback_history(user_id, history)
 
     return ChatResponse(reply=reply, plan_updated=plan_updated, history=history)
 
 
 @app.delete("/chat/{user_id}/history")
 async def clear_history(user_id: str) -> dict[str, str]:
-    _conversation_history.pop(user_id, None)
+    path = _get_feedback_history_path(user_id)
+    if path.exists():
+        try:
+            path.unlink()
+        except Exception as exc:
+            logger.warning("Could not delete feedback history at %s: %s", path, exc)
     return {"status": "cleared", "user_id": user_id}

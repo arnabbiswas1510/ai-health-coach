@@ -182,6 +182,59 @@ class AdaptiveRunningCoach:
             focus = "Aerobic Maintenance Run"
             notes = "Consistent aerobic maintenance. Keep breathing light and comfortable."
 
+        # Fetch latest recovery indicators from Garmin Connect
+        sleep_score = None
+        avg_stress = None
+        hrv_value = None
+        if self.garmin_data and self.garmin_data.recovery_indicators:
+            latest_rec = self.garmin_data.recovery_indicators[-1]
+            if latest_rec.sleep:
+                sleep_score = latest_rec.sleep.get("quality", {}).get("overall_score")
+                hrv_value = latest_rec.sleep.get("avg_overnight_hrv")
+            if latest_rec.stress:
+                avg_stress = latest_rec.stress.get("avg_level")
+
+        # Apply autoregulated scaling factors based on Garmin recovery metrics
+        scale_factor = 1.0
+        autoregulation_notes = []
+
+        if sleep_score is not None:
+            if sleep_score < 60:
+                scale_factor *= 0.70
+                autoregulation_notes.append(f"Sleep score was poor ({sleep_score}/100), reducing target volume by 30%.")
+            elif sleep_score < 75:
+                scale_factor *= 0.90
+                autoregulation_notes.append(f"Sleep score was mediocre ({sleep_score}/100), reducing target volume by 10%.")
+            elif sleep_score >= 85:
+                scale_factor *= 1.05
+                autoregulation_notes.append(f"Sleep score was excellent ({sleep_score}/100), scaling target volume by +5%.")
+
+        if avg_stress is not None:
+            if avg_stress > 40:
+                scale_factor *= 0.80
+                autoregulation_notes.append(f"Daily stress average was high ({avg_stress}), reducing volume by 20%.")
+            elif avg_stress < 20:
+                scale_factor *= 1.05
+                autoregulation_notes.append(f"Daily stress average was very low ({avg_stress}), scaling target volume by +5%.")
+
+        # Limit scaling factor to prevent extreme changes
+        scale_factor = max(0.5, min(1.15, scale_factor))
+
+        if scale_factor != 1.0:
+            adjusted_dist = adjusted_dist * scale_factor
+            focus = f"Autoregulated {focus}"
+            notes += "\n\n### Autoregulation Insights (Garmin Connect)\n" + "\n".join([f"- {note}" for note in autoregulation_notes])
+
+        # If severe fatigue, override to rest day
+        if (sleep_score is not None and sleep_score < 50) and (avg_stress is not None and avg_stress > 45):
+            adjusted_dist = 0.0
+            focus = "Autoregulated Rest / Active Recovery Walk"
+            notes = (
+                f"### Autoregulation Insights (Garmin Connect)\n"
+                f"- Severe fatigue detected (Sleep Score: {sleep_score}/100, Average Stress: {avg_stress}). "
+                f"To prevent injury and support long-term recovery, today is designated as a **Rest Day** or a very easy 20-minute walk."
+            )
+
         # Target duration based on average pace
         target_duration = adjusted_dist * base_pace
 
