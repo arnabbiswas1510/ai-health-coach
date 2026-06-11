@@ -3,7 +3,12 @@ import logging
 from datetime import datetime
 
 from services.ai.ai_settings import AgentRole
-from services.ai.langgraph.schemas import CombinedAnalystOutputs
+from services.ai.langgraph.schemas import (
+    ActivityExpertOutputs,
+    CombinedAnalystOutputs,
+    MetricsExpertOutputs,
+    PhysiologyExpertOutputs,
+)
 from services.ai.langgraph.state.training_analysis_state import TrainingAnalysisState
 from services.ai.langgraph.utils.message_helper import normalize_langchain_messages
 from services.ai.model_config import ModelSelector
@@ -164,9 +169,9 @@ async def combined_analyst_node(state: TrainingAnalysisState) -> dict[str, list 
         log_node_completion("Combined analyst", execution_time, len(available_plots))
 
         return {
-            "metrics_outputs": {"output": agent_output.metrics},
-            "physiology_outputs": {"output": agent_output.physiology},
-            "activity_outputs": {"output": agent_output.activity},
+            "metrics_outputs": MetricsExpertOutputs(output=agent_output.metrics),
+            "physiology_outputs": PhysiologyExpertOutputs(output=agent_output.physiology),
+            "activity_outputs": ActivityExpertOutputs(output=agent_output.activity),
             "synthesis_result": agent_output.synthesis,
             "synthesis_complete": True,
             "plots": plots,
