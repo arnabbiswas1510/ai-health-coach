@@ -1,8 +1,8 @@
 # =============================================================================
-# docker-compose.yml — Single-Container NAS Deployment
+# docker-compose.yml
 # =============================================================================
 # Usage:
-#   docker compose up -d        # pulls image from GHCR, no source code needed
+#   docker compose up -d        # pulls ghcr.io/arnabbiswas1510/ai-health-coach:latest
 #
 # On every `up`, the container automatically:
 #   1. Deletes stale HTML artifacts
@@ -11,6 +11,7 @@
 #   4. Starts the chat-api (feedback panel on port 8001)
 #   5. Starts the Garmin poller daemon (re-runs analysis on new activities)
 # =============================================================================
+
 
 services:
   ai-health-coach:
