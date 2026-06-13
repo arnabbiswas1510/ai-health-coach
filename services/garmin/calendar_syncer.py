@@ -220,13 +220,7 @@ class GarminCalendarSyncer:
         return steps
 
     def _clear_future_scheduled_workouts(self, days_ahead: int = 35) -> None:  # noqa: C901
-        """Unschedule all Garmin-scheduled workouts for today + the next N days.
-
-        Note: unschedule_workout removes the calendar entry but keeps the
-        workout template in the library — keeping your library clean would
-        require a separate delete_workout() call which we intentionally skip
-        so that the coach history is preserved.
-        """
+        """Unschedule all Garmin-scheduled workouts for today + the next N days and delete their templates."""
         today = datetime.now().date()
         end_date = today + timedelta(days=days_ahead)
 
@@ -241,8 +235,8 @@ class GarminCalendarSyncer:
             else:
                 cursor = date(cursor.year, cursor.month + 1, 1)
 
-        # Collect all scheduled workout IDs in date range
-        scheduled_ids: list[int] = []
+        # Collect scheduled entries (schedule_id, workout_id) in date range
+        to_clear: list[tuple[int, int | None]] = []
         for year, month in sorted(months_to_check):
             try:
                 result = self.client.client.get_scheduled_workouts(year, month)
@@ -254,16 +248,26 @@ class GarminCalendarSyncer:
                     except ValueError:
                         continue
                     if today <= entry_date <= end_date:
-                        sched_id = entry.get("id") or entry.get("scheduleId")
-                        if sched_id:
-                            scheduled_ids.append(int(sched_id))
+                        if entry.get("itemType") == "workout" or entry.get("workoutId") is not None:
+                            sched_id = entry.get("id") or entry.get("scheduleId")
+                            workout_id = entry.get("workoutId")
+                            if sched_id:
+                                to_clear.append((int(sched_id), int(workout_id) if workout_id else None))
             except Exception:
                 logger.warning("Could not fetch scheduled workouts for %d/%d", year, month, exc_info=True)
 
-        logger.info("Clearing %d scheduled workouts before pushing new plan", len(scheduled_ids))
-        for sched_id in scheduled_ids:
+        logger.info("Clearing %d scheduled workouts before pushing new plan", len(to_clear))
+        for sched_id, workout_id in to_clear:
             try:
                 self.client.client.unschedule_workout(sched_id)
                 logger.debug("Unscheduled workout calendar entry %s", sched_id)
             except Exception:
                 logger.warning("Could not unschedule entry %s", sched_id, exc_info=True)
+
+            if workout_id:
+                try:
+                    self.client.client.delete_workout(workout_id)
+                    logger.debug("Deleted workout template %s from library", workout_id)
+                except Exception:
+                    logger.warning("Could not delete workout template %s from library", workout_id, exc_info=True)
+
