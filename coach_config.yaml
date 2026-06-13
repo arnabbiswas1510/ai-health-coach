@@ -10,8 +10,8 @@ athlete:
   height: "5'9\""                # Athlete height (Golden source is Garmin Connect, fallback to this value if unset)
   weight: null                   # Current athlete weight in kg (Golden source is Garmin scale metrics, fallback to this if unset)
   weight_goal: "weight_loss"     # Weight management preference: "maintain_lower_healthy_range" or "weight_loss"
-  zone2_min: 115                 # Custom Zone 2 HR low limit (beats per minute) to allow comfortable jogging
-  zone2_max: 130                 # Custom Zone 2 HR high limit (beats per minute) to allow comfortable jogging
+  zone2_min: 118                 # Custom Zone 2 HR low limit (beats per minute) to allow comfortable jogging
+  zone2_max: 135                 # Custom Zone 2 HR high limit (beats per minute) to allow comfortable jogging
 
 # Analysis Context
 context:
