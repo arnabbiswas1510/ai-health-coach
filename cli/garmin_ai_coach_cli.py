@@ -283,6 +283,18 @@ class ConfigParser:
     def get_weight_goal(self) -> str | None:
         return self._get_val("WEIGHT_GOAL", ("athlete", "weight_goal"), None)
 
+    def get_zone2_bounds(self) -> tuple[int | None, int | None]:
+        def _to_int(val: Any) -> int | None:
+            if val is not None:
+                try:
+                    return int(val)
+                except ValueError:
+                    pass
+            return None
+        min_val = self._get_val("ZONE2_MIN", ("athlete", "zone2_min"), None)
+        max_val = self._get_val("ZONE2_MAX", ("athlete", "zone2_max"), None)
+        return _to_int(min_val), _to_int(max_val)
+
 
 def fetch_outside_competitions_from_config(config: dict[str, Any]) -> list[dict[str, Any]]:
     client = OutsideApiGraphQlClient()
@@ -574,8 +586,8 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         accumulated_debt = config_parser.get_accumulated_debt_km()
         sync_calendar = config_parser.get_sync_calendar()
 
-        logger.info("Running Adaptive Running Coach (Age: %d, Goal: %s, Missed runs: %d, Acc Debt: %s km)...", age, goal, missed_runs, accumulated_debt)
-        coach = AdaptiveRunningCoach(garmin_data, goal=goal, age=age, weight_goal=weight_goal, height=resolved_height)
+        zone2_min, zone2_max = config_parser.get_zone2_bounds()
+        coach = AdaptiveRunningCoach(garmin_data, goal=goal, age=age, weight_goal=weight_goal, height=resolved_height, zone2_min=zone2_min, zone2_max=zone2_max)
         suggestion = coach.suggest_next_run(missed_runs_count=missed_runs, accumulated_debt_km=accumulated_debt)
 
         logger.info("Suggested Run distance: %s km", suggestion["distance_km"])

@@ -7,7 +7,7 @@ from .models import Activity, GarminData
 logger = logging.getLogger(__name__)
 
 class AdaptiveRunningCoach:
-    def __init__(self, garmin_data: GarminData, goal: str = "base_building", age: int = 53, weight_goal: str | None = None, height: float | None = None):
+    def __init__(self, garmin_data: GarminData, goal: str = "base_building", age: int = 53, weight_goal: str | None = None, height: float | None = None, zone2_min: int | None = None, zone2_max: int | None = None):
         self.garmin_data = garmin_data
         self.goal = goal
         self.age = age
@@ -18,8 +18,8 @@ class AdaptiveRunningCoach:
         self.height = height or (profile.height if profile else None)
 
         # Zone 2 is 60% to 72% of max HR, or 100-117 bpm (longevity/cardio focus)
-        self.zone2_low = int(self.max_hr * 0.60)
-        self.zone2_high = int(self.max_hr * 0.72)
+        self.zone2_low = zone2_min if zone2_min is not None else int(self.max_hr * 0.60)
+        self.zone2_high = zone2_max if zone2_max is not None else int(self.max_hr * 0.72)
 
         self.running_activities = self._extract_running_activities()
         self.baselines = self._calculate_baselines()
