@@ -9,17 +9,18 @@ athlete:
   accumulated_debt_km: 0.0       # Accumulated mileage debt carried forward (km)
   height: "5'9\""                # Athlete height (Golden source is Garmin Connect, fallback to this value if unset)
   weight: null                   # Current athlete weight in kg (Golden source is Garmin scale metrics, fallback to this if unset)
-  weight_goal: "maintain_lower_healthy_range" # Weight management preference: "maintain_lower_healthy_range" or "weight_loss"
+  weight_goal: "weight_loss"     # Weight management preference: "maintain_lower_healthy_range" or "weight_loss"
 
 # Analysis Context
 context:
   analysis: |
-    Focusing on base building and improving running adaptation. 
+    Goal is to lose weight down to 160 lbs. Currently focus on base building and running adaptation. 
     Struggle to stay in Zone 2 while running (heart rate spikes to Zone 3/4).
-    Suggest structured walk-run intervals to help build the aerobic base.
+    Suggest structured walk-run intervals to help build the aerobic base and fat oxidation.
 
   planning: |
-    Focusing on building aerobic capacity and cardiovascular fitness.
+    Focusing on building aerobic capacity, cardiovascular fitness, and caloric expenditure.
+    Target weight: 160 lbs.
     Adjust run workouts with run-walk intervals to keep heart rate in Zone 2.
 
 # Data Extraction Settings

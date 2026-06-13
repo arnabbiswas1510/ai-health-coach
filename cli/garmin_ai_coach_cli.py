@@ -610,10 +610,7 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         logger.info("Saved suggested run MD report to %s", suggested_run_md)
 
         if sync_calendar:
-            # NOTE: The full 28-day plan sync below will push all workouts.
-            # The legacy single-run sync is kept as a fallback in case the AI
-            # plan is skipped (e.g. skip_synthesis=True with no weekly_plan).
-            logger.info("Calendar sync enabled — will sync full AI plan after analysis")
+            logger.info("Calendar sync enabled — will sync suggested next run after analysis")
 
         now = datetime.now()
         plotting_enabled = extraction_settings.get("enable_plotting", False)
@@ -671,63 +668,37 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         files_generated.extend(_save_plan_outputs(output_dir, result))
 
         # -----------------------------------------------------------------
-        # Garmin Calendar Sync: push the 28-day AI plan to the watch
+        # Garmin Calendar Sync: push the single suggested next workout to the watch
         # -----------------------------------------------------------------
         if sync_calendar:
-            weekly_plan_dict = result.get("weekly_plan")
-            plan_text: str | None = None
-            if isinstance(weekly_plan_dict, dict):
-                plan_text = weekly_plan_dict.get("output") or weekly_plan_dict.get("content")
-            elif isinstance(weekly_plan_dict, str):
-                plan_text = weekly_plan_dict
-
-            if plan_text:
-                logger.info("Syncing 28-day training plan to Garmin calendar...")
-                try:
-                    max_hr = 220 - age
-                    parser = PlanParser(max_hr=max_hr)
-                    parsed_workouts = parser.parse_weekly_plan(
-                        plan_text=plan_text,
-                        start_date=now,
-                    )
-                    non_rest = [w for w in parsed_workouts if w.workout_type != "rest"]
-                    logger.info(
-                        "Parsed %d workouts from plan (%d rest days skipped)",
-                        len(non_rest),
-                        len(parsed_workouts) - len(non_rest),
-                    )
-                    syncer = GarminCalendarSyncer(extractor.garmin)
-                    workout_ids = syncer.sync_plan_to_calendar(
-                        workouts=parsed_workouts,
-                        clear_existing=True,
-                        days_ahead=35,
-                    )
-                    logger.info("✅ Synced %d workouts to Garmin calendar", len(workout_ids))
+            logger.info("Syncing suggested next run to Garmin calendar...")
+            try:
+                syncer = GarminCalendarSyncer(extractor.garmin)
+                # Clear future workouts for the next 7 days to keep the calendar clean
+                syncer._clear_future_scheduled_workouts(days_ahead=7)
+                
+                date_str = now.strftime("%Y-%m-%d")
+                if suggestion["distance_km"] > 0:
+                    workout_id = syncer.sync_workout_to_calendar(suggestion, date_str)
+                    logger.info("✅ Successfully synced suggested run to Garmin calendar: %s (workout ID: %s)", date_str, workout_id)
                     # Save a record of what was synced
                     (output_dir / "calendar_sync.json").write_text(
-                        json.dumps(
-                            [
-                                {
-                                    "date": w.date_str,
-                                    "name": w.workout_name,
-                                    "type": w.workout_type,
-                                    "duration_mins": round(w.estimated_duration_secs / 60),
-                                }
-                                for w in parsed_workouts
-                                if w.workout_type != "rest"
-                            ],
-                            indent=2,
-                        ),
+                        json.dumps([
+                            {
+                                "date": date_str,
+                                "name": suggestion["workout_name"],
+                                "type": "run",
+                                "duration_mins": round(suggestion["duration_min"]),
+                            }
+                        ], indent=2),
                         encoding="utf-8",
                     )
                     logger.info("Saved calendar_sync.json to %s", output_dir)
-                except Exception:
-                    logger.exception("Calendar sync failed — analysis results are still saved")
-            else:
-                logger.warning(
-                    "sync_calendar=true but no weekly_plan found in result; "
-                    "run with skip_synthesis=false to generate a plan"
-                )
+                else:
+                    logger.info("Today is suggested as a Rest Day. Skipping workout upload.")
+                    (output_dir / "calendar_sync.json").write_text(json.dumps([]), encoding="utf-8")
+            except Exception:
+                logger.exception("Calendar sync failed — analysis results are still saved")
 
         cost_total = float(
             result.get("cost_summary", {}).get("total_cost_usd", 0.0) or
