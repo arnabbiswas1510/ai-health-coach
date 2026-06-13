@@ -422,6 +422,18 @@ def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: 
         inches = 0
     height_ft_in = f"{feet}'{inches}\""
 
+    # 4.5-Month Weight Loss Plan (Accountability Partner Tracker)
+    # Start: June 13, 2026 at 179.8 lbs. Target: 160.0 lbs in 137 days (4.5 months).
+    start_date = datetime(2026, 6, 13).date()
+    start_weight_lbs = 179.8
+    target_weight_lbs = 160.0
+    target_days = 137
+    daily_rate = (start_weight_lbs - target_weight_lbs) / target_days  # ~0.1445 lbs/day
+    
+    today_date = datetime.now().date()
+    days_elapsed = max(0, (today_date - start_date).days)
+    projected_weight_lbs = max(target_weight_lbs, start_weight_lbs - (days_elapsed * daily_rate))
+
     msg = f"""
 ## Athlete Physical Dimensions & Weight Goals
 - **Height**: {height_cm:.1f} cm ({height_ft_in}) [Golden source of truth: Garmin Connect]
@@ -429,11 +441,27 @@ def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: 
 - **Healthy BMI Range (18.5 - 24.9)**: {min_weight:.1f} kg - {max_weight:.1f} kg ({min_weight * 2.20462:.1f} lbs - {max_weight * 2.20462:.1f} lbs)
 - **Target Weight Range (preferably on the lower side, BMI 18.5 - 22.0)**: {min_weight:.1f} kg - {lower_target_weight_max:.1f} kg ({min_weight * 2.20462:.1f} lbs - {lower_target_weight_max * 2.20462:.1f} lbs)
 - **Weight Management Goal**: {weight_goal}
+
+### ⚖️ 4.5-Month Weight Loss Accountability Tracker
+- **Plan Start Date**: 2026-06-13 (Start Weight: {start_weight_lbs:.1f} lbs)
+- **Target Horizon**: 4.5 months (Projected completion: 2026-10-28, Target Weight: {target_weight_lbs:.1f} lbs)
+- **Days Elapsed**: {days_elapsed} days
+- **Today's Projected Weight Target**: {projected_weight_lbs:.1f} lbs
 """
     if weight_kg:
+        current_weight_lbs = weight_kg * 2.20462
         current_bmi = weight_kg / (height_m ** 2)
-        msg += f"- **Current Weight**: {weight_kg:.1f} kg ({weight_kg * 2.20462:.1f} lbs) [Source: Garmin Connect]\n"
+        deviation_lbs = current_weight_lbs - projected_weight_lbs
+        
+        msg += f"- **Actual Current Weight**: {current_weight_lbs:.1f} lbs ({weight_kg:.1f} kg) [Source: Garmin Connect]\n"
         msg += f"- **Current BMI**: {current_bmi:.1f}\n"
+        
+        if deviation_lbs > 0.1:
+            msg += f"- **Accountability Status**: 🚨 BEHIND PLAN BY {deviation_lbs:.1f} lbs\n"
+            msg += f"- **Accountability Coaching Alert**: You are currently above your projected weight loss path. Coach demands review of calorie compliance, strict Zone 2 consistency (no pacing overshoots!), and limiting processed carbohydrates.\n"
+        else:
+            msg += f"- **Accountability Status**: 🎉 ON TRACK (Ahead of plan by {abs(deviation_lbs):.1f} lbs)\n"
+            msg += f"- **Accountability Coaching Alert**: Excellent discipline! You are executing your calorie deficit and Zone 2 aerobic base building perfectly. Keep it up and maintain consistency.\n"
 
         if current_bmi < min_bmi:
             msg += "- **Status**: Underweight (BMI < 18.5). WARNING: Athlete is below the healthy range. Do NOT restrict calories or promote weight loss. Focus on muscle mass preservation, adequate recovery, and caloric sufficiency.\n"
@@ -443,7 +471,7 @@ def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: 
         else:
             msg += "- **Status**: Within target lower-healthy-range. Goal: Maintain current weight. Emphasize consistency in aerobic conditioning, balance training volume with caloric intake to avoid under-recovery.\n"
     else:
-        msg += "- **Current Weight**: Not available (awaiting Garmin scale sync or manual entry).\n"
+        msg += "- **Actual Current Weight**: Not available (awaiting Garmin scale sync or manual entry).\n"
         msg += "- **Status**: Pending current weight data. Maintain training routines focused on general aerobic base building.\n"
 
     msg += f"""
