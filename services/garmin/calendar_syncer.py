@@ -20,14 +20,14 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 # HR target dict builder
-def _HR_TARGET(lo, hi):
+def _HR_TARGET_TYPE():
     return {
-    "workoutTargetTypeId": 4,  # TargetType.HEART_RATE
-    "workoutTargetTypeKey": "heart.rate.zone",
-    "displayOrder": 1,
-    "targetValueOne": float(lo),
-    "targetValueTwo": float(hi),
-}
+        "workoutTargetTypeId": 4,  # TargetType.HEART_RATE
+        "workoutTargetTypeKey": "heart.rate.zone",
+        "displayOrder": 4,
+    }
+
+
 _NO_TARGET = {
     "workoutTargetTypeId": 1,  # TargetType.NO_TARGET
     "workoutTargetTypeKey": "no.target",
@@ -103,8 +103,10 @@ class GarminCalendarSyncer:
         run_step = create_interval_step(
             float(segments["run_secs"]),
             step_order=2,
-            target_type=_HR_TARGET(segments["target_hr_min"], segments["target_hr_max"]),
+            target_type=_HR_TARGET_TYPE(),
         )
+        run_step.targetValueOne = float(segments["target_hr_min"])
+        run_step.targetValueTwo = float(segments["target_hr_max"])
 
         cooldown = create_cooldown_step(float(segments["cooldown_secs"]), step_order=3)
 
@@ -167,10 +169,16 @@ class GarminCalendarSyncer:
             create_interval_step,
             create_warmup_step,
         )
-        target = _HR_TARGET(pw.target_hr_min, pw.target_hr_max) if (pw.target_hr_min and pw.target_hr_max) else _NO_TARGET
+        if pw.target_hr_min and pw.target_hr_max:
+            run_step = create_interval_step(pw.run_secs, step_order=2, target_type=_HR_TARGET_TYPE())
+            run_step.targetValueOne = float(pw.target_hr_min)
+            run_step.targetValueTwo = float(pw.target_hr_max)
+        else:
+            run_step = create_interval_step(pw.run_secs, step_order=2, target_type=_NO_TARGET)
+
         return [
             create_warmup_step(pw.warmup_secs, step_order=1),
-            create_interval_step(pw.run_secs, step_order=2, target_type=target),
+            run_step,
             create_cooldown_step(pw.cooldown_secs, step_order=3),
         ]
 
@@ -201,10 +209,12 @@ class GarminCalendarSyncer:
         step_order = 2
 
         for interval in pw.intervals:
-            target = _HR_TARGET(interval["hr_min"], interval["hr_max"])
             work = create_interval_step(
-                interval["work_secs"], step_order=1, target_type=target
+                interval["work_secs"], step_order=1, target_type=_HR_TARGET_TYPE()
             )
+            work.targetValueOne = float(interval["hr_min"])
+            work.targetValueTwo = float(interval["hr_max"])
+
             recovery = create_recovery_step(
                 interval["recovery_secs"], step_order=2, target_type=_NO_TARGET
             )
