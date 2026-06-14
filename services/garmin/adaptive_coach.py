@@ -11,15 +11,35 @@ class AdaptiveRunningCoach:
         self.garmin_data = garmin_data
         self.goal = goal
         self.age = age
-        self.max_hr = 220 - age  # Estimate max HR: 167 for age 53
 
         profile = garmin_data.user_profile if garmin_data else None
+        if profile and profile.lactate_threshold_heart_rate:
+            self.max_hr = int(profile.lactate_threshold_heart_rate / 0.88)
+        else:
+            self.max_hr = 220 - age  # Estimate max HR: 167 for age 53
+
         self.weight_goal = weight_goal or (profile.weight_goal if profile else None) or "maintain_lower_healthy_range"
         self.height = height or (profile.height if profile else None)
 
-        # Zone 2 is 60% to 72% of max HR, or 100-117 bpm (longevity/cardio focus)
-        self.zone2_low = zone2_min if zone2_min is not None else int(self.max_hr * 0.60)
-        self.zone2_high = zone2_max if zone2_max is not None else int(self.max_hr * 0.72)
+        # Zone 2 resolution:
+        # Priority: (1) manual config override, (2) Garmin dynamic LTHR (85-89%), (3) age-based fallback (60-72%)
+        if zone2_min is not None:
+            self.zone2_low = zone2_min
+        elif profile and profile.lactate_threshold_heart_rate is not None:
+            self.zone2_low = int(profile.lactate_threshold_heart_rate * 0.85)
+        else:
+            self.zone2_low = int(self.max_hr * 0.60)
+
+        if zone2_max is not None:
+            self.zone2_high = zone2_max
+        elif profile and profile.lactate_threshold_heart_rate is not None:
+            self.zone2_high = int(profile.lactate_threshold_heart_rate * 0.89)
+        else:
+            self.zone2_high = int(self.max_hr * 0.72)
+
+        if profile:
+            profile.zone2_low = self.zone2_low
+            profile.zone2_high = self.zone2_high
 
         self.running_activities = self._extract_running_activities()
         self.baselines = self._calculate_baselines()

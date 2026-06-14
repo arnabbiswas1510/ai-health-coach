@@ -402,7 +402,17 @@ def _save_plan_outputs(output_dir: Path, result: dict[str, Any]) -> list[str]:
     return files_generated
 
 
-def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: int, weight_goal: str) -> str:
+def get_weight_analysis_context(
+    height_cm: float,
+    weight_kg: float | None,
+    age: int,
+    weight_goal: str,
+    zone2_low: int | None = None,
+    zone2_high: int | None = None,
+    lthr: int | None = None,
+    zone2_min_cfg: int | None = None,
+    zone2_max_cfg: int | None = None,
+) -> str:
     height_m = height_cm / 100.0
     min_bmi = 18.5
     max_bmi = 24.9
@@ -441,7 +451,19 @@ def get_weight_analysis_context(height_cm: float, weight_kg: float | None, age: 
 - **Healthy BMI Range (18.5 - 24.9)**: {min_weight:.1f} kg - {max_weight:.1f} kg ({min_weight * 2.20462:.1f} lbs - {max_weight * 2.20462:.1f} lbs)
 - **Target Weight Range (preferably on the lower side, BMI 18.5 - 22.0)**: {min_weight:.1f} kg - {lower_target_weight_max:.1f} kg ({min_weight * 2.20462:.1f} lbs - {lower_target_weight_max * 2.20462:.1f} lbs)
 - **Weight Management Goal**: {weight_goal}
+"""
 
+    if zone2_low is not None and zone2_high is not None:
+        msg += f"\n## Athlete Heart Rate Zones (Resolved)\n"
+        msg += f"- **Zone 2 Range**: {zone2_low} - {zone2_high} bpm\n"
+        if zone2_min_cfg is not None or zone2_max_cfg is not None:
+            msg += "  - Source: Manually overridden via user configuration (coach_config.yaml).\n"
+        elif lthr is not None:
+            msg += f"  - Source: Dynamically calculated from Garmin Connect Lactate Threshold Heart Rate (LTHR) of {lthr} bpm (Zone 2 running: 85-89% of LTHR).\n"
+        else:
+            msg += f"  - Source: Calculated from estimated Max HR of {220 - age} bpm (Zone 2 running: 60-72% of Max HR).\n"
+
+    msg += f"""
 ### ⚖️ 4.5-Month Weight Loss Accountability Tracker
 - **Plan Start Date**: 2026-06-13 (Start Weight: {start_weight_lbs:.1f} lbs)
 - **Target Horizon**: 4.5 months (Projected completion: 2026-10-28, Target Weight: {target_weight_lbs:.1f} lbs)
@@ -597,14 +619,6 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         garmin_data.user_profile.weight = resolved_weight
         garmin_data.user_profile.weight_goal = weight_goal
 
-        # Generate the scientific weight analysis context
-        weight_context = get_weight_analysis_context(
-            height_cm=resolved_height,
-            weight_kg=resolved_weight,
-            age=config_parser.get_athlete_age(),
-            weight_goal=weight_goal
-        )
-
         # -------------------------------------------------------------
         # Adaptive Running Coach Integration
         # -------------------------------------------------------------
@@ -616,6 +630,19 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
 
         zone2_min, zone2_max = config_parser.get_zone2_bounds()
         coach = AdaptiveRunningCoach(garmin_data, goal=goal, age=age, weight_goal=weight_goal, height=resolved_height, zone2_min=zone2_min, zone2_max=zone2_max)
+
+        # Generate the scientific weight & heart rate analysis context
+        weight_context = get_weight_analysis_context(
+            height_cm=resolved_height,
+            weight_kg=resolved_weight,
+            age=age,
+            weight_goal=weight_goal,
+            zone2_low=coach.zone2_low,
+            zone2_high=coach.zone2_high,
+            lthr=garmin_data.user_profile.lactate_threshold_heart_rate if garmin_data.user_profile else None,
+            zone2_min_cfg=zone2_min,
+            zone2_max_cfg=zone2_max,
+        )
         suggestion = coach.suggest_next_run(missed_runs_count=missed_runs, accumulated_debt_km=accumulated_debt)
 
         logger.info("Suggested Run distance: %s km", suggestion["distance_km"])

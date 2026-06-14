@@ -148,3 +148,33 @@ def test_adaptive_coach_weight_management(sample_garmin_data):
     notes_healthy = suggestion_healthy["notes"]
     assert "Within target lower-healthy-range" in notes_healthy
     assert "Maintain consistency" in notes_healthy
+
+
+def test_dynamic_heart_rate_zones(sample_garmin_data):
+    from services.garmin.models import UserProfile
+
+    # Scenario 1: Dynamic LTHR is available (174 bpm)
+    sample_garmin_data.user_profile = UserProfile(lactate_threshold_heart_rate=174)
+    coach = AdaptiveRunningCoach(sample_garmin_data, age=53)
+    
+    # max_hr should be calculated from LTHR: int(174 / 0.88) = 197
+    assert coach.max_hr == 197
+    # zone2_low should be LTHR * 0.85 = 174 * 0.85 = 147.9 -> 147
+    assert coach.zone2_low == 147
+    # zone2_high should be LTHR * 0.89 = 174 * 0.89 = 154.86 -> 154
+    assert coach.zone2_high == 154
+
+    # Scenario 2: Manual config overrides are specified, they should take precedence
+    coach_override = AdaptiveRunningCoach(
+        sample_garmin_data, age=53, zone2_min=118, zone2_max=135
+    )
+    assert coach_override.zone2_low == 118
+    assert coach_override.zone2_high == 135
+
+    # Scenario 3: LTHR is not available, should fall back to 220 - age
+    sample_garmin_data.user_profile = UserProfile(lactate_threshold_heart_rate=None)
+    coach_fallback = AdaptiveRunningCoach(sample_garmin_data, age=53)
+    assert coach_fallback.max_hr == 167
+    assert coach_fallback.zone2_low == 100
+    assert coach_fallback.zone2_high == 120
+

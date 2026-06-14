@@ -41,6 +41,8 @@ class UserProfile:
     preferred_long_training_days: list[str] | None = None
     sleep_time: str | None = None
     wake_time: str | None = None
+    zone2_low: int | None = None
+    zone2_high: int | None = None
 
 
 @dataclass

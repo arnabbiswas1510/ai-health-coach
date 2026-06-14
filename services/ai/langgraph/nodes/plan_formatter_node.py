@@ -112,6 +112,25 @@ async def plan_formatter_node(state: TrainingAnalysisState) -> dict[str, list | 
     try:
         agent_start_time = datetime.now()
 
+        # Extract resolved Zone 2 bounds from the state
+        garmin_data = state.get("garmin_data", {})
+        user_profile = garmin_data.get("user_profile", {}) if isinstance(garmin_data, dict) else {}
+        z2_low = 100
+        z2_high = 120
+        if isinstance(user_profile, dict):
+            if user_profile.get("zone2_low") is not None:
+                z2_low = user_profile.get("zone2_low")
+            if user_profile.get("zone2_high") is not None:
+                z2_high = user_profile.get("zone2_high")
+
+        dynamic_system_prompt = PLAN_FORMATTER_SYSTEM_PROMPT.replace(
+            "Zone 2 (100 to 120 bpm, or under 120 bpm)",
+            f"Zone 2 ({z2_low} to {z2_high} bpm, or under {z2_high} bpm)"
+        ).replace(
+            "above 120 bpm (spiked into Zone 3/4)",
+            f"above {z2_high} bpm (spiked into Zone 3/4)"
+        )
+
         def get_content(field):
             value = state.get(field, "")
             if hasattr(value, "output"):
@@ -137,7 +156,7 @@ async def plan_formatter_node(state: TrainingAnalysisState) -> dict[str, list | 
 
         async def call_plan_formatting():
             response = await ModelSelector.get_llm(AgentRole.FORMATTER).ainvoke([
-                {"role": "system", "content": PLAN_FORMATTER_SYSTEM_PROMPT},
+                {"role": "system", "content": dynamic_system_prompt},
                 {"role": "user", "content": PLAN_FORMATTER_USER_PROMPT.format(
                     season_plan=get_content("season_plan"),
                     weekly_plan=get_content("weekly_plan"),
