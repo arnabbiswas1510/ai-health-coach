@@ -713,7 +713,7 @@
             <iframe id="iframe-metrics" src="analysis.html" class="tab-iframe" onload="styleIframe(this, 'metrics')"></iframe>
         </div>
         <div class="tab-content" id="tab-retro">
-            <iframe id="iframe-retro" src="planning.html?tab=retro#retro-analysis" class="tab-iframe" onload="styleIframe(this, 'retro')"></iframe>
+            <iframe id="iframe-retro" src="planning.html?tab=retro" class="tab-iframe" onload="styleIframe(this, 'retro')"></iframe>
         </div>
 
         <!-- Quick Links for raw files -->
@@ -1023,8 +1023,13 @@
                 if (doc && doc.documentElement) {
                     const height = doc.documentElement.scrollHeight;
                     const currentHeight = parseFloat(iframe.style.height) || 0;
-                    if (Math.abs(currentHeight - height) > 3) {
+                    
+                    const now = Date.now();
+                    const lastResize = iframe._lastResizeTime || 0;
+                    // Throttle updates: only resize if difference > 10px and at least 300ms passed since last resize
+                    if (Math.abs(currentHeight - height) > 10 && (now - lastResize > 300)) {
                         iframe.style.height = height + 'px';
+                        iframe._lastResizeTime = now;
                     }
                 }
             } catch (e) {
@@ -1047,8 +1052,13 @@
                     if (iframe.contentWindow === e.source) {
                         const newHeight = e.data.height;
                         const currentHeight = parseFloat(iframe.style.height) || 0;
-                        if (Math.abs(currentHeight - newHeight) > 3) {
+                        
+                        const now = Date.now();
+                        const lastResize = iframe._lastResizeTime || 0;
+                        // Throttle updates: only resize if difference > 10px and at least 300ms passed since last resize
+                        if (Math.abs(currentHeight - newHeight) > 10 && (now - lastResize > 300)) {
                             iframe.style.height = newHeight + 'px';
+                            iframe._lastResizeTime = now;
                         }
                         break;
                     }
