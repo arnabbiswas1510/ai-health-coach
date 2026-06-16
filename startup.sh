@@ -99,6 +99,13 @@ if [ ! -L /usr/share/nginx/html ]; then
     ln -s /app/data /usr/share/nginx/html
 fi
 
+# Always copy the latest index.html to the data directory so that UI updates are applied on container restart/deployment
+if [ -f "/app/index.html" ]; then
+    log "Copying latest index.html to /app/data/index.html..."
+    cp /app/index.html /app/data/index.html
+    ok "Latest index.html copied."
+fi
+
 # Test nginx config before starting
 nginx -t 2>/dev/null || die "nginx configuration test failed. Check nginx.nas.conf."
 nginx

@@ -1158,12 +1158,22 @@
                 document.getElementById('chat-plan-reload').classList.remove('visible');
             }
 
+            function addQuickFeedback(text) {
+                const input = document.getElementById('chat-input');
+                if (input) {
+                    input.value = text;
+                    autoResize(input);
+                    sendChatMessage();
+                }
+            }
+
             // Expose chat functions to window
             window.toggleChatPanel = toggleChatPanel;
             window.sendChatMessage = sendChatMessage;
             window.handleChatKey = handleChatKey;
             window.autoResize = autoResize;
             window.clearChatHistory = clearChatHistory;
+            window.addQuickFeedback = addQuickFeedback;
         })();
     </script>
 </body>
