@@ -42,6 +42,9 @@ COPY nginx.nas.conf /etc/nginx/nginx.conf
 COPY startup.sh /app/startup.sh
 RUN chmod +x /app/startup.sh
 
+# Generate a build hash of python, html, css, and js files inside the container to detect deployments
+RUN find /app -type f \( -name "*.py" -o -name "*.html" -o -name "*.css" -o -name "*.js" \) ! -path "*/data/*" ! -path "*/tokens/*" | sort | xargs sha256sum > /app/build_hash.txt
+
 # ── Environment defaults ──────────────────────────────────────────────────────
 ENV PYTHONUNBUFFERED=1
 ENV GARMINCONNECT_TOKENS=/app/tokens

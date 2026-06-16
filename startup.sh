@@ -57,10 +57,23 @@ echo -e ""
 FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
 SKIP_INITIAL_RUN=false
 
-if [ "$FORCE_ANALYTICS" = "true" ]; then
-    log "Step 1/5 — FORCE_ANALYTICS=true: Cleaning old HTML files to force regeneration..."
+# Detect new deployments by comparing the current build hash against the persisted build hash
+NEW_DEPLOYMENT=false
+if [ -f "/app/build_hash.txt" ]; then
+    if [ ! -f "/app/data/build_hash.txt" ] || ! cmp -s "/app/build_hash.txt" "/app/data/build_hash.txt"; then
+        log "Detected new deployment/code changes! Forcing HTML regeneration to apply updates."
+        NEW_DEPLOYMENT=true
+    fi
+fi
+
+if [ "$FORCE_ANALYTICS" = "true" ] || [ "$NEW_DEPLOYMENT" = "true" ]; then
+    log "Step 1/5 — Cleaning old HTML files to force regeneration..."
     find /app/data -maxdepth 3 -name "*.html" -print -delete 2>/dev/null || true
     ok "Stale HTML artifacts cleaned."
+    # Copy build hash to data directory to mark this deployment as processed
+    if [ -f "/app/build_hash.txt" ]; then
+        cp /app/build_hash.txt /app/data/build_hash.txt
+    fi
 else
     # Check if planning.html and analysis.html exist and are not empty
     if [ -s "/app/data/planning.html" ] && [ -s "/app/data/analysis.html" ]; then
