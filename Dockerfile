@@ -42,8 +42,16 @@ COPY nginx.nas.conf /etc/nginx/nginx.conf
 COPY startup.sh /app/startup.sh
 RUN chmod +x /app/startup.sh
 
-# Generate a build hash of python, html, css, and js files inside the container to detect deployments
-RUN find /app -type f \( -name "*.py" -o -name "*.html" -o -name "*.css" -o -name "*.js" \) ! -path "*/data/*" ! -path "*/tokens/*" | sort | xargs sha256sum > /app/build_hash.txt
+# Generate a build hash from ONLY the files whose changes require fresh HTML output.
+# Narrowed to index.html and the two locked HTML template modules.
+# Changes to other Python files (nodes, CLI, formatters, etc.) do NOT force a re-run.
+# To force a re-run manually, set FORCE_ANALYTICS=true in your .env or docker-compose.
+RUN sha256sum \
+      /app/index.html \
+      /app/services/ai/langgraph/nodes/planning_template.py \
+      /app/services/ai/langgraph/nodes/analysis_template.py \
+    > /app/build_hash.txt 2>/dev/null || \
+    echo "build_hash_fallback_$(date +%s)" > /app/build_hash.txt
 
 # ── Environment defaults ──────────────────────────────────────────────────────
 ENV PYTHONUNBUFFERED=1
