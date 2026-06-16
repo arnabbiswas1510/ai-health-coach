@@ -459,7 +459,7 @@ def get_weight_analysis_context(
         if zone2_min_cfg is not None or zone2_max_cfg is not None:
             msg += "  - Source: Manually overridden via user configuration (coach_config.yaml).\n"
         elif lthr is not None:
-            msg += f"  - Source: Dynamically calculated from Garmin Connect Lactate Threshold Heart Rate (LTHR) of {lthr} bpm (Zone 2 running: 85-89% of LTHR).\n"
+            msg += f"  - Source: Dynamically calculated from Garmin Connect Lactate Threshold Heart Rate (LTHR) of {lthr} bpm (Zone 2 running: 80-89% of LTHR).\n"
         else:
             msg += f"  - Source: Calculated from estimated Max HR of {220 - age} bpm (Zone 2 running: 60-72% of Max HR).\n"
 

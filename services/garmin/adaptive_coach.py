@@ -22,11 +22,11 @@ class AdaptiveRunningCoach:
         self.height = height or (profile.height if profile else None)
 
         # Zone 2 resolution:
-        # Priority: (1) manual config override, (2) Garmin dynamic LTHR (85-89%), (3) age-based fallback (60-72%)
+        # Priority: (1) manual config override, (2) Garmin dynamic LTHR (80-89%), (3) age-based fallback (60-72%)
         if zone2_min is not None:
             self.zone2_low = zone2_min
         elif profile and profile.lactate_threshold_heart_rate is not None:
-            self.zone2_low = int(profile.lactate_threshold_heart_rate * 0.85)
+            self.zone2_low = int(profile.lactate_threshold_heart_rate * 0.80)
         else:
             self.zone2_low = int(self.max_hr * 0.60)
 
