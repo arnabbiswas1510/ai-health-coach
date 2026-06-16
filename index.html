@@ -1001,8 +1001,12 @@
                 `;
                 doc.head.appendChild(style);
 
-                // Resize once on load, then let postMessage drive further updates
-                resizeIframe(iframe);
+                // Measure height immediately, then at 100ms, 500ms, 1500ms intervals
+                // to catch the layout settling after style injection.
+                resizeIframe(iframe, true);
+                setTimeout(() => resizeIframe(iframe, true), 100);
+                setTimeout(() => resizeIframe(iframe, true), 500);
+                setTimeout(() => resizeIframe(iframe, true), 1500);
 
                 // Also attach click listeners inside the iframe to trigger recalculation on interaction
                 doc.body.addEventListener('click', () => {
@@ -1018,23 +1022,20 @@
             }
         }
 
-        function resizeIframe(iframe) {
+        function resizeIframe(iframe, force) {
             try {
                 const doc = iframe.contentDocument || iframe.contentWindow.document;
                 if (doc && doc.documentElement) {
                     const height = doc.documentElement.scrollHeight;
+                    if (height < 10) return; // skip trivially-small readings before layout
                     const currentHeight = parseFloat(iframe.style.height) || 0;
-                    
-                    const now = Date.now();
-                    const lastResize = iframe._lastResizeTime || 0;
-                    // Throttle updates: only resize if difference > 10px and at least 300ms passed since last resize
-                    if (Math.abs(currentHeight - height) > 10 && (now - lastResize > 300)) {
+                    if (force || Math.abs(currentHeight - height) > 10) {
                         iframe.style.height = height + 'px';
-                        iframe._lastResizeTime = now;
+                        iframe._lastResizeTime = Date.now();
                     }
                 }
             } catch (e) {
-                // Ignore same-origin policy errors during local development if any
+                // Ignore same-origin policy errors
             }
         }
 
@@ -1045,21 +1046,18 @@
             });
         }, 1500);
 
-        // Handle cross-origin or file:// height adjustment messages from iframes
+        // Handle postMessage height updates from iframes
         window.addEventListener('message', function(e) {
             if (e.data && e.data.type === 'resize') {
                 const iframes = document.querySelectorAll('iframe');
                 for (let iframe of iframes) {
                     if (iframe.contentWindow === e.source) {
                         const newHeight = e.data.height;
+                        if (newHeight < 10) break; // ignore trivially-small readings
                         const currentHeight = parseFloat(iframe.style.height) || 0;
-                        
-                        const now = Date.now();
-                        const lastResize = iframe._lastResizeTime || 0;
-                        // Throttle updates: only resize if difference > 10px and at least 300ms passed since last resize
-                        if (Math.abs(currentHeight - newHeight) > 10 && (now - lastResize > 300)) {
+                        if (Math.abs(currentHeight - newHeight) > 10) {
                             iframe.style.height = newHeight + 'px';
-                            iframe._lastResizeTime = now;
+                            iframe._lastResizeTime = Date.now();
                         }
                         break;
                     }
