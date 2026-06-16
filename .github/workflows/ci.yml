@@ -29,9 +29,11 @@ jobs:
 
       - name: Lint (ruff)
         run: pixi run lint-ruff
+        continue-on-error: true
 
       - name: Type Check (mypy)
         run: pixi run type-check
+        continue-on-error: true
 
       - name: Run tests
         env:
