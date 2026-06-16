@@ -667,7 +667,12 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
         }
       }
 
-      window.addEventListener('load', sendHeight);
+      // Send height once after full page load (images, fonts, etc. settled)
+      window.addEventListener('load', function() {
+        sendHeight();
+        // Send again after a short delay to capture late-rendering elements
+        setTimeout(sendHeight, 500);
+      });
 
       // Only send height on horizontal resize to avoid feedback loops
       let lastWidth = window.innerWidth;
@@ -678,13 +683,14 @@ def _inject_iframe_helpers(html: str, is_planning: bool) -> str:
         }
       });
 
-      // Monitor DOM updates and clicks to resize instantly
+      // Resend on click (e.g. expanding collapsible sections)
       document.body.addEventListener('click', function() {
         setTimeout(sendHeight, 50);
       });
 
-      const observer = new MutationObserver(sendHeight);
-      observer.observe(document.body, { attributes: true, childList: true, subtree: true });
+      // NOTE: MutationObserver intentionally removed — it triggered an infinite
+      // resize feedback loop: iframe sends height → parent resizes iframe →
+      // iframe DOM mutates → MutationObserver fires → repeat.
     }
   })();
 </script>

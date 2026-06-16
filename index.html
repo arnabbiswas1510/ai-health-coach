@@ -1001,16 +1001,17 @@
                 `;
                 doc.head.appendChild(style);
 
-                // Setup dynamic resizing and mutations inside iframe
+                // Resize once on load, then let postMessage drive further updates
                 resizeIframe(iframe);
 
-                const observer = new MutationObserver(() => resizeIframe(iframe));
-                observer.observe(doc.body, { attributes: true, childList: true, subtree: true });
-
-                // Also attach click listeners to all labels and checkboxes to force recalculation on interaction
+                // Also attach click listeners inside the iframe to trigger recalculation on interaction
                 doc.body.addEventListener('click', () => {
                     setTimeout(() => resizeIframe(iframe), 50);
                 });
+
+                // NOTE: MutationObserver intentionally removed — observing the iframe body
+                // created an infinite loop: height update mutates DOM → observer fires →
+                // resizeIframe called → height update → repeat.
 
             } catch (e) {
                 console.warn("Failed to inject styles into iframe:", e);
