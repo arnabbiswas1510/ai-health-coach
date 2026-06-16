@@ -8,8 +8,6 @@ from services.ai.langgraph.state.training_analysis_state import TrainingAnalysis
 from services.ai.model_config import ModelSelector
 from services.ai.utils.retry_handler import AI_ANALYSIS_CONFIG, retry_with_backoff
 
-from .tool_calling_helper import extract_text_content
-
 logger = logging.getLogger(__name__)
 
 COMBINED_SUMMARIZER_SYSTEM_PROMPT = """## Goal

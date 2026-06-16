@@ -156,7 +156,7 @@ def test_dynamic_heart_rate_zones(sample_garmin_data):
     # Scenario 1: Dynamic LTHR is available (174 bpm)
     sample_garmin_data.user_profile = UserProfile(lactate_threshold_heart_rate=174)
     coach = AdaptiveRunningCoach(sample_garmin_data, age=53)
-    
+
     # max_hr should be calculated from LTHR: int(174 / 0.88) = 197
     assert coach.max_hr == 197
     # zone2_low should be LTHR * 0.85 = 174 * 0.85 = 147.9 -> 147

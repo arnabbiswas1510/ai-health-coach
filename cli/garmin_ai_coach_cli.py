@@ -28,7 +28,6 @@ from services.garmin import (
     AdaptiveRunningCoach,
     ExtractionConfig,
     GarminCalendarSyncer,
-    PlanParser,
     TriathlonCoachDataExtractor,
 )
 from services.outside.client import OutsideApiGraphQlClient
@@ -439,7 +438,7 @@ def get_weight_analysis_context(
     target_weight_lbs = 160.0
     target_days = 137
     daily_rate = (start_weight_lbs - target_weight_lbs) / target_days  # ~0.1445 lbs/day
-    
+
     today_date = datetime.now().date()
     days_elapsed = max(0, (today_date - start_date).days)
     projected_weight_lbs = max(target_weight_lbs, start_weight_lbs - (days_elapsed * daily_rate))
@@ -454,7 +453,7 @@ def get_weight_analysis_context(
 """
 
     if zone2_low is not None and zone2_high is not None:
-        msg += f"\n## Athlete Heart Rate Zones (Resolved)\n"
+        msg += "\n## Athlete Heart Rate Zones (Resolved)\n"
         msg += f"- **Zone 2 Range**: {zone2_low} - {zone2_high} bpm\n"
         if zone2_min_cfg is not None or zone2_max_cfg is not None:
             msg += "  - Source: Manually overridden via user configuration (coach_config.yaml).\n"
@@ -474,16 +473,16 @@ def get_weight_analysis_context(
         current_weight_lbs = weight_kg * 2.20462
         current_bmi = weight_kg / (height_m ** 2)
         deviation_lbs = current_weight_lbs - projected_weight_lbs
-        
+
         msg += f"- **Actual Current Weight**: {current_weight_lbs:.1f} lbs ({weight_kg:.1f} kg) [Source: Garmin Connect]\n"
         msg += f"- **Current BMI**: {current_bmi:.1f}\n"
-        
+
         if deviation_lbs > 0.1:
             msg += f"- **Accountability Status**: 🚨 BEHIND PLAN BY {deviation_lbs:.1f} lbs\n"
-            msg += f"- **Accountability Coaching Alert**: You are currently above your projected weight loss path. Coach demands review of calorie compliance, strict Zone 2 consistency (no pacing overshoots!), and limiting processed carbohydrates.\n"
+            msg += "- **Accountability Coaching Alert**: You are currently above your projected weight loss path. Coach demands review of calorie compliance, strict Zone 2 consistency (no pacing overshoots!), and limiting processed carbohydrates.\n"
         else:
             msg += f"- **Accountability Status**: 🎉 ON TRACK (Ahead of plan by {abs(deviation_lbs):.1f} lbs)\n"
-            msg += f"- **Accountability Coaching Alert**: Excellent discipline! You are executing your calorie deficit and Zone 2 aerobic base building perfectly. Keep it up and maintain consistency.\n"
+            msg += "- **Accountability Coaching Alert**: Excellent discipline! You are executing your calorie deficit and Zone 2 aerobic base building perfectly. Keep it up and maintain consistency.\n"
 
         if current_bmi < min_bmi:
             msg += "- **Status**: Underweight (BMI < 18.5). WARNING: Athlete is below the healthy range. Do NOT restrict calories or promote weight loss. Focus on muscle mass preservation, adequate recovery, and caloric sufficiency.\n"
@@ -743,7 +742,7 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
                 syncer = GarminCalendarSyncer(extractor.garmin)
                 # Clear future workouts for the next 7 days to keep the calendar clean
                 syncer._clear_future_scheduled_workouts(days_ahead=7)
-                
+
                 date_str = now.strftime("%Y-%m-%d")
                 if suggestion["distance_km"] > 0:
                     workout_id = syncer.sync_workout_to_calendar(suggestion, date_str)

@@ -10,7 +10,6 @@ from services.ai.langgraph.schemas import (
     PhysiologyExpertOutputs,
 )
 from services.ai.langgraph.state.training_analysis_state import TrainingAnalysisState
-from services.ai.langgraph.utils.message_helper import normalize_langchain_messages
 from services.ai.model_config import ModelSelector
 from services.ai.tools.plotting import PlotStorage
 from services.ai.utils.retry_handler import AI_ANALYSIS_CONFIG, retry_with_backoff
@@ -24,7 +23,6 @@ from .node_base import (
 )
 from .prompt_components import (
     get_plotting_instructions,
-    get_workflow_context,
 )
 from .tool_calling_helper import handle_tool_calling_in_node
 
@@ -102,7 +100,6 @@ For the `synthesis` field, write the final Integrated Athlete Report:
 
 async def combined_analyst_node(state: TrainingAnalysisState) -> dict[str, list | str | dict]:
     logger.info("Starting Combined Analyst node")
-    node_name = "Combined Analyst"
 
     plot_storage = PlotStorage(state["execution_id"])
     plotting_enabled = state.get("plotting_enabled", False)

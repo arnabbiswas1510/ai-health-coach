@@ -205,12 +205,11 @@ class AdaptiveRunningCoach:
         # Fetch latest recovery indicators from Garmin Connect
         sleep_score = None
         avg_stress = None
-        hrv_value = None
         if self.garmin_data and self.garmin_data.recovery_indicators:
             latest_rec = self.garmin_data.recovery_indicators[-1]
             if latest_rec.sleep:
                 sleep_score = latest_rec.sleep.get("quality", {}).get("overall_score")
-                hrv_value = latest_rec.sleep.get("avg_overnight_hrv")
+                latest_rec.sleep.get("avg_overnight_hrv")
             if latest_rec.stress:
                 avg_stress = latest_rec.stress.get("avg_level")
 
