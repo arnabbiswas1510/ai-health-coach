@@ -722,7 +722,7 @@ def _get_chat_panel_html() -> str:
     bottom: 24px;
     right: 24px;
     width: 380px;
-    max-height: 600px;
+    max-height: min(600px, calc(100vh - 48px));
     background: rgba(15, 23, 42, 0.92);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(99, 179, 237, 0.25);
