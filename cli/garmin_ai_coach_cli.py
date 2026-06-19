@@ -762,23 +762,25 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         files_generated.extend(_save_plan_outputs(output_dir, result))
 
         # -----------------------------------------------------------------
-        # Garmin Workout Library Sync
-        # Upload the suggested workout to Garmin's workout library — no date
-        # is assigned.  The athlete runs it whenever they choose (rest day or
-        # not).  The 7-day forecast in the planning HTML is purely advisory.
-        # Garmin Connect / the watch surfaces it under "My Workouts".
+        # Garmin Sync: upload to library + schedule for TODAY
+        # Scheduling for today triggers an automatic Bluetooth sync to the
+        # watch — no "Send to Device" tap needed. Each morning the sleep
+        # trigger fires, the old entry is cleared, and a fresh workout is
+        # scheduled for the new day.
         # -----------------------------------------------------------------
         if sync_calendar:
-            logger.info("Uploading next workout to Garmin workout library...")
+            logger.info("Uploading next workout to Garmin and scheduling for today...")
             try:
+                from datetime import date as _date
                 syncer = GarminCalendarSyncer(extractor.garmin)
 
                 if suggestion["distance_km"] > 0:
                     workout_id = syncer.upload_workout_to_library(suggestion)
+                    today_str = _date.today().isoformat()
+                    extractor.garmin.client.schedule_workout(workout_id, today_str)
                     logger.info(
-                        "✅ Workout uploaded to Garmin library: '%s' (ID: %s) — "
-                        "no date assigned; athlete runs it when ready.",
-                        suggestion["workout_name"], workout_id,
+                        "✅ Workout '%s' (ID: %s) scheduled for %s — syncs to watch automatically.",
+                        suggestion["workout_name"], workout_id, today_str,
                     )
                     (output_dir / "calendar_sync.json").write_text(
                         json.dumps([{
@@ -786,15 +788,17 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
                             "name": suggestion["workout_name"],
                             "type": "run",
                             "duration_mins": round(suggestion["duration_min"]),
-                            "note": "Date-agnostic — run when ready",
+                            "scheduled_date": today_str,
+                            "note": "Scheduled for today — syncs automatically to watch",
                         }], indent=2),
                         encoding="utf-8",
                     )
                 else:
-                    logger.info("Suggested workout is Rest/Active-Recovery — skipping library upload.")
+                    logger.info("Suggested workout is Rest/Active-Recovery — skipping sync.")
                     (output_dir / "calendar_sync.json").write_text(json.dumps([]), encoding="utf-8")
             except Exception:
-                logger.exception("Garmin library upload failed — analysis results are still saved")
+                logger.exception("Garmin sync failed — analysis results are still saved")
+
 
         cost_total = float(
             result.get("cost_summary", {}).get("total_cost_usd", 0.0) or
