@@ -129,6 +129,55 @@ class GarminCalendarSyncer:
         logger.info("Legacy workout synced: id=%s on %s", workout_id, date_str)
         return workout_id
 
+    def upload_workout_to_library(self, workout_data: dict[str, Any]) -> str:
+        """Upload a workout to Garmin's workout library with NO calendar date.
+
+        The athlete can pick it up from 'My Workouts' in Garmin Connect or on
+        the watch and run it on any day they choose — rest day or not.
+        Returns the workout ID string.
+        """
+        from garminconnect.workout import (
+            RunningWorkout,
+            WorkoutSegment,
+            create_cooldown_step,
+            create_interval_step,
+            create_warmup_step,
+        )
+
+        logger.info("Building Garmin workout for library: %s", workout_data.get("workout_name", "Run"))
+        segments = workout_data["structured_segments"]
+
+        warmup = create_warmup_step(float(segments["warmup_secs"]), step_order=1)
+
+        run_step = create_interval_step(
+            float(segments["run_secs"]),
+            step_order=2,
+            target_type=_HR_TARGET_TYPE(),
+        )
+        run_step.targetValueOne = float(segments["target_hr_min"])
+        run_step.targetValueTwo = float(segments["target_hr_max"])
+
+        cooldown = create_cooldown_step(float(segments["cooldown_secs"]), step_order=3)
+
+        total_duration = segments["warmup_secs"] + segments["run_secs"] + segments["cooldown_secs"]
+        workout = RunningWorkout(
+            workoutName=workout_data.get("workout_name", "Next Run"),
+            estimatedDurationInSecs=int(total_duration),
+            workoutSegments=[
+                WorkoutSegment(
+                    segmentOrder=1,
+                    sportType={"sportTypeId": 1, "sportTypeKey": "running"},
+                    workoutSteps=[warmup, run_step, cooldown],
+                )
+            ],
+        )
+
+        upload_result = self.client.client.upload_running_workout(workout)
+        workout_id = str(upload_result["workoutId"])
+        # NOTE: no schedule_workout() call — date-agnostic by design
+        logger.info("Workout uploaded to library (no date): id=%s", workout_id)
+        return workout_id
+
     # ------------------------------------------------------------------
     # Internal helpers
     # ------------------------------------------------------------------
