@@ -787,44 +787,45 @@ class TriathlonCoachDataExtractor(DataExtractor):
             )
 
             # Fetch athlete self-evaluation (perceived effort + workout feeling)
-            # entered on watch/app after the activity
-            evaluation = self._call_api(
-                self.garmin.client.get_activity_evaluation,
-                activity_id,
-                default={},
-                what=f"get_activity_evaluation({activity_id})",
-            ) or {}
-            if evaluation:
-                # perceived effort: 1-10 RPE from activityEvaluation.perceivedEffort
-                pe = _to_int(
-                    evaluation.get("perceivedEffort")
-                    or evaluation.get("perceived_effort")
-                )
-                activity.perceived_effort = pe
-
-                # workout feeling: numeric key → human label
-                # Garmin uses 0-5 scale: 0=No Input, 1=Terrible, 2=Worse, 3=Okay, 4=Good, 5=Great
-                _FEELING_MAP = {
-                    0: None,         # no input
-                    1: "Terrible",
-                    2: "Worse than usual",
-                    3: "Okay",
-                    4: "Good",
-                    5: "Great",
-                }
-                feeling_val = evaluation.get("activityFeedbackSummary") or evaluation.get("feeling")
-                if feeling_val is not None:
-                    feeling_int = _to_int(feeling_val)
-                    if feeling_int in _FEELING_MAP:
-                        activity.workout_feeling = _FEELING_MAP[feeling_int]
-                    elif isinstance(feeling_val, str) and feeling_val.strip():
-                        activity.workout_feeling = feeling_val.strip()
-
-                if activity.perceived_effort or activity.workout_feeling:
-                    logger.info(
-                        "Activity %s feedback: effort=%s, feeling=%s",
-                        activity_id, activity.perceived_effort, activity.workout_feeling,
+            # entered on watch/app after the activity.
+            # Guard: get_activity_evaluation may not exist in all garminconnect versions.
+            if hasattr(self.garmin.client, "get_activity_evaluation"):
+                evaluation = self._call_api(
+                    self.garmin.client.get_activity_evaluation,
+                    activity_id,
+                    default={},
+                    what=f"get_activity_evaluation({activity_id})",
+                ) or {}
+                if evaluation:
+                    pe = _to_int(
+                        evaluation.get("perceivedEffort")
+                        or evaluation.get("perceived_effort")
                     )
+                    activity.perceived_effort = pe
+
+                    _FEELING_MAP = {
+                        0: None,
+                        1: "Terrible",
+                        2: "Worse than usual",
+                        3: "Okay",
+                        4: "Good",
+                        5: "Great",
+                    }
+                    feeling_val = evaluation.get("activityFeedbackSummary") or evaluation.get("feeling")
+                    if feeling_val is not None:
+                        feeling_int = _to_int(feeling_val)
+                        if feeling_int in _FEELING_MAP:
+                            activity.workout_feeling = _FEELING_MAP[feeling_int]
+                        elif isinstance(feeling_val, str) and feeling_val.strip():
+                            activity.workout_feeling = feeling_val.strip()
+
+                    if activity.perceived_effort or activity.workout_feeling:
+                        logger.info(
+                            "Activity %s feedback: effort=%s, feeling=%s",
+                            activity_id, activity.perceived_effort, activity.workout_feeling,
+                        )
+            else:
+                logger.debug("get_activity_evaluation not available in this garminconnect version — skipping feedback fetch")
 
             return activity
 
