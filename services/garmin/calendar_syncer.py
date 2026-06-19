@@ -134,6 +134,8 @@ class GarminCalendarSyncer:
 
         The athlete can pick it up from 'My Workouts' in Garmin Connect or on
         the watch and run it on any day they choose — rest day or not.
+        Any previous workout with the same "Coach:" prefix is deleted first so
+        only one coach workout exists in the library at a time.
         Returns the workout ID string.
         """
         from garminconnect.workout import (
@@ -143,6 +145,9 @@ class GarminCalendarSyncer:
             create_interval_step,
             create_warmup_step,
         )
+
+        # Remove any previous coach-generated workouts so the new one replaces them
+        self._clear_coach_library_workouts()
 
         logger.info("Building Garmin workout for library: %s", workout_data.get("workout_name", "Run"))
         segments = workout_data["structured_segments"]
@@ -177,6 +182,29 @@ class GarminCalendarSyncer:
         # NOTE: no schedule_workout() call — date-agnostic by design
         logger.info("Workout uploaded to library (no date): id=%s", workout_id)
         return workout_id
+
+    def _clear_coach_library_workouts(self, prefix: str = "Coach:") -> None:
+        """Delete all workouts from the Garmin library whose name starts with `prefix`.
+
+        Called before uploading a new coach workout so only one exists at a time.
+        """
+        try:
+            workouts = self.client.client.get_workouts(0, 100) or []
+            deleted = 0
+            for w in workouts:
+                name = w.get("workoutName", "") or ""
+                wid = w.get("workoutId")
+                if name.startswith(prefix) and wid:
+                    try:
+                        self.client.client.delete_workout(str(wid))
+                        logger.info("Deleted previous coach workout: '%s' (id=%s)", name, wid)
+                        deleted += 1
+                    except Exception:
+                        logger.warning("Could not delete workout id=%s ('%s')", wid, name, exc_info=True)
+            if deleted == 0:
+                logger.debug("No previous coach workouts found in library.")
+        except Exception:
+            logger.warning("Could not list workouts for cleanup — proceeding with upload", exc_info=True)
 
     # ------------------------------------------------------------------
     # Internal helpers
