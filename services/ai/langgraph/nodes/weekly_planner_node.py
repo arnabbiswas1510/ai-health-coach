@@ -59,7 +59,7 @@ Create today's custom, autoregulated running workout prescription and a provisio
 ## Output Requirements
 Your output MUST contain exactly two sections:
 
-1. **TODAY'S SUGGESTED WORKOUT (Run of the Day)**:
+1. **NEXT WORKOUT (Run of the Day)**:
    - **Workout Details**: Target Distance (km), Target Duration (mins), Target Pace (min/km), Target HR Zone.
    - **Structured segments**: Step-by-step instructions (Warmup, Run/Walk intervals, Cooldown).
    - **Purpose**: Why this workout is prescribed today.
@@ -73,7 +73,7 @@ Your output MUST contain exactly two sections:
 
 WEEKLY_PLANNER_FINAL_CHECKLIST = """
 ## Final Checklist
-- Generate only Today's Workout and a 7-day provisional forecast.
+- Generate only the Next Workout and a 7-day provisional forecast.
 - Factor in and directly respond to the athlete's latest feedback/comments in the planning context.
 - Adhere strictly to the physiological limits specified by the experts.
 - Keep output concise and structured.

@@ -3,6 +3,7 @@ import logging
 import os
 import subprocess
 import time
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -100,12 +101,52 @@ def check_and_run():  # noqa: C901
     if last_id_file.exists():
         last_processed_id = last_id_file.read_text(encoding="utf-8").strip()
 
-    if activity_id == last_processed_id:
-        logger.info("No new runs detected for %s. Plan is up to date.", display_name)
+    should_run = False
+    run_reason = ""
+
+    if activity_id != last_processed_id:
+        # Trigger 1: new workout uploaded
+        should_run = True
+        run_reason = f"New activity detected (ID: {activity_id} != {last_processed_id})"
+
+    if not should_run:
+        # Trigger 2: new overnight sleep data available
+        # Garmin uploads sleep data in the morning after you sync your watch.
+        # We check once per day whether yesterday's sleep record has arrived.
+        last_sleep_file = user_data_dir / "last_processed_sleep_date.txt"
+        yesterday = (date.today().toordinal() - 1)
+        yesterday_iso = date.fromordinal(yesterday).isoformat()
+        last_sleep_date = ""
+        if last_sleep_file.exists():
+            last_sleep_date = last_sleep_file.read_text(encoding="utf-8").strip()
+
+        if last_sleep_date != yesterday_iso:
+            logger.info("Checking Garmin Connect for last night's sleep data (%s)...", yesterday_iso)
+            try:
+                sleep_data = client.get_sleep_data(yesterday_iso) or {}
+                daily_sleep = (sleep_data.get("dailySleepDTO") or {})
+                sleep_seconds = daily_sleep.get("sleepTimeSeconds") or 0
+                if sleep_seconds and int(sleep_seconds) > 0:
+                    sleep_hours = round(int(sleep_seconds) / 3600, 1)
+                    should_run = True
+                    run_reason = (
+                        f"New sleep data for {yesterday_iso} received "
+                        f"({sleep_hours}h) — re-calculating next workout based on recovery"
+                    )
+                    # Mark this date as processed regardless of pipeline outcome
+                    # (prevents repeated triggers on the same day's sleep)
+                    last_sleep_file.write_text(yesterday_iso, encoding="utf-8")
+                else:
+                    logger.info("Sleep data for %s not yet available. Will check again next poll.", yesterday_iso)
+            except Exception as e:
+                logger.warning("Could not fetch sleep data for %s: %s", yesterday_iso, e)
+
+    if not should_run:
+        logger.info("No new runs or sleep data detected for %s. Plan is up to date.", display_name)
         return
 
-    # 5. New activity! Run the CLI analysis
-    logger.info("New activity detected for %s! (ID: %s != %s)", display_name, activity_id, last_processed_id)
+    # 5. Trigger detected — run the CLI analysis
+    logger.info("%s: %s", display_name, run_reason)
     logger.info("Running coach analysis workflow...")
 
     # Run the python CLI script directly inside the container
@@ -117,7 +158,7 @@ def check_and_run():  # noqa: C901
         res = subprocess.run(cmd, cwd=str(project_dir), capture_output=True, text=True, check=False)
         if res.returncode == 0:
             logger.info("Coach analysis completed successfully!")
-            # Update local id record
+            # Update the activity sentinel so we don't re-trigger on the same activity
             last_id_file.write_text(activity_id, encoding="utf-8")
             logger.info("Updated last processed ID to %s", activity_id)
         else:

@@ -181,7 +181,7 @@ def _render_hero_section(d: dict) -> str:
 
     return f"""
 <section class="plan-section hero-section">
-  <h2>⚡ Today's Workout — {_e(m.get("workout_type",""))}</h2>
+  <h2>⚡ Next Workout — {_e(m.get("workout_type",""))}</h2>
   <div class="metric-grid">
     <div class="metric-card">
       <div class="metric-icon">📏</div>
