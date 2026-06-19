@@ -11,6 +11,7 @@ import json
 import logging
 import os
 import re
+import subprocess
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -290,6 +291,39 @@ def _summarise_change(new_plan: str, user_message: str) -> str:
     )
 
 
+
+def _is_regenerate_command(message: str) -> bool:
+    """Return True if the message is a request to re-run the full AI pipeline."""
+    msg = message.lower().strip().lstrip("/")
+    triggers = [
+        "regenerate", "regen", "retrigger", "re-trigger",
+        "rerun", "re-run", "run pipeline", "new workout",
+        "regenerate workout", "refresh workout", "update workout",
+    ]
+    return any(msg == t or msg.startswith(t) for t in triggers)
+
+
+def _trigger_pipeline_background(config_path: str = "/app/coach_config.yaml") -> str:
+    """Launch garmin_ai_coach_cli.py as a detached background process.
+
+    Returns a status string — 'pid=<N>' on success or 'error: ...' on failure.
+    """
+    try:
+        log_f = open("/tmp/coach_run.log", "w")
+        proc = subprocess.Popen(
+            ["python", "cli/garmin_ai_coach_cli.py", "--config", config_path],
+            stdout=log_f,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,  # detach so it survives the HTTP request
+            cwd="/app",
+        )
+        logger.info("Pipeline triggered in background: PID=%s", proc.pid)
+        return f"pid={proc.pid}"
+    except Exception as exc:
+        logger.exception("Failed to trigger pipeline: %s", exc)
+        return f"error: {exc}"
+
+
 # ---------------------------------------------------------------------------
 # API endpoints
 # ---------------------------------------------------------------------------
@@ -323,6 +357,23 @@ async def chat(req: ChatRequest) -> ChatResponse:
 
     plan_updated = False
     reply = "I encountered an error updating the plan. Please try again."
+
+    # ── Step 0: Check for /regenerate command ─────────────────────────────
+    if _is_regenerate_command(message):
+        status = _trigger_pipeline_background()
+        if status.startswith("error"):
+            reply = f"❌ Could not trigger the pipeline: {status}"
+        else:
+            reply = (
+                "🔄 **Full pipeline triggered** — I'm fetching your latest Garmin data, "
+                "re-running the AI analysis, and generating a new workout.\n\n"
+                "This takes **3–5 minutes**. The page will refresh automatically once done. "
+                "Your new workout will also be synced to Garmin Connect."
+            )
+        history = _load_feedback_history(user_id)
+        history.append({"role": "assistant", "content": reply})
+        _save_feedback_history(user_id, history)
+        return ChatResponse(reply=reply, plan_updated=False, history=history)
 
     # ── Step 1: Check for an explicit distance override ────────────────────
     distance_km = _parse_distance_override(message)
