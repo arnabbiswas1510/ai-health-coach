@@ -130,6 +130,9 @@ class Activity:
     weather: WeatherData | None = None
     hr_zones: list[HeartRateZone] | None = None
     laps: list[dict[str, Any]] | None = None  # Complex structure, keeping as Dict for now
+    # Athlete self-evaluation — entered on watch/app after activity
+    perceived_effort: int | None = None        # 1–10 RPE scale
+    workout_feeling: str | None = None         # e.g. "Good", "Rough", "Very Strong"
 
 
 @dataclass

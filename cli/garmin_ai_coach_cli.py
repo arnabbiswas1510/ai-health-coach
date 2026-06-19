@@ -702,6 +702,34 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
             except Exception as e:
                 logger.warning("Could not load/append user feedback history: %s", e)
 
+        # Append Garmin watch self-evaluation feedback (perceived effort + workout feeling)
+        # from the last 5 runs — entered by athlete on the watch after each activity
+        if garmin_data.recent_activities:
+            feedback_entries = []
+            for act in reversed(garmin_data.recent_activities):
+                if not (act.activity_type and "run" in act.activity_type.lower()):
+                    continue
+                if act.perceived_effort is None and act.workout_feeling is None:
+                    continue
+                date_label = (act.start_time or "")[:10]
+                parts = []
+                if act.workout_feeling:
+                    parts.append(f"felt {act.workout_feeling}")
+                if act.perceived_effort is not None:
+                    parts.append(f"effort {act.perceived_effort}/10")
+                if parts:
+                    feedback_entries.append(f"- {date_label} ({act.activity_name or 'Run'}): {', '.join(parts)}")
+                if len(feedback_entries) >= 5:
+                    break
+            if feedback_entries:
+                garmin_fb_section = (
+                    "\n\n## Garmin Watch Self-Evaluation (last runs):\n"
+                    + "\n".join(feedback_entries)
+                    + "\nUse this to adjust today's prescription — e.g. if recent runs felt hard, reduce volume."
+                )
+                planning_context = planning_context + garmin_fb_section
+                logger.info("Appended Garmin watch feedback for %d runs to planning context", len(feedback_entries))
+
         current_date = {"date": now.strftime("%Y-%m-%d"), "day_name": now.strftime("%A")}
         week_dates = [
             {"date": (now + timedelta(days=offset)).strftime("%Y-%m-%d"),
