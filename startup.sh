@@ -55,42 +55,30 @@ echo -e ""
 
 # ── Step 1: Check if analytics are already persisted ─────────────────────────
 FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
+
+# Skip the expensive AI pipeline on startup if persisted data already exists.
+# The daemon's polling loop handles re-running when new activities/sleep arrive.
+# Only run on startup if:
+#   a) FORCE_ANALYTICS=true is explicitly set, OR
+#   b) No planning.html exists yet (first-ever run)
 SKIP_INITIAL_RUN=false
 
-# Detect new deployments by comparing the current build hash against the persisted build hash
-NEW_DEPLOYMENT=false
-if [ -f "/app/build_hash.txt" ]; then
-    if [ ! -f "/app/data/build_hash.txt" ] || ! cmp -s "/app/build_hash.txt" "/app/data/build_hash.txt"; then
-        log "Detected new deployment/code changes! Forcing HTML regeneration to apply updates."
-        NEW_DEPLOYMENT=true
-    fi
-fi
-
-if [ "$FORCE_ANALYTICS" = "true" ] || [ "$NEW_DEPLOYMENT" = "true" ]; then
-    log "Step 1/5 — Cleaning old HTML files to force regeneration..."
+if [ "$FORCE_ANALYTICS" = "true" ]; then
+    log "Step 1/5 — FORCE_ANALYTICS=true: cleaning old HTML and forcing fresh analysis..."
     find /app/data -maxdepth 3 -name "*.html" -print -delete 2>/dev/null || true
     ok "Stale HTML artifacts cleaned."
-    # Copy build hash to data directory to mark this deployment as processed
-    if [ -f "/app/build_hash.txt" ]; then
-        cp /app/build_hash.txt /app/data/build_hash.txt
-    fi
+elif [ -s "/app/data/Arnab_Biswas/planning.html" ] || [ -s "/app/data/planning.html" ]; then
+    SKIP_INITIAL_RUN=true
+    log "Step 1/5 — Found existing analytics in /app/data."
+    ok "Skipping initial AI analysis — daemon will re-run when new activity or sleep data is detected."
 else
-    # Check if planning.html and analysis.html exist and are not empty
-    if [ -s "/app/data/planning.html" ] && [ -s "/app/data/analysis.html" ]; then
-        SKIP_INITIAL_RUN=true
-        log "Step 1/5 — Found existing analytics in /app/data (planning.html and analysis.html)."
-        ok "Skipping initial HTML cleaning."
-    else
-        log "Step 1/5 — Existing analytics missing or empty. Cleaning stale HTML files..."
-        find /app/data -maxdepth 3 -name "*.html" -print -delete 2>/dev/null || true
-        ok "Stale HTML artifacts cleaned."
-    fi
+    log "Step 1/5 — No persisted analytics found (first run). Will run initial analysis."
 fi
 
 # ── Step 2: Run initial coach analysis ────────────────────────────────────────
 if [ "$SKIP_INITIAL_RUN" = "true" ]; then
-    log "Step 2/5 — Skipping initial AI coach analysis (using persisted filesystem reports)."
-    ok "Using cached reports on filesystem (to force regeneration, delete planning.html or set FORCE_ANALYTICS=true)."
+    log "Step 2/5 — Skipping initial AI coach analysis (using persisted reports)."
+    ok "To force a fresh run: set FORCE_ANALYTICS=true and restart, or wait for daemon polling."
 else
     log "Step 2/5 — Running initial AI coach analysis (this takes 2–5 minutes)..."
     echo -e ""
@@ -102,6 +90,7 @@ else
     echo -e ""
     ok "Initial coach analysis completed — fresh HTML artifacts generated."
 fi
+
 
 # ── Step 3: Start nginx ───────────────────────────────────────────────────────
 log "Step 3/5 — Starting nginx..."
