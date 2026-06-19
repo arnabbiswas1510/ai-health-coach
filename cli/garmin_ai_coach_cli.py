@@ -765,19 +765,17 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         # Garmin Sync: upload to library + schedule for TODAY
         # Scheduling for today triggers an automatic Bluetooth sync to the
         # watch — no "Send to Device" tap needed. Each morning the sleep
-        # trigger fires, the old entry is cleared, and a fresh workout is
-        # scheduled for the new day.
+        # trigger fires, old entries are cleared, and a fresh workout is
+        # scheduled for that day.
         # -----------------------------------------------------------------
         if sync_calendar:
             logger.info("Uploading next workout to Garmin and scheduling for today...")
             try:
-                from datetime import date as _date
                 syncer = GarminCalendarSyncer(extractor.garmin)
 
                 if suggestion["distance_km"] > 0:
                     workout_id = syncer.upload_workout_to_library(suggestion)
-                    today_str = _date.today().isoformat()
-                    extractor.garmin.client.schedule_workout(workout_id, today_str)
+                    today_str = syncer.schedule_workout_for_today(workout_id)
                     logger.info(
                         "✅ Workout '%s' (ID: %s) scheduled for %s — syncs to watch automatically.",
                         suggestion["workout_name"], workout_id, today_str,

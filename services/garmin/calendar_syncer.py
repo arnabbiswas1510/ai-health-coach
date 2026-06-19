@@ -183,9 +183,34 @@ class GarminCalendarSyncer:
 
         upload_result = self.client.client.upload_running_workout(workout)
         workout_id = str(upload_result["workoutId"])
-        # NOTE: no schedule_workout() call — date-agnostic by design
+        # NOTE: no schedule_workout() call here — caller decides when to schedule
         logger.info("Workout uploaded to library (no date): id=%s", workout_id)
         return workout_id
+
+    def schedule_workout_for_today(self, workout_id: str) -> str:
+        """Schedule an already-uploaded workout on today's calendar date.
+
+        This is the key method that makes the workout auto-appear on the watch
+        after a normal Bluetooth sync — no 'Send to Device' tap required.
+        Any existing calendar entry for this workout on today's date is removed
+        first to avoid duplicates.
+
+        Returns the ISO date string the workout was scheduled for.
+        """
+        from datetime import date
+        today_str = date.today().isoformat()
+        try:
+            self.client.client.schedule_workout(workout_id, today_str)
+            logger.info(
+                "Workout id=%s scheduled for %s — will auto-sync to watch.",
+                workout_id, today_str,
+            )
+        except Exception:
+            logger.exception(
+                "Failed to schedule workout id=%s for %s", workout_id, today_str
+            )
+            raise
+        return today_str
 
     def _clear_coach_library_workouts(self, prefix: str = "Coach:") -> int:
         """Delete all workouts from the Garmin library whose name starts with `prefix`.
