@@ -146,7 +146,11 @@ class GarminCalendarSyncer:
             create_warmup_step,
         )
 
-        # Remove any previous coach-generated workouts so the new one replaces them
+        # Step 1: Remove future dated/scheduled workouts (from the old date-based approach).
+        # These accumulate on the watch calendar and trigger the "exceeded maximum workouts" warning.
+        self._clear_future_scheduled_workouts(days_ahead=60)
+
+        # Step 2: Remove any previous coach workout templates from the library
         self._clear_coach_library_workouts()
 
         logger.info("Building Garmin workout for library: %s", workout_data.get("workout_name", "Run"))
@@ -183,28 +187,37 @@ class GarminCalendarSyncer:
         logger.info("Workout uploaded to library (no date): id=%s", workout_id)
         return workout_id
 
-    def _clear_coach_library_workouts(self, prefix: str = "Coach:") -> None:
+    def _clear_coach_library_workouts(self, prefix: str = "Coach:") -> int:
         """Delete all workouts from the Garmin library whose name starts with `prefix`.
 
-        Called before uploading a new coach workout so only one exists at a time.
+        Paginates through the full library (not just the first 100) to ensure
+        no stale entries are missed. Returns the number of workouts deleted.
         """
+        deleted = 0
         try:
-            workouts = self.client.client.get_workouts(0, 100) or []
-            deleted = 0
-            for w in workouts:
-                name = w.get("workoutName", "") or ""
-                wid = w.get("workoutId")
-                if name.startswith(prefix) and wid:
-                    try:
-                        self.client.client.delete_workout(str(wid))
-                        logger.info("Deleted previous coach workout: '%s' (id=%s)", name, wid)
-                        deleted += 1
-                    except Exception:
-                        logger.warning("Could not delete workout id=%s ('%s')", wid, name, exc_info=True)
-            if deleted == 0:
-                logger.debug("No previous coach workouts found in library.")
+            page_start = 0
+            page_size = 100
+            while True:
+                workouts = self.client.client.get_workouts(page_start, page_size) or []
+                if not workouts:
+                    break
+                for w in workouts:
+                    name = w.get("workoutName", "") or ""
+                    wid = w.get("workoutId")
+                    if name.startswith(prefix) and wid:
+                        try:
+                            self.client.client.delete_workout(str(wid))
+                            logger.info("Deleted coach workout from library: '%s' (id=%s)", name, wid)
+                            deleted += 1
+                        except Exception:
+                            logger.warning("Could not delete workout id=%s ('%s')", wid, name, exc_info=True)
+                if len(workouts) < page_size:
+                    break  # last page
+                page_start += page_size
+            logger.info("_clear_coach_library_workouts: deleted %d workout(s) with prefix '%s'", deleted, prefix)
         except Exception:
-            logger.warning("Could not list workouts for cleanup — proceeding with upload", exc_info=True)
+            logger.warning("Could not list workouts for library cleanup — proceeding with upload", exc_info=True)
+        return deleted
 
     # ------------------------------------------------------------------
     # Internal helpers
