@@ -50,6 +50,7 @@ logger = logging.getLogger(__name__)
 # NOTE: host.docker.internal is Docker Desktop only and does NOT work on
 # Linux Docker (192.168.1.50). Use the Windows LAN IP instead.
 _DEFAULT_HOST = os.environ.get("LOGSEQ_HOST", "http://192.168.1.80:12315")
+_API_TOKEN    = os.environ.get("LOGSEQ_API_TOKEN", "")   # required in Logseq 0.10.x
 _API_TIMEOUT  = int(os.environ.get("LOGSEQ_API_TIMEOUT", "5"))   # seconds
 
 
@@ -59,8 +60,11 @@ def _call(method: str, args: list[Any], host: str = _DEFAULT_HOST) -> Any:
     """Call the Logseq HTTP API and return the result, or None on error."""
     url = f"{host}/api"
     payload = {"method": method, "args": args}
+    headers = {"Content-Type": "application/json"}
+    if _API_TOKEN:
+        headers["Authorization"] = f"Bearer {_API_TOKEN}"
     try:
-        resp = httpx.post(url, json=payload, timeout=_API_TIMEOUT)
+        resp = httpx.post(url, json=payload, headers=headers, timeout=_API_TIMEOUT)
         resp.raise_for_status()
         return resp.json()
     except httpx.ConnectError:
