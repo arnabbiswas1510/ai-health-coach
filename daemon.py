@@ -199,11 +199,12 @@ def check_and_run():  # noqa: C901
                 try:
                     sr = json.loads(suggested_run_path.read_text(encoding="utf-8"))
                     _run_distance = sr.get("distance_km")
-                    # suggested_run stores pace as min/km string; convert to m/s for the client
-                    pace_str = sr.get("target_pace_str", "")  # e.g. "5:45"
-                    if pace_str and ":" in pace_str:
-                        parts = pace_str.split(":")
-                        pace_sec = int(parts[0]) * 60 + int(parts[1])
+                    # target_pace_str is e.g. "6:01 /km" — strip any suffix after MM:SS
+                    pace_str = sr.get("target_pace_str", "")
+                    import re as _re
+                    m = _re.match(r"(\d+):(\d+)", pace_str)
+                    if m:
+                        pace_sec = int(m.group(1)) * 60 + int(m.group(2))
                         if pace_sec > 0:
                             _run_speed_ms = 1000.0 / pace_sec  # m/s
                 except Exception as e:
