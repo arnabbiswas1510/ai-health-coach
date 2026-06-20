@@ -10,6 +10,8 @@ from typing import Any
 import yaml
 from garminconnect import Garmin
 
+from services.logseq import write_daily_properties
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
@@ -143,6 +145,91 @@ def check_and_run():  # noqa: C901
 
     if not should_run:
         logger.info("No new runs or sleep data detected for %s. Plan is up to date.", display_name)
+
+    # ── Daily Logseq Sync ─────────────────────────────────────────────────────
+    # Runs once per day regardless of whether the full pipeline triggered.
+    # Reads yesterday's sleep from Garmin + today's suggested_run.json.
+    logseq_sync_file = user_data_dir / "last_logseq_sync_date.txt"
+    today_iso = date.today().isoformat()
+    last_logseq_date = logseq_sync_file.read_text(encoding="utf-8").strip() if logseq_sync_file.exists() else ""
+
+    if last_logseq_date != today_iso:
+        logger.info("Running daily Logseq journal sync for %s...", today_iso)
+        try:
+            import json
+
+            # Sleep fields — from yesterday's Garmin sleep data (already fetched above)
+            _sleep_hours   = None
+            _bed_time      = None
+            _wake_time     = None
+            _sleep_quality = None
+            try:
+                sleep_raw  = client.get_sleep_data(yesterday_iso) or {}
+                daily_dto  = sleep_raw.get("dailySleepDTO") or {}
+                secs       = daily_dto.get("sleepTimeSeconds") or 0
+                if secs:
+                    _sleep_hours = round(int(secs) / 3600, 2)
+                # bed / wake times stored as epoch ms in sleepStartTimestampGMT / sleepEndTimestampGMT
+                # but Garmin also exposes them as local HH:MM strings in the DTO
+                _bed_time  = daily_dto.get("sleepStartTimestampLocal")  # may be None
+                _wake_time = daily_dto.get("sleepEndTimestampLocal")    # may be None
+                # Fallback: parse from epoch ms
+                if not _bed_time:
+                    gmt_ms = daily_dto.get("sleepStartTimestampGMT")
+                    if gmt_ms:
+                        import datetime as _dt
+                        _bed_time = _dt.datetime.fromtimestamp(int(gmt_ms) / 1000).strftime("%H:%M")
+                if not _wake_time:
+                    gmt_ms = daily_dto.get("sleepEndTimestampGMT")
+                    if gmt_ms:
+                        import datetime as _dt
+                        _wake_time = _dt.datetime.fromtimestamp(int(gmt_ms) / 1000).strftime("%H:%M")
+                scores = daily_dto.get("sleepScores") or {}
+                overall = scores.get("overall") or {}
+                _sleep_quality = overall.get("value")
+            except Exception as e:
+                logger.warning("Logseq sync: could not fetch sleep data: %s", e)
+
+            # Run fields — from persisted suggested_run.json
+            _run_distance = None
+            _run_speed_ms = None
+            _run_avg_hr   = None
+            suggested_run_path = user_data_dir / "suggested_run.json"
+            if suggested_run_path.exists():
+                try:
+                    sr = json.loads(suggested_run_path.read_text(encoding="utf-8"))
+                    _run_distance = sr.get("distance_km")
+                    # suggested_run stores pace as min/km string; convert to m/s for the client
+                    pace_str = sr.get("target_pace_str", "")  # e.g. "5:45"
+                    if pace_str and ":" in pace_str:
+                        parts = pace_str.split(":")
+                        pace_sec = int(parts[0]) * 60 + int(parts[1])
+                        if pace_sec > 0:
+                            _run_speed_ms = 1000.0 / pace_sec  # m/s
+                except Exception as e:
+                    logger.warning("Logseq sync: could not read suggested_run.json: %s", e)
+
+            synced = write_daily_properties(
+                sleep_duration_hours=_sleep_hours,
+                sleep_bed_time=_bed_time,
+                sleep_wake_time=_wake_time,
+                sleep_quality=_sleep_quality,
+                run_distance_km=_run_distance,
+                run_avg_speed_ms=_run_speed_ms,
+                run_avg_heart_rate=_run_avg_hr,
+            )
+            if synced:
+                logseq_sync_file.write_text(today_iso, encoding="utf-8")
+                logger.info("Logseq journal sync complete for %s.", today_iso)
+            else:
+                logger.warning("Logseq journal sync wrote 0 properties — Logseq may not be running.")
+        except Exception as e:
+            logger.exception("Logseq journal sync failed — daemon continues: %s", e)
+    else:
+        logger.info("Logseq journal already synced today (%s). Skipping.", today_iso)
+    # ── End Daily Logseq Sync ─────────────────────────────────────────────────
+
+    if not should_run:
         return
 
     # 5. Trigger detected — run the CLI analysis
