@@ -218,12 +218,17 @@ def main():
     if not journals.exists():
         logger.warning("No journals/ folder found in %s — will create on first write", graph)
 
-    logger.info("Logseq graph: %s", graph)
-    logger.info("Listening on 127.0.0.1:%d (portproxy handles LAN→local forwarding)", args.port)
-    logger.info("POST http://localhost:%d/health  with JSON health props", args.port)
+    try:
+        server = HTTPServer(("", args.port), make_handler(graph))
+    except OSError as e:
+        logger.error("Cannot bind to port %d: %s", args.port, e)
+        logger.error("Try a different port with --port XXXX")
+        sys.exit(1)
+
+    logger.info("✓ Listening on 0.0.0.0:%d", args.port)
+    logger.info("POST http://<this-machine-ip>:%d/health  with JSON health props", args.port)
     logger.info("GET  http://localhost:%d/health  to check status", args.port)
 
-    server = HTTPServer(("127.0.0.1", args.port), make_handler(graph))
     try:
         server.serve_forever()
     except KeyboardInterrupt:
