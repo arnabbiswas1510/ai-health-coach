@@ -219,11 +219,11 @@ def main():
         logger.warning("No journals/ folder found in %s — will create on first write", graph)
 
     logger.info("Logseq graph: %s", graph)
-    logger.info("Listening on 0.0.0.0:%d", args.port)
+    logger.info("Listening on 127.0.0.1:%d (portproxy handles LAN→local forwarding)", args.port)
     logger.info("POST http://localhost:%d/health  with JSON health props", args.port)
     logger.info("GET  http://localhost:%d/health  to check status", args.port)
 
-    server = HTTPServer(("0.0.0.0", args.port), make_handler(graph))
+    server = HTTPServer(("127.0.0.1", args.port), make_handler(graph))
     try:
         server.serve_forever()
     except KeyboardInterrupt:
