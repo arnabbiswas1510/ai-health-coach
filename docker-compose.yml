@@ -56,6 +56,8 @@ services:
       - HITL_ENABLED=${HITL_ENABLED:-true}
       - SKIP_SYNTHESIS=${SKIP_SYNTHESIS:-false}
       - FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
+      # ── Logseq Integration ──────────────────────────────────────────────────
+      - LOGSEQ_HOST=${LOGSEQ_HOST:-http://192.168.1.80:12315}
       # ── Paths & Daemon ─────────────────────────────────────────────────────
       - OUTPUT_DIR=/app/data
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
