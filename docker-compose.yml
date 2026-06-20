@@ -65,6 +65,8 @@ services:
       - OUTPUT_DIR=/app/data
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
     volumes:
-      - ./tokens:/app/tokens # Garmin auth tokens (persisted)
-      - ./data:/app/data # Generated HTML + JSON (persisted)
-      - ./coach_config.yaml:/app/coach_config.yaml # Athlete config
+      - ./tokens:/app/tokens                        # Garmin auth tokens (persisted)
+      - ./data:/app/data                            # Generated HTML + JSON (persisted)
+      - ./coach_config.yaml:/app/coach_config.yaml  # Athlete config
+      - ./daemon.py:/app/daemon.py                  # Hot-reload: local overrides image
+      - ./services/logseq:/app/services/logseq      # Hot-reload: local overrides image
