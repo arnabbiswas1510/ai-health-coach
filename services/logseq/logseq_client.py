@@ -129,6 +129,8 @@ def write_daily_properties(
     *,
     sleep_duration_hours: float | None = None,
     sleep_bed_time: str | None = None,       # raw Garmin string e.g. "23:30:00"
+    sleep_wake_time: str | None = None,      # raw Garmin string e.g. "06:45:00"
+    sleep_quality: int | None = None,        # Garmin overall sleep score 0-100
     run_distance_km: float | None = None,
     run_avg_speed_ms: float | None = None,   # m/s → converted to min/km pace
     run_avg_heart_rate: int | None = None,
@@ -143,6 +145,8 @@ def write_daily_properties(
     Property keys written (Logseq namespace format, hyphen-separated):
       sleep/duration        decimal hours, e.g. 7.5
       sleep/bed-time        24h HH:MM string, e.g. "23:30"
+      sleep/wake-up-time    24h HH:MM string, e.g. "06:45"
+      sleep/quality         integer 0-100 (Garmin overall sleep score)
       run/distance          km float, e.g. 6.2
       run/avg-speed         pace in min/km (decimal), e.g. 5.75
       run/avg-heart-rate    integer bpm, e.g. 152
@@ -174,6 +178,13 @@ def write_daily_properties(
     bed_time_formatted = _format_bed_time(sleep_bed_time)
     if bed_time_formatted:
         props["sleep/bed-time"] = bed_time_formatted
+
+    wake_time_formatted = _format_bed_time(sleep_wake_time)  # same HH:MM parser
+    if wake_time_formatted:
+        props["sleep/wake-up-time"] = wake_time_formatted
+
+    if sleep_quality is not None:
+        props["sleep/quality"] = int(sleep_quality)
 
     if run_distance_km is not None:
         props["run/distance"] = round(run_distance_km, 2)

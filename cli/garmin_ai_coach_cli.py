@@ -577,13 +577,24 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         # plugins or Datalog queries / table views.
         # -----------------------------------------------------------------
         try:
-            # Sleep: total hours from DailyStats; bed time from UserProfile
+            # Sleep: total hours from DailyStats; bed/wake time from UserProfile
             _sleep_hours = None
             _bed_time    = None
+            _wake_time   = None
+            _sleep_quality = None
             if garmin_data.daily_stats:
                 _sleep_hours = garmin_data.daily_stats.sleeping_hours
             if garmin_data.user_profile:
-                _bed_time = garmin_data.user_profile.sleep_time
+                _bed_time  = garmin_data.user_profile.sleep_time
+                _wake_time = garmin_data.user_profile.wake_time
+
+            # Sleep quality: overall score from the most recent RecoveryIndicators
+            if garmin_data.recovery_indicators:
+                latest_ri = garmin_data.recovery_indicators[-1]
+                if latest_ri.sleep:
+                    _sleep_quality = (
+                        latest_ri.sleep.get("quality", {}) or {}
+                    ).get("overall_score")
 
             # Most-recent run: walk recent_activities newest-first
             _run_distance   = None
@@ -604,6 +615,8 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
             write_daily_properties(
                 sleep_duration_hours=_sleep_hours,
                 sleep_bed_time=_bed_time,
+                sleep_wake_time=_wake_time,
+                sleep_quality=_sleep_quality,
                 run_distance_km=_run_distance,
                 run_avg_speed_ms=_run_speed_ms,
                 run_avg_heart_rate=_run_avg_hr,
