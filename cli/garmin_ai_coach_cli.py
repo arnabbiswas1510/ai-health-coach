@@ -31,6 +31,7 @@ from services.garmin import (
     TriathlonCoachDataExtractor,
 )
 from services.outside.client import OutsideApiGraphQlClient
+from services.logseq import write_daily_properties
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
@@ -568,6 +569,47 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
 
         garmin_data = extractor.extract_data(extraction_config)
         logger.info("Data extraction completed")
+
+        # -----------------------------------------------------------------
+        # Logseq Journal Sync
+        # Write today's Garmin health metrics to the Logseq daily journal
+        # as page-level properties so they can be used by habit tracker
+        # plugins or Datalog queries / table views.
+        # -----------------------------------------------------------------
+        try:
+            # Sleep: total hours from DailyStats; bed time from UserProfile
+            _sleep_hours = None
+            _bed_time    = None
+            if garmin_data.daily_stats:
+                _sleep_hours = garmin_data.daily_stats.sleeping_hours
+            if garmin_data.user_profile:
+                _bed_time = garmin_data.user_profile.sleep_time
+
+            # Most-recent run: walk recent_activities newest-first
+            _run_distance   = None
+            _run_speed_ms   = None
+            _run_avg_hr     = None
+            if garmin_data.recent_activities:
+                for _act in garmin_data.recent_activities:
+                    if _act.activity_type and "run" in _act.activity_type.lower():
+                        if _act.summary:
+                            _run_distance = (
+                                _act.summary.distance / 1000.0
+                                if _act.summary.distance is not None else None
+                            )
+                            _run_speed_ms = _act.summary.average_speed
+                            _run_avg_hr   = _act.summary.average_hr
+                        break  # most recent run only
+
+            write_daily_properties(
+                sleep_duration_hours=_sleep_hours,
+                sleep_bed_time=_bed_time,
+                run_distance_km=_run_distance,
+                run_avg_speed_ms=_run_speed_ms,
+                run_avg_heart_rate=_run_avg_hr,
+            )
+        except Exception:
+            logger.exception("Logseq journal sync failed — pipeline continues")
 
         # Resolve golden height and weight sources of truth
         config_height = config_parser.get_athlete_height()
