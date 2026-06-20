@@ -57,8 +57,9 @@ services:
       - SKIP_SYNTHESIS=${SKIP_SYNTHESIS:-false}
       - FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
       # ── Logseq Integration ──────────────────────────────────────────────────
-      - LOGSEQ_HOST=${LOGSEQ_HOST:-http://192.168.1.80:12315}
-      - LOGSEQ_API_TOKEN=${LOGSEQ_API_TOKEN:-}
+      # Points to windows_agent/logseq_writer.py running on the Windows machine.
+      # Port 12316 — separate from Logseq's own API port (12315).
+      - LOGSEQ_WRITER_HOST=${LOGSEQ_WRITER_HOST:-http://192.168.1.80:12316}
       # ── Paths & Daemon ─────────────────────────────────────────────────────
       - OUTPUT_DIR=/app/data
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
