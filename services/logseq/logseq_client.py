@@ -43,10 +43,13 @@ logger = logging.getLogger(__name__)
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-# Host of the machine running Logseq. In production the server reaches the
-# Windows host via the portproxy rule (127.0.0.1:12315 → Windows 12315).
-# Override with LOGSEQ_HOST env var if the host IP is different.
-_DEFAULT_HOST = os.environ.get("LOGSEQ_HOST", "http://host.docker.internal:12315")
+# Host of the Windows machine running Logseq, reachable from the Linux Docker
+# host at its LAN IP. The netsh portproxy rule on Windows forwards
+# 0.0.0.0:12315 → 127.0.0.1:12315, so the container can reach Logseq via
+# the Windows LAN IP directly.
+# NOTE: host.docker.internal is Docker Desktop only and does NOT work on
+# Linux Docker (192.168.1.50). Use the Windows LAN IP instead.
+_DEFAULT_HOST = os.environ.get("LOGSEQ_HOST", "http://192.168.1.80:12315")
 _API_TIMEOUT  = int(os.environ.get("LOGSEQ_API_TIMEOUT", "5"))   # seconds
 
 
