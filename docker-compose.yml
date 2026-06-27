@@ -57,10 +57,10 @@ services:
       - SKIP_SYNTHESIS=${SKIP_SYNTHESIS:-false}
       - FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
       # ── Logseq Integration ──────────────────────────────────────────────────
-      # Points to windows_agent/logseq_writer.py running on the Windows machine.
-      # Run agent as admin: python windows_agent/logseq_writer.py --port 19876
-      # Firewall rule required: New-NetFirewallRule -LocalPort 19876 ...
-      - LOGSEQ_WRITER_HOST=${LOGSEQ_WRITER_HOST:-http://192.168.1.80:19876}
+      # Points to the Logseq built-in HTTP API (Settings → Features → Enable HTTP APIs server).
+      # Port 3001 must be forwarded on Windows: netsh portproxy add v4tov4 listenport=3001 listenaddress=0.0.0.0 connectport=3000 connectaddress=127.0.0.1
+      - LOGSEQ_HOST=${LOGSEQ_HOST:-http://192.168.1.80:3001}
+      - LOGSEQ_API_TOKEN=${LOGSEQ_API_TOKEN:-}
       # ── Paths & Daemon ─────────────────────────────────────────────────────
       - OUTPUT_DIR=/app/data
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}

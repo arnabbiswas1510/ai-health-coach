@@ -2,15 +2,23 @@
 services/logseq/logseq_client.py
 
 Writes health metrics from Garmin Connect into the Logseq daily journal
-by calling the windows_agent/logseq_writer.py HTTP receiver running on
-the Windows machine. The agent writes directly to the journal .md files,
-bypassing the Logseq HTTP API entirely (which requires auth in v0.10.x).
+by calling the Logseq built-in HTTP API directly (enabled via
+Settings → Features → Enable HTTP APIs server).
 
 Architecture:
     container (192.168.1.50)
-      → POST http://192.168.1.80:12316/health  (JSON health props)
-        → windows_agent/logseq_writer.py  (running on Windows)
-          → writes to C:\\Users\\arnab\\logseq\\journals\\YYYY_MM_DD.md
+      → POST http://192.168.1.80:3001/api   (Logseq HTTP API, Bearer token)
+        → Logseq (running on Windows machine 192.168.1.80)
+          → upserts properties on the target journal page's first block
+
+    NOTE: Logseq's API listens on 127.0.0.1:3000 by default.
+    A portproxy rule on Windows must forward LAN → localhost:
+        netsh interface portproxy add v4tov4 ^
+            listenport=3001 listenaddress=0.0.0.0 ^
+            connectport=3000 connectaddress=127.0.0.1
+    And allow inbound in the firewall:
+        New-NetFirewallRule -DisplayName "Logseq HTTP API" ^
+            -Direction Inbound -LocalPort 3001 -Protocol TCP -Action Allow
 
 Properties written (Logseq page-level property format  key:: value):
   sleep/duration      decimal hours,    e.g. 7.5
@@ -21,16 +29,15 @@ Properties written (Logseq page-level property format  key:: value):
   run/avg-speed       min/km pace,      e.g. 5.75  (decimal, 5.75 = 5:45/km)
   run/avg-heart-rate  integer bpm,      e.g. 152
 
-Logseq habit tracker query:
-  #+BEGIN_QUERY
-  {:title "Sleep + Run log"
-   :query [:find ?day ?dur ?dist
-           :where
-           [?p :block/journal-day ?day]
-           [?p :block/properties ?props]
-           [(get ?props :sleep/duration) ?dur]
-           [(get ?props :run/distance) ?dist]]}
-  #+END_QUERY
+Public API:
+  build_props(...)         → dict  — convert raw Garmin values to formatted props
+  write_props_dict(...)    → bool  — write a pre-built props dict to a specific date
+  write_daily_properties(...)→bool — convenience wrapper (build + write in one call)
+
+Environment variables:
+  LOGSEQ_HOST         Base URL of the Logseq HTTP API, default http://192.168.1.80:3001
+  LOGSEQ_API_TOKEN    Bearer token set in Logseq Settings → HTTP API → Authorization tokens
+  LOGSEQ_API_TIMEOUT  Request timeout in seconds, default 5
 
 The client is intentionally silent on failure — a sync error should
 never abort the main pipeline.
@@ -49,11 +56,81 @@ logger = logging.getLogger(__name__)
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
-# URL of the windows_agent/logseq_writer.py HTTP server running on Windows.
-# Port 12316 (separate from Logseq's own API port 12315).
-# The netsh portproxy rule on Windows must forward 12316 → 127.0.0.1:12316.
-_WRITER_HOST = os.environ.get("LOGSEQ_WRITER_HOST", "http://192.168.1.80:12316")
-_API_TIMEOUT = int(os.environ.get("LOGSEQ_API_TIMEOUT", "5"))   # seconds
+_LOGSEQ_HOST  = os.environ.get("LOGSEQ_HOST", "http://192.168.1.80:3001")
+_API_TOKEN    = os.environ.get("LOGSEQ_API_TOKEN", "Rehaan2478!")
+_API_TIMEOUT  = int(os.environ.get("LOGSEQ_API_TIMEOUT", "5"))   # seconds
+
+
+# ── Logseq HTTP API helpers ────────────────────────────────────────────────────
+
+def _api_call(client: httpx.Client, method: str, args: list[Any]) -> Any:
+    """POST a single Logseq Plugin API call and return the parsed result."""
+    resp = client.post(
+        f"{_LOGSEQ_HOST}/api",
+        json={"method": method, "args": args},
+        headers={
+            "Authorization": f"Bearer {_API_TOKEN}",
+            "Content-Type": "application/json",
+        },
+        timeout=_API_TIMEOUT,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
+def _journal_page_name(for_date: datetime.date | None = None) -> str:
+    """Return the Logseq journal page name for a given date, e.g. 'Jun 20th, 2026'."""
+    d = for_date or datetime.date.today()
+    day = d.day
+    # Ordinal suffix
+    if 11 <= day <= 13:
+        suffix = "th"
+    else:
+        suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+    return d.strftime(f"%b {day}{suffix}, %Y")
+
+
+def _get_journal_first_block_uuid(
+    client: httpx.Client,
+    page_name: str,
+) -> str | None:
+    """Return the UUID of the first block on a journal page, or None if not found."""
+    try:
+        blocks = _api_call(client, "logseq.Editor.getPageBlocksTree", [page_name])
+        if blocks and isinstance(blocks, list) and len(blocks) > 0:
+            uuid = blocks[0].get("uuid")
+            logger.debug("Logseq: journal page '%s' first block uuid=%s", page_name, uuid)
+            return uuid
+    except Exception as exc:
+        logger.debug("Logseq: could not get blocks for '%s': %s", page_name, exc)
+    return None
+
+
+def _ensure_journal_page(client: httpx.Client, page_name: str) -> str | None:
+    """
+    Ensure the journal page exists and return its first block UUID.
+    If the page doesn't exist yet, create it via appendBlockInPage.
+    """
+    uuid = _get_journal_first_block_uuid(client, page_name)
+    if uuid:
+        return uuid
+
+    # Page doesn't exist yet — create it with an empty block
+    logger.info("Logseq: journal page '%s' not found — creating it", page_name)
+    try:
+        result = _api_call(
+            client,
+            "logseq.Editor.appendBlockInPage",
+            [page_name, ""],
+        )
+        if result and isinstance(result, dict):
+            uuid = result.get("uuid")
+            logger.info("Logseq: created journal page '%s', block uuid=%s", page_name, uuid)
+            return uuid
+    except Exception as exc:
+        logger.warning("Logseq: could not create journal page '%s': %s", page_name, exc)
+
+    return None
 
 
 # ── Property value formatters ──────────────────────────────────────────────────
@@ -87,7 +164,7 @@ def _format_time(time_str: str | None) -> str | None:
 
 # ── Public API ─────────────────────────────────────────────────────────────────
 
-def write_daily_properties(
+def build_props(
     *,
     sleep_duration_hours: float | None = None,
     sleep_bed_time: str | None = None,       # raw Garmin string e.g. "23:30:00"
@@ -96,13 +173,11 @@ def write_daily_properties(
     run_distance_km: float | None = None,
     run_avg_speed_ms: float | None = None,   # m/s → converted to min/km pace
     run_avg_heart_rate: int | None = None,
-    date: datetime.date | None = None,       # defaults to today; unused here (agent writes to today)
-    host: str = _WRITER_HOST,
-) -> bool:
-    """POST health properties to the Windows logseq_writer agent.
+) -> dict[str, Any]:
+    """Convert raw Garmin values into a formatted Logseq properties dict.
 
-    All arguments are optional — only non-None values are included.
-    Returns True if the agent accepted the data.
+    Only non-None values are included. The returned dict can be persisted
+    and later passed to write_props_dict() to write to any past date.
     """
     props: dict[str, Any] = {}
 
@@ -130,25 +205,108 @@ def write_daily_properties(
     if run_avg_heart_rate is not None:
         props["run/avg-heart-rate"] = int(run_avg_heart_rate)
 
+    return props
+
+
+def write_props_dict(
+    props: dict[str, Any],
+    *,
+    date: datetime.date | None = None,
+) -> bool:
+    """Write a pre-built props dict to the Logseq journal for a specific date.
+
+    Args:
+        props:  Formatted props dict (as returned by build_props()).
+        date:   Target journal date. Defaults to today. Pass a past date to
+                backfill a missed sync (e.g. after a vacation with Logseq closed).
+
+    Returns True if all properties were accepted by Logseq.
+    """
     if not props:
-        logger.info("Logseq: no properties to write — all values are None")
+        logger.info("Logseq: no properties to write — empty dict")
         return False
 
-    url = f"{host}/health"
-    logger.info("Logseq: posting %d properties to %s", len(props), url)
+    page_name = _journal_page_name(date)
+    logger.info(
+        "Logseq: writing %d properties to journal '%s' via HTTP API at %s",
+        len(props), page_name, _LOGSEQ_HOST,
+    )
 
     try:
-        resp = httpx.post(url, json=props, timeout=_API_TIMEOUT)
-        resp.raise_for_status()
-        logger.info("Logseq: agent accepted — %s", resp.json())
-        return True
+        with httpx.Client() as client:
+            block_uuid = _ensure_journal_page(client, page_name)
+            if not block_uuid:
+                logger.warning(
+                    "Logseq: could not obtain first block UUID for '%s' — "
+                    "is Logseq running and is the HTTP API enabled? "
+                    "(Settings → Features → Enable HTTP APIs server)",
+                    page_name,
+                )
+                return False
+
+            failed: list[str] = []
+            for key, value in props.items():
+                try:
+                    _api_call(
+                        client,
+                        "logseq.Editor.upsertBlockProperty",
+                        [block_uuid, key, value],
+                    )
+                    logger.debug("Logseq: wrote %s=%s on block %s", key, value, block_uuid)
+                except Exception as exc:
+                    logger.warning("Logseq: failed to write %s=%s: %s", key, value, exc)
+                    failed.append(key)
+
+            if failed:
+                logger.warning("Logseq: %d properties failed: %s", len(failed), failed)
+                return False
+
+            logger.info(
+                "Logseq: successfully wrote %d properties (%s) to '%s'",
+                len(props), ", ".join(props.keys()), page_name,
+            )
+            return True
+
     except httpx.ConnectError:
         logger.warning(
-            "Logseq writer agent not reachable at %s "
-            "— is windows_agent/logseq_writer.py running on the Windows machine?",
-            url,
+            "Logseq HTTP API not reachable at %s/api — "
+            "is Logseq running, the HTTP API enabled, and port 3001 "
+            "forwarded via netsh portproxy?",
+            _LOGSEQ_HOST,
         )
         return False
     except Exception as exc:
-        logger.warning("Logseq writer agent error: %s", exc)
+        logger.warning("Logseq HTTP API error: %s", exc)
         return False
+
+
+def write_daily_properties(
+    *,
+    sleep_duration_hours: float | None = None,
+    sleep_bed_time: str | None = None,
+    sleep_wake_time: str | None = None,
+    sleep_quality: int | None = None,
+    run_distance_km: float | None = None,
+    run_avg_speed_ms: float | None = None,
+    run_avg_heart_rate: int | None = None,
+    date: datetime.date | None = None,
+) -> bool:
+    """Build and write health properties to today's (or a specific) Logseq journal.
+
+    Convenience wrapper around build_props() + write_props_dict().
+    For backfilling missed syncs, prefer calling both separately so you can
+    persist the props dict before the write attempt.
+    """
+    props = build_props(
+        sleep_duration_hours=sleep_duration_hours,
+        sleep_bed_time=sleep_bed_time,
+        sleep_wake_time=sleep_wake_time,
+        sleep_quality=sleep_quality,
+        run_distance_km=run_distance_km,
+        run_avg_speed_ms=run_avg_speed_ms,
+        run_avg_heart_rate=run_avg_heart_rate,
+    )
+    if not props:
+        logger.info("Logseq: no properties to write — all values are None")
+        return False
+    return write_props_dict(props, date=date)
