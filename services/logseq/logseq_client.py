@@ -94,39 +94,47 @@ def _get_journal_first_block_uuid(
     client: httpx.Client,
     page_name: str,
 ) -> str | None:
-    """Return the UUID of the first block on a journal page, or None if not found."""
-    try:
-        blocks = _api_call(client, "logseq.Editor.getPageBlocksTree", [page_name])
-        if blocks and isinstance(blocks, list) and len(blocks) > 0:
-            uuid = blocks[0].get("uuid")
-            logger.debug("Logseq: journal page '%s' first block uuid=%s", page_name, uuid)
-            return uuid
-    except Exception as exc:
-        logger.debug("Logseq: could not get blocks for '%s': %s", page_name, exc)
-    return None
-
+    # Deprecated: kept for backwards compatibility if needed, but not used by write_props_dict
+    pass
 
 def _ensure_journal_page(client: httpx.Client, page_name: str) -> str | None:
     """
-    Ensure the journal page exists and return its first block UUID.
-    If the page doesn't exist yet, create it via appendBlockInPage.
+    Ensure the journal page exists and return the UUID of the block to write to.
+    This creates an independent block (sibling to the first block) so it doesn't
+    overwrite existing page bullets or properties.
     """
-    uuid = _get_journal_first_block_uuid(client, page_name)
-    if uuid:
-        return uuid
+    try:
+        blocks = _api_call(client, "logseq.Editor.getPageBlocksTree", [page_name])
+        if blocks and isinstance(blocks, list) and len(blocks) > 0:
+            # Check if any block already has health properties
+            for block in blocks:
+                content = block.get("content", "")
+                if "sleep/duration::" in content or "run/distance::" in content:
+                    logger.debug("Logseq: found existing health block for '%s'", page_name)
+                    return block.get("uuid")
+            
+            # If not, create a new block after the first block
+            first_uuid = blocks[0].get("uuid")
+            if first_uuid:
+                result = _api_call(client, "logseq.Editor.insertBlock", [first_uuid, "", {"sibling": True}])
+                if result and isinstance(result, dict):
+                    uuid = result.get("uuid")
+                    logger.info("Logseq: created independent health block %s on '%s'", uuid, page_name)
+                    return uuid
+    except Exception as exc:
+        logger.debug("Logseq: could not get blocks for '%s': %s", page_name, exc)
 
-    # Page doesn't exist yet — create it with an empty block
+    # Page doesn't exist yet — create it
     logger.info("Logseq: journal page '%s' not found — creating it", page_name)
     try:
-        result = _api_call(
-            client,
-            "logseq.Editor.appendBlockInPage",
-            [page_name, ""],
-        )
+        result = _api_call(client, "logseq.Editor.appendBlockInPage", [page_name, ""])
         if result and isinstance(result, dict):
-            uuid = result.get("uuid")
-            logger.info("Logseq: created journal page '%s', block uuid=%s", page_name, uuid)
-            return uuid
+            first_uuid = result.get("uuid")
+            # Create a second block for health metrics
+            result2 = _api_call(client, "logseq.Editor.insertBlock", [first_uuid, "", {"sibling": True}])
+            if result2 and isinstance(result2, dict):
+                return result2.get("uuid")
+            return first_uuid
     except Exception as exc:
         logger.warning("Logseq: could not create journal page '%s': %s", page_name, exc)
 
