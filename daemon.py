@@ -10,13 +10,98 @@ from typing import Any
 import yaml
 from garminconnect import Garmin
 
-from services.logseq import write_daily_properties
+from services.logseq import build_props, write_props_dict
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger("daemon")
+
+
+# ── Pending Logseq sync queue ─────────────────────────────────────────────────
+# When Logseq is closed (e.g. on vacation) the write fails silently.
+# We persist the formatted props + target date in a JSON file so they can be
+# replayed to the correct past journal pages once Logseq is open again.
+
+def _load_pending_syncs(path: Path) -> list[dict]:
+    """Return the list of pending sync entries, or [] if none."""
+    if not path.exists():
+        return []
+    try:
+        import json as _json
+        return _json.loads(path.read_text(encoding="utf-8")) or []
+    except Exception as exc:
+        logger.warning("Could not read pending sync queue %s: %s", path, exc)
+        return []
+
+
+def _save_pending_syncs(path: Path, entries: list[dict]) -> None:
+    import json as _json
+    try:
+        path.write_text(_json.dumps(entries, indent=2), encoding="utf-8")
+    except Exception as exc:
+        logger.warning("Could not save pending sync queue %s: %s", path, exc)
+
+
+def _queue_pending_sync(
+    path: Path,
+    date_iso: str,
+    props: dict,
+) -> None:
+    """Add or update a pending sync entry for date_iso (deduplicates by date)."""
+    entries = _load_pending_syncs(path)
+    # Replace existing entry for the same date, or append
+    existing = {e["date"]: i for i, e in enumerate(entries)}
+    entry = {"date": date_iso, "properties": props}
+    if date_iso in existing:
+        entries[existing[date_iso]] = entry
+    else:
+        entries.append(entry)
+    _save_pending_syncs(path, entries)
+    logger.info(
+        "Logseq: queued sync for %s (%d properties) — will retry when Logseq is open.",
+        date_iso, len(props),
+    )
+
+
+def _flush_pending_syncs(path: Path) -> int:
+    """Try to write all pending syncs to their correct journal pages.
+
+    Processes entries oldest-first. Stops on the first failure (if Logseq is
+    still closed, no point attempting the rest). Removes successful entries.
+    Returns the number of entries still pending.
+    """
+    entries = _load_pending_syncs(path)
+    if not entries:
+        return 0
+
+    logger.info("Logseq: attempting to flush %d pending sync(s)...", len(entries))
+    still_pending: list[dict] = []
+    logseq_reachable = True
+
+    for entry in sorted(entries, key=lambda e: e["date"]):
+        if not logseq_reachable:
+            still_pending.append(entry)
+            continue
+
+        target_date = date.fromisoformat(entry["date"])
+        ok = write_props_dict(entry["properties"], date=target_date)
+        if ok:
+            logger.info("Logseq: flushed pending sync for %s.", entry["date"])
+        else:
+            logger.warning(
+                "Logseq: could not flush pending sync for %s — Logseq still unavailable.",
+                entry["date"],
+            )
+            still_pending.append(entry)
+            logseq_reachable = False  # stop trying further entries
+
+    _save_pending_syncs(path, still_pending)
+    flushed = len(entries) - len(still_pending)
+    if flushed:
+        logger.info("Logseq: flushed %d pending sync(s), %d still queued.", flushed, len(still_pending))
+    return len(still_pending)
 
 def check_and_run():  # noqa: C901
     project_dir = Path(__file__).parent.resolve()
@@ -116,32 +201,31 @@ def check_and_run():  # noqa: C901
         # Garmin uploads sleep data in the morning after you sync your watch.
         # We check once per day whether yesterday's sleep record has arrived.
         last_sleep_file = user_data_dir / "last_processed_sleep_date.txt"
-        yesterday = (date.today().toordinal() - 1)
-        yesterday_iso = date.fromordinal(yesterday).isoformat()
+        today_iso = date.today().isoformat()
         last_sleep_date = ""
         if last_sleep_file.exists():
             last_sleep_date = last_sleep_file.read_text(encoding="utf-8").strip()
 
-        if last_sleep_date != yesterday_iso:
-            logger.info("Checking Garmin Connect for last night's sleep data (%s)...", yesterday_iso)
+        if last_sleep_date != today_iso:
+            logger.info("Checking Garmin Connect for last night's sleep data (%s)...", today_iso)
             try:
-                sleep_data = client.get_sleep_data(yesterday_iso) or {}
+                sleep_data = client.get_sleep_data(today_iso) or {}
                 daily_sleep = (sleep_data.get("dailySleepDTO") or {})
                 sleep_seconds = daily_sleep.get("sleepTimeSeconds") or 0
                 if sleep_seconds and int(sleep_seconds) > 0:
                     sleep_hours = round(int(sleep_seconds) / 3600, 1)
                     should_run = True
                     run_reason = (
-                        f"New sleep data for {yesterday_iso} received "
+                        f"New sleep data for {today_iso} received "
                         f"({sleep_hours}h) — re-calculating next workout based on recovery"
                     )
                     # Mark this date as processed regardless of pipeline outcome
                     # (prevents repeated triggers on the same day's sleep)
-                    last_sleep_file.write_text(yesterday_iso, encoding="utf-8")
+                    last_sleep_file.write_text(today_iso, encoding="utf-8")
                 else:
-                    logger.info("Sleep data for %s not yet available. Will check again next poll.", yesterday_iso)
+                    logger.info("Sleep data for %s not yet available. Will check again next poll.", today_iso)
             except Exception as e:
-                logger.warning("Could not fetch sleep data for %s: %s", yesterday_iso, e)
+                logger.warning("Could not fetch sleep data for %s: %s", today_iso, e)
 
     if not should_run:
         logger.info("No new runs or sleep data detected for %s. Plan is up to date.", display_name)
@@ -149,10 +233,20 @@ def check_and_run():  # noqa: C901
     # ── Daily Logseq Sync ─────────────────────────────────────────────────────
     # Runs once per day regardless of whether the full pipeline triggered.
     # Reads yesterday's sleep from Garmin + today's suggested_run.json.
-    logseq_sync_file = user_data_dir / "last_logseq_sync_date.txt"
-    today_iso = date.today().isoformat()
-    last_logseq_date = logseq_sync_file.read_text(encoding="utf-8").strip() if logseq_sync_file.exists() else ""
+    #
+    # If Logseq is closed (e.g. vacation), the formatted props + target date are
+    # saved to pending_logseq_syncs.json and replayed to the CORRECT past journal
+    # page once Logseq comes back online.
+    logseq_sync_file   = user_data_dir / "last_logseq_sync_date.txt"
+    pending_sync_path  = user_data_dir / "pending_logseq_syncs.json"
+    today_iso          = date.today().isoformat()
+    last_logseq_date   = logseq_sync_file.read_text(encoding="utf-8").strip() if logseq_sync_file.exists() else ""
 
+    # 1. Flush any pending syncs from previous days when Logseq was closed.
+    #    Stops immediately if Logseq is still unreachable.
+    _flush_pending_syncs(pending_sync_path)
+
+    # 2. Run today's sync if not already done.
     if last_logseq_date != today_iso:
         logger.info("Running daily Logseq journal sync for %s...", today_iso)
         try:
@@ -164,7 +258,7 @@ def check_and_run():  # noqa: C901
             _wake_time     = None
             _sleep_quality = None
             try:
-                sleep_raw  = client.get_sleep_data(yesterday_iso) or {}
+                sleep_raw  = client.get_sleep_data(today_iso) or {}
                 daily_dto  = sleep_raw.get("dailySleepDTO") or {}
                 secs       = daily_dto.get("sleepTimeSeconds") or 0
                 if secs:
@@ -210,7 +304,9 @@ def check_and_run():  # noqa: C901
                 except Exception as e:
                     logger.warning("Logseq sync: could not read suggested_run.json: %s", e)
 
-            synced = write_daily_properties(
+            # Build the formatted props dict BEFORE the write attempt so we can
+            # persist it to the pending queue if Logseq happens to be closed.
+            props_today = build_props(
                 sleep_duration_hours=_sleep_hours,
                 sleep_bed_time=_bed_time,
                 sleep_wake_time=_wake_time,
@@ -219,11 +315,18 @@ def check_and_run():  # noqa: C901
                 run_avg_speed_ms=_run_speed_ms,
                 run_avg_heart_rate=_run_avg_hr,
             )
-            if synced:
-                logseq_sync_file.write_text(today_iso, encoding="utf-8")
-                logger.info("Logseq journal sync complete for %s.", today_iso)
+
+            if not props_today:
+                logger.info("Logseq sync: no properties to write for %s.", today_iso)
             else:
-                logger.warning("Logseq journal sync wrote 0 properties — Logseq may not be running.")
+                synced = write_props_dict(props_today, date=date.today())
+                if synced:
+                    logseq_sync_file.write_text(today_iso, encoding="utf-8")
+                    logger.info("Logseq journal sync complete for %s.", today_iso)
+                else:
+                    # Logseq is closed — queue so it writes to the RIGHT date later.
+                    _queue_pending_sync(pending_sync_path, today_iso, props_today)
+
         except Exception as e:
             logger.exception("Logseq journal sync failed — daemon continues: %s", e)
     else:

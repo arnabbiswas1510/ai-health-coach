@@ -109,7 +109,7 @@ def _ensure_journal_page(client: httpx.Client, page_name: str) -> str | None:
             # Check if any block already has health properties
             for block in blocks:
                 content = block.get("content", "")
-                if "sleep/duration::" in content or "run/distance::" in content:
+                if "sleep-duration::" in content or "run-distance::" in content or "sleep/duration::" in content or "run/distance::" in content:
                     logger.debug("Logseq: found existing health block for '%s'", page_name)
                     return block.get("uuid")
             
@@ -190,28 +190,28 @@ def build_props(
     props: dict[str, Any] = {}
 
     if sleep_duration_hours is not None:
-        props["sleep/duration"] = round(sleep_duration_hours, 2)
+        props["sleep-duration"] = round(sleep_duration_hours, 2)
 
     t = _format_time(sleep_bed_time)
     if t:
-        props["sleep/bed-time"] = t
+        props["sleep-bed-time"] = t
 
     t = _format_time(sleep_wake_time)
     if t:
-        props["sleep/wake-up-time"] = t
+        props["sleep-wake-up-time"] = t
 
     if sleep_quality is not None:
-        props["sleep/quality"] = int(sleep_quality)
+        props["sleep-quality"] = int(sleep_quality)
 
     if run_distance_km is not None:
-        props["run/distance"] = round(run_distance_km, 2)
+        props["run-distance"] = round(run_distance_km, 2)
 
     pace = _format_pace(run_avg_speed_ms)
     if pace is not None:
-        props["run/avg-speed"] = pace
+        props["run-avg-speed"] = pace
 
     if run_avg_heart_rate is not None:
-        props["run/avg-heart-rate"] = int(run_avg_heart_rate)
+        props["run-avg-heart-rate"] = int(run_avg_heart_rate)
 
     return props
 

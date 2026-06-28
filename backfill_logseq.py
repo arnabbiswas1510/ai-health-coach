@@ -58,11 +58,27 @@ def backfill():
         overall = scores.get("overall") or {}
         _sleep_quality = overall.get("value")
         
+        activities = client.client.get_activities_by_date(target_date.isoformat(), target_date.isoformat(), activitytype="running")
+        _run_distance = None
+        _run_avg_speed = None
+        _run_avg_hr = None
+        
+        if activities and len(activities) > 0:
+            act = activities[0]
+            if act.get("distance"):
+                _run_distance = round(act["distance"] / 1000.0, 2)
+            _run_avg_speed = act.get("averageSpeed")
+            if act.get("averageHR"):
+                _run_avg_hr = int(act["averageHR"])
+
         props = logseq_client.build_props(
             sleep_duration_hours=_sleep_duration,
             sleep_bed_time=_bed_time,
             sleep_wake_time=_wake_time,
             sleep_quality=_sleep_quality,
+            run_distance_km=_run_distance,
+            run_avg_speed_ms=_run_avg_speed,
+            run_avg_heart_rate=_run_avg_hr,
         )
         
         if props:

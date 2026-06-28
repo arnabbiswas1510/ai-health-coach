@@ -1,4 +1,4 @@
 # services/logseq/__init__.py
-from .logseq_client import write_daily_properties
+from .logseq_client import build_props, write_daily_properties, write_props_dict
 
-__all__ = ["write_daily_properties"]
+__all__ = ["build_props", "write_daily_properties", "write_props_dict"]
