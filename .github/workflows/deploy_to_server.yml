@@ -1,0 +1,35 @@
+name: Deploy to Production Server
+
+on:
+  workflow_run:
+    workflows: ["Publish Docker Image"]
+    types:
+      - completed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Deploy new images to server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 2222
+          timeout: 120s
+          script: |
+            cd /home/dietpi/docker/garmin-ai-coach
+
+            echo "=== Pulling latest ai-health-coach image ==="
+            docker compose pull ai-health-coach
+
+            echo "=== Restarting ai-health-coach ==="
+            docker compose up -d ai-health-coach > /dev/null 2>&1
+
+            echo "=== Deployment complete ==="
+            docker inspect ai-health-coach --format 'ai-health-coach: {{.State.Status}} (restarts: {{.RestartCount}})'
+            exit 0
