@@ -13,6 +13,13 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Debug secrets
+        run: |
+          if [ -z "${{ secrets.DEPLOY_HOST }}" ]; then
+            echo "DEPLOY_HOST is empty!"
+          else
+            echo "DEPLOY_HOST is set!"
+          fi
       - name: Deploy new images to server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
