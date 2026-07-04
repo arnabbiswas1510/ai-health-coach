@@ -359,22 +359,89 @@ def check_and_run():  # noqa: C901
         logger.error("Failed to run coach command: %s", e)
 
 def run_withings_sync():
-    """Runs withings-sync command-line tool to push scale measurements to Garmin."""
+    """Push Withings scale measurements to Garmin Connect.
+
+    Calls withings-sync programmatically (not as a CLI subprocess) so we can
+    inject our already-authenticated ``garminconnect.Garmin`` client.  This
+    avoids a fresh SSO login — which would trigger Garmin's MFA wall in a
+    non-interactive container environment.
+
+    The flow:
+      1. Authenticate to Garmin using the existing tokenstore (same tokens the
+         main daemon uses — no password / MFA required).
+      2. Patch ``withings_sync.garmin.GarminConnect.login`` so that when
+         ``withings_sync.sync.sync()`` creates a ``GarminConnect`` and calls
+         ``.login()``, our hook injects the pre-authenticated client instead of
+         performing a fresh SSO login.
+      3. Patch ``sys.argv`` temporarily so ``withings_sync.sync.get_args()``
+         sees the right config and garmin-username arguments.
+      4. Call ``sync()`` and restore all patches.
+    """
     logger.info("Starting Withings-Garmin sync...")
     try:
-        # withings-sync config folder is /app/tokens
-        cmd = ["withings-sync", "-c", "/app/tokens"]
-        res = subprocess.run(cmd, capture_output=True, text=True, check=False)
-        if res.returncode == 0:
+        garmin_email = os.getenv("GARMIN_EMAIL", "")
+        tokens_dir = os.getenv("GARMINCONNECT_TOKENS", "/app/tokens")
+
+        if not garmin_email:
+            logger.warning("GARMIN_EMAIL not set — skipping Withings-Garmin sync.")
+            return
+
+        # ── Step 1: authenticate to Garmin via the existing tokenstore ────────
+        sanitized = garmin_email.replace("@", "_").replace(".", "_")
+        user_tokens_dir = os.path.join(tokens_dir, sanitized)
+
+        from garminconnect import Garmin as GarminClient
+        gc_client = GarminClient(email=garmin_email, password="", prompt_mfa=None)
+        gc_client.login(tokenstore=user_tokens_dir)
+        logger.info("Garmin tokenstore login successful (no MFA required).")
+
+        # ── Step 2: import withings_sync modules ──────────────────────────────
+        import sys as _sys
+        import withings_sync.sync as _ws_sync
+        from withings_sync.garmin import GarminConnect as WGarminConnect
+
+        # ── Step 3: patch sys.argv so get_args() sees our config ──────────────
+        # Keep -c /app/tokens so withings-sync finds the Withings OAuth token at
+        # /app/tokens/.withings_user.json (original config location).
+        # garmin_username is set so the Garmin upload branch is entered.
+        # The actual password is irrelevant — we intercept login() before it runs.
+        _orig_argv = _sys.argv[:]
+        _sys.argv = [
+            "withings-sync",
+            "-c", tokens_dir,           # keeps Withings token accessible
+            "--garmin-username", garmin_email,
+            "--garmin-password", "UNUSED_PLACEHOLDER",  # never used — we inject client
+        ]
+        try:
+            _ws_sync.ARGS = _ws_sync.get_args()
+        finally:
+            _sys.argv = _orig_argv
+
+        # ── Step 4: patch GarminConnect.login to inject pre-auth client ───────
+        # Inside sync(), withings-sync does:
+        #   garmin = GarminConnect(config_folder=...)
+        #   garmin.login(username, password)   ← this would trigger MFA
+        # We replace login() with a shim that injects our gc_client instead.
+        _orig_login = WGarminConnect.login
+
+        def _login_shim(self, email=None, password=None):
+            self.client = gc_client  # inject pre-authenticated garminconnect client
+            logger.info("withings-sync: using pre-authenticated Garmin client (no MFA).")
+
+        WGarminConnect.login = _login_shim
+
+        try:
+            _ws_sync.sync()
             logger.info("Withings-Garmin sync completed successfully!")
-            if res.stdout:
-                logger.info(res.stdout)
-        else:
-            logger.error("Withings-Garmin sync execution failed:")
-            if res.stderr:
-                logger.error(res.stderr)
+        finally:
+            WGarminConnect.login = _orig_login  # always restore
+
+
+
     except Exception as exc:
-        logger.error("Failed to run withings-sync command: %s", exc)
+        logger.error("Withings-Garmin sync failed: %s", exc, exc_info=True)
+
+
 
 
 def main():
