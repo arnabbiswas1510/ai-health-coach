@@ -57,14 +57,14 @@ jobs:
             git fetch --all
             git reset --hard origin/main
 
-            echo "=== Pulling latest ai-health-coach image ==="
-            docker compose pull ai-health-coach
+            echo "=== Pulling latest images ==="
+            docker compose pull
 
-            echo "=== Removing old container instance to prevent name conflict ==="
-            docker compose rm -fs ai-health-coach
+            echo "=== Shutting down compose stack to remove old and orphaned containers ==="
+            docker compose down
 
-            echo "=== Restarting ai-health-coach ==="
-            docker compose up -d ai-health-coach > /dev/null 2>&1
+            echo "=== Restarting compose stack ==="
+            docker compose up -d --remove-orphans
 
             echo "=== Deployment complete ==="
             docker inspect ai-health-coach --format 'ai-health-coach: {{.State.Status}} (restarts: {{.RestartCount}})'
