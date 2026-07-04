@@ -28,6 +28,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           port: 2222
           timeout: 120s
+          debug: true
           script: |
             cd /home/dietpi/docker/garmin-ai-coach
 
