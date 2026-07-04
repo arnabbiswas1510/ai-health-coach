@@ -31,6 +31,10 @@ jobs:
           script: |
             cd /home/dietpi/docker/garmin-ai-coach
 
+            echo "=== Pulling latest repository code ==="
+            git fetch --all
+            git reset --hard origin/main
+
             echo "=== Pulling latest ai-health-coach image ==="
             docker compose pull ai-health-coach
 
