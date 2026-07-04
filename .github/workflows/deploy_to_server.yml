@@ -15,10 +15,31 @@ jobs:
     steps:
       - name: Debug secrets
         run: |
-          if [ -z "${{ secrets.DEPLOY_HOST }}" ]; then
+          HOST="${{ secrets.DEPLOY_HOST }}"
+          if [ -z "$HOST" ]; then
             echo "DEPLOY_HOST is empty!"
           else
-            echo "DEPLOY_HOST is set!"
+            echo "DEPLOY_HOST is set! Length: ${#HOST}"
+            if [[ "$HOST" =~ [[:space:]] ]]; then
+              echo "WARNING: DEPLOY_HOST contains whitespace!"
+            fi
+            if [[ "$HOST" =~ ^http ]]; then
+              echo "WARNING: DEPLOY_HOST contains http/https prefix!"
+            fi
+          fi
+
+          USER="${{ secrets.DEPLOY_USER }}"
+          if [ -z "$USER" ]; then
+            echo "DEPLOY_USER is empty!"
+          else
+            echo "DEPLOY_USER is set! Length: ${#USER}"
+          fi
+
+          KEY="${{ secrets.DEPLOY_KEY }}"
+          if [ -z "$KEY" ]; then
+            echo "DEPLOY_KEY is empty!"
+          else
+            echo "DEPLOY_KEY is set! Length: ${#KEY}"
           fi
       - name: Deploy new images to server via SSH
         uses: appleboy/ssh-action@v1.0.3
