@@ -15,7 +15,8 @@
 
 services:
   ai-health-coach:
-    image: ghcr.io/arnabbiswas1510/ai-health-coach:latest
+    build: .
+    image: ai-health-coach:local
     entrypoint: ["/app/startup.sh"]
     container_name: ai-health-coach
     restart: unless-stopped

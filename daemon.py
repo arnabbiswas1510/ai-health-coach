@@ -358,12 +358,32 @@ def check_and_run():  # noqa: C901
     except Exception as e:
         logger.error("Failed to run coach command: %s", e)
 
+def run_withings_sync():
+    """Runs withings-sync command-line tool to push scale measurements to Garmin."""
+    logger.info("Starting Withings-Garmin sync...")
+    try:
+        # withings-sync config folder is /app/tokens
+        cmd = ["withings-sync", "-c", "/app/tokens"]
+        res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        if res.returncode == 0:
+            logger.info("Withings-Garmin sync completed successfully!")
+            if res.stdout:
+                logger.info(res.stdout)
+        else:
+            logger.error("Withings-Garmin sync execution failed:")
+            if res.stderr:
+                logger.error(res.stderr)
+    except Exception as exc:
+        logger.error("Failed to run withings-sync command: %s", exc)
+
+
 def main():
     poll_interval = int(os.getenv("POLL_INTERVAL_SECONDS", "3600"))
     logger.info("Garmin AI Coach daemon started. Polling interval: %s seconds.", poll_interval)
 
     # Run once immediately on start
     try:
+        run_withings_sync()
         check_and_run()
     except Exception as e:
         logger.exception("Unhandled error in check_and_run: %s", e)
@@ -372,6 +392,7 @@ def main():
     while True:
         try:
             time.sleep(poll_interval)
+            run_withings_sync()
             check_and_run()
         except KeyboardInterrupt:
             logger.info("Daemon stopped by user.")
