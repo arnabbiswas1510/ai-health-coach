@@ -159,8 +159,8 @@ def test_dynamic_heart_rate_zones(sample_garmin_data):
 
     # max_hr should be calculated from LTHR: int(174 / 0.88) = 197
     assert coach.max_hr == 197
-    # zone2_low should be LTHR * 0.85 = 174 * 0.85 = 147.9 -> 147
-    assert coach.zone2_low == 147
+    # zone2_low should be LTHR * 0.80 = 174 * 0.80 = 139.2 -> 139
+    assert coach.zone2_low == 139
     # zone2_high should be LTHR * 0.89 = 174 * 0.89 = 154.86 -> 154
     assert coach.zone2_high == 154
 
