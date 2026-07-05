@@ -16,7 +16,12 @@ def test_logseq_connection_success(mock_api_call):
     This ensures that when the proxy is correctly forwarding 3001 -> 3000,
     the app handles the request properly without being blocked by iphlpsvc.
     """
-    mock_api_call.return_value = [{"uuid": "test-uuid"}] # mock blocks response
+    def mock_api_handler(client, method, args):
+        if method == "logseq.Editor.getPageBlocksTree":
+            return [{"uuid": "test-root-uuid", "content": "Garmin Health Sync"}]
+        return {"uuid": "test-uuid"}
+        
+    mock_api_call.side_effect = mock_api_handler
 
     import datetime
     props = build_props(sleep_quality=85)
