@@ -238,6 +238,31 @@ def write_props_dict(
         logger.info("Logseq: no properties to write — empty dict")
         return False
 
+    # Normalize flat properties (e.g. from old queue: "sleep-duration": 7.5) to nested format
+    normalized_props = {}
+    for k, v in props.items():
+        if isinstance(v, dict):
+            if k not in normalized_props:
+                normalized_props[k] = {}
+            normalized_props[k].update(v)
+        else:
+            cat = "misc"
+            key = k
+            if "/" in k:
+                parts = k.split("/")
+                cat = parts[0].strip()
+                key = parts[-1].strip()
+            elif "-" in k:
+                parts = k.split("-")
+                cat = parts[0].strip()
+                key = "-".join(parts[1:]).strip()
+                
+            if cat not in normalized_props:
+                normalized_props[cat] = {}
+            normalized_props[cat][key] = v
+            
+    props = normalized_props
+
     page_name = _journal_page_name(date)
     logger.info(
         "Logseq: writing %d properties to journal '%s' via HTTP API at %s",
