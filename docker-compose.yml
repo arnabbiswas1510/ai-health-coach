@@ -59,6 +59,8 @@ services:
       - FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
       # ── Logseq Integration ──────────────────────────────────────────────────
       # Points to the Logseq built-in HTTP API (Settings → Features → Enable HTTP APIs server).
+      # Logseq listens on 127.0.0.1:3000 by default; expose on LAN via netsh portproxy:
+      #   netsh interface portproxy add v4tov4 listenport=3001 listenaddress=0.0.0.0 connectport=3000 connectaddress=127.0.0.1
       # Host/port defined in .env as LOGSEQ_HOST.
       - LOGSEQ_HOST=${LOGSEQ_HOST}
       - LOGSEQ_API_TOKEN=${LOGSEQ_API_TOKEN:-}

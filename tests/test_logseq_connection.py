@@ -5,9 +5,9 @@ from unittest.mock import patch, MagicMock
 
 from services.logseq.logseq_client import _LOGSEQ_HOST, build_props, write_props_dict
 
-def test_logseq_default_host_uses_3000():
-    """Verify that the default host uses port 3000 (Logseq's native HTTP API port)."""
-    assert "3000" in _LOGSEQ_HOST, f"Expected 3000 in host, got {_LOGSEQ_HOST}"
+def test_logseq_default_host_uses_3001():
+    """Verify that the host uses port 3001 (netsh portproxy endpoint: 3001→3000 on the Windows machine)."""
+    assert "3001" in _LOGSEQ_HOST, f"Expected 3001 in host, got {_LOGSEQ_HOST}"
 
 @patch("services.logseq.logseq_client._api_call")
 def test_logseq_connection_success(mock_api_call):

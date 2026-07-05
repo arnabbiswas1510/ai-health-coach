@@ -39,6 +39,6 @@ jobs:
         env:
           ANTHROPIC_API_KEY: "sk-ant-TEST"
           OPENAI_API_KEY: "sk-TEST"
-          LOGSEQ_HOST: "http://localhost:3000"   # dummy — no real Logseq in CI
+          LOGSEQ_HOST: "http://localhost:3001"   # dummy — no real Logseq in CI
           LOGSEQ_API_TOKEN: "ci-test-token"
         run: pixi run test
