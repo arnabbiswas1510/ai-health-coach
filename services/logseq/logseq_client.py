@@ -60,17 +60,19 @@ _LOGSEQ_HOST  = os.environ.get("LOGSEQ_HOST", "")
 _API_TOKEN    = os.environ.get("LOGSEQ_API_TOKEN", "")
 _API_TIMEOUT  = int(os.environ.get("LOGSEQ_API_TIMEOUT", "5"))   # seconds
 
-if not _LOGSEQ_HOST:
-    raise RuntimeError(
-        "LOGSEQ_HOST env var is not set. "
-        "Add it to your .env file, e.g.: LOGSEQ_HOST=http://192.168.1.17:3000"
-    )
+# NOTE: We validate _LOGSEQ_HOST lazily (inside _api_call) so that importing
+# this module in tests or CI without a real Logseq instance does not crash.
 
 
 # ── Logseq HTTP API helpers ────────────────────────────────────────────────────
 
 def _api_call(client: httpx.Client, method: str, args: list[Any]) -> Any:
     """POST a single Logseq Plugin API call and return the parsed result."""
+    if not _LOGSEQ_HOST:
+        raise RuntimeError(
+            "LOGSEQ_HOST env var is not set. "
+            "Add it to your .env file, e.g.: LOGSEQ_HOST=http://192.168.1.17:3000"
+        )
     resp = client.post(
         f"{_LOGSEQ_HOST}/api",
         json={"method": method, "args": args},
