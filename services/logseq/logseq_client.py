@@ -7,8 +7,8 @@ Settings → Features → Enable HTTP APIs server).
 
 Architecture:
     container (192.168.1.50)
-      → POST http://192.168.1.80:3001/api   (Logseq HTTP API, Bearer token)
-        → Logseq (running on Windows machine 192.168.1.80)
+      → POST http://192.168.1.17:3000/api   (Logseq HTTP API, Bearer token)
+        → Logseq (running on Windows machine 192.168.1.17)
           → upserts properties on the target journal page's first block
 
     NOTE: Logseq's API listens on 127.0.0.1:3000 by default.
@@ -35,7 +35,7 @@ Public API:
   write_daily_properties(...)→bool — convenience wrapper (build + write in one call)
 
 Environment variables:
-  LOGSEQ_HOST         Base URL of the Logseq HTTP API, default http://192.168.1.80:3001
+  LOGSEQ_HOST         Base URL of the Logseq HTTP API  (defined in .env)
   LOGSEQ_API_TOKEN    Bearer token set in Logseq Settings → HTTP API → Authorization tokens
   LOGSEQ_API_TIMEOUT  Request timeout in seconds, default 5
 
@@ -54,11 +54,17 @@ import httpx
 
 logger = logging.getLogger(__name__)
 
-# ── Configuration ─────────────────────────────────────────────────────────────
+# ── Configuration (values come from .env — do NOT hard-code here) ────────────
 
-_LOGSEQ_HOST  = os.environ.get("LOGSEQ_HOST", "http://192.168.1.80:3001")
-_API_TOKEN    = os.environ.get("LOGSEQ_API_TOKEN", "Rehaan2478!")
+_LOGSEQ_HOST  = os.environ.get("LOGSEQ_HOST", "")
+_API_TOKEN    = os.environ.get("LOGSEQ_API_TOKEN", "")
 _API_TIMEOUT  = int(os.environ.get("LOGSEQ_API_TIMEOUT", "5"))   # seconds
+
+if not _LOGSEQ_HOST:
+    raise RuntimeError(
+        "LOGSEQ_HOST env var is not set. "
+        "Add it to your .env file, e.g.: LOGSEQ_HOST=http://192.168.1.17:3000"
+    )
 
 
 # ── Logseq HTTP API helpers ────────────────────────────────────────────────────
