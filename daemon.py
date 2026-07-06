@@ -251,6 +251,33 @@ def check_and_run():  # noqa: C901
         logger.info("Running daily Logseq journal sync for %s...", today_iso)
         try:
             import json
+            import datetime as _dt
+            yesterday_date = date.today() - _dt.timedelta(days=1)
+            yesterday_iso = yesterday_date.isoformat()
+            
+            # First, fetch and sync yesterday's actual workout to yesterday's Logseq page
+            try:
+                activities = client.client.get_activities_by_date(yesterday_iso, yesterday_iso, activitytype="running")
+                if activities and len(activities) > 0:
+                    act = activities[0]
+                    y_dist = round(act.get("distance", 0) / 1000.0, 2) if act.get("distance") else None
+                    y_spd = act.get("averageSpeed")
+                    y_hr = int(act.get("averageHR")) if act.get("averageHR") else None
+                    
+                    y_props = build_props(
+                        run_distance_km=y_dist,
+                        run_avg_speed_ms=y_spd,
+                        run_avg_heart_rate=y_hr
+                    )
+                    if y_props:
+                        y_synced = write_props_dict(y_props, date=yesterday_date)
+                        if y_synced:
+                            logger.info("Logseq: synced actual run for yesterday %s", yesterday_iso)
+                        else:
+                            _queue_pending_sync(pending_sync_path, yesterday_iso, y_props)
+            except Exception as e:
+                logger.warning("Logseq sync: could not fetch yesterday's actual workout: %s", e)
+
 
             # Sleep fields — from yesterday's Garmin sleep data (already fetched above)
             _sleep_hours   = None
