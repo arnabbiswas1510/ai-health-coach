@@ -155,11 +155,11 @@ def _format_pace(avg_speed_ms: float | None) -> float | None:
 
 
 def _format_time(time_str: str | None) -> str | None:
-    """Parse a Garmin time string (HH:MM:SS or HH:MM or epoch-ms) → 'HH:MM'."""
+    """Parse a Garmin time string (HH:MM:SS, ISO string with T, or epoch-ms) → 'HH:MM'."""
     if not time_str:
         return None
-    # Try HH:MM or HH:MM:SS
-    m = re.match(r"(\d{2}):(\d{2})", str(time_str))
+    # Try finding HH:MM inside the string (handles "22:30", "22:30:00", and "2024-05-18T22:30:00")
+    m = re.search(r"(\d{2}):(\d{2})", str(time_str))
     if m:
         return f"{m.group(1)}:{m.group(2)}"
     # Try epoch ms (numeric string)
