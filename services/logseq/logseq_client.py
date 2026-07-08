@@ -322,7 +322,7 @@ def write_props_dict(
                         _api_call(
                             client,
                             "logseq.Editor.upsertBlockProperty",
-                            [cat_uuid, key, value],
+                            [cat_uuid, key, str(value)],
                         )
                         logger.debug("Logseq: wrote %s=%s on block %s", key, value, cat_uuid)
                 except Exception as exc:
