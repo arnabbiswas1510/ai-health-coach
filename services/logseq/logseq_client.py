@@ -107,23 +107,35 @@ def _get_journal_first_block_uuid(
 
 def _ensure_journal_page(client: httpx.Client, page_name: str) -> str | None:
     """
-    Ensure the journal page exists and return the UUID of its first block.
-    This ensures properties are written as page-level properties.
+    Ensure the journal page exists and return the UUID of the root block.
+    This creates an independent block (sibling to the first block) so it doesn't
+    overwrite existing page bullets or properties.
     """
     try:
         blocks = _api_call(client, "logseq.Editor.getPageBlocksTree", [page_name])
         if blocks and isinstance(blocks, list) and len(blocks) > 0:
+            # Check if any block already is our sync root
+            for block in blocks:
+                content = block.get("content", "")
+                if "Garmin Health Sync" in content:
+                    logger.debug("Logseq: found existing health root block for '%s'", page_name)
+                    return block.get("uuid")
+            
+            # If not, create a new block after the first block
             first_uuid = blocks[0].get("uuid")
             if first_uuid:
-                return first_uuid
+                result = _api_call(client, "logseq.Editor.insertBlock", [first_uuid, "Garmin Health Sync", {"sibling": True}])
+                if result and isinstance(result, dict):
+                    uuid = result.get("uuid")
+                    logger.info("Logseq: created health root block %s on '%s'", uuid, page_name)
+                    return uuid
     except Exception as exc:
         logger.debug("Logseq: could not get blocks for '%s': %s", page_name, exc)
 
     # Page doesn't exist yet — create it
     logger.info("Logseq: journal page '%s' not found — creating it", page_name)
     try:
-        # Appending an empty block creates the page and makes it the first block
-        result = _api_call(client, "logseq.Editor.appendBlockInPage", [page_name, ""])
+        result = _api_call(client, "logseq.Editor.appendBlockInPage", [page_name, "Garmin Health Sync"])
         if result and isinstance(result, dict):
             return result.get("uuid")
     except Exception as exc:
@@ -226,23 +238,35 @@ def write_props_dict(
         logger.info("Logseq: no properties to write — empty dict")
         return False
 
-    # Flatten properties (e.g. from {"sleep": {"duration": 7.5}} to {"sleep-duration": 7.5})
-    flat_props = {}
+    # Normalize flat properties (e.g. from old queue: "sleep-duration": 7.5) to nested format
+    normalized_props = {}
     for k, v in props.items():
         if isinstance(v, dict):
-            for sub_k, sub_v in v.items():
-                flat_props[f"{k}-{sub_k}"] = sub_v
+            if k not in normalized_props:
+                normalized_props[k] = {}
+            normalized_props[k].update(v)
         else:
-            # For backward compatibility if it's already flat
+            cat = "misc"
+            key = k
             if "/" in k:
-                flat_props[k.replace("/", "-")] = v
-            else:
-                flat_props[k] = v
+                parts = k.split("/")
+                cat = parts[0].strip()
+                key = parts[-1].strip()
+            elif "-" in k:
+                parts = k.split("-")
+                cat = parts[0].strip()
+                key = "-".join(parts[1:]).strip()
+                
+            if cat not in normalized_props:
+                normalized_props[cat] = {}
+            normalized_props[cat][key] = v
+            
+    props = normalized_props
 
     page_name = _journal_page_name(date)
     logger.info(
         "Logseq: writing %d properties to journal '%s' via HTTP API at %s",
-        len(flat_props), page_name, _LOGSEQ_HOST,
+        len(props), page_name, _LOGSEQ_HOST,
     )
 
     try:
@@ -259,25 +283,59 @@ def write_props_dict(
 
             failed: list[str] = []
             
-            for key, value in flat_props.items():
+            # Get existing children to avoid duplicates
+            cat_uuid_map = {}
+            block_data = _api_call(client, "logseq.Editor.getBlock", [block_uuid, {"includeChildren": True}])
+            if block_data and isinstance(block_data, dict):
+                children = block_data.get("children", [])
+                for child in children:
+                    child_uuid = None
+                    if isinstance(child, list) and len(child) == 2 and child[0] == "uuid":
+                        child_uuid = child[1]
+                    elif isinstance(child, dict):
+                        child_uuid = child.get("uuid")
+                        
+                    if child_uuid:
+                        child_block = _api_call(client, "logseq.Editor.getBlock", [child_uuid])
+                        if child_block and isinstance(child_block, dict):
+                            content = child_block.get("content", "")
+                            for cat in props.keys():
+                                if content.startswith(f"{cat}::"):
+                                    cat_uuid_map[cat] = child_uuid
+
+            for category, category_props in props.items():
                 try:
-                    _api_call(
-                        client,
-                        "logseq.Editor.upsertBlockProperty",
-                        [block_uuid, key, str(value)],
-                    )
-                    logger.debug("Logseq: wrote %s=%s on block %s", key, value, block_uuid)
+                    cat_uuid = cat_uuid_map.get(category)
+                    if not cat_uuid:
+                        # Create the category block as a child of the root block
+                        cat_block = _api_call(
+                            client, 
+                            "logseq.Editor.insertBlock", 
+                            [block_uuid, f"{category}:: ", {"sibling": False}]
+                        )
+                        cat_uuid = cat_block.get("uuid") if cat_block else None
+
+                    if not cat_uuid:
+                        continue
+                        
+                    for key, value in category_props.items():
+                        _api_call(
+                            client,
+                            "logseq.Editor.upsertBlockProperty",
+                            [cat_uuid, key, value],
+                        )
+                        logger.debug("Logseq: wrote %s=%s on block %s", key, value, cat_uuid)
                 except Exception as exc:
-                    logger.warning("Logseq: failed to write property %s: %s", key, exc)
-                    failed.append(key)
+                    logger.warning("Logseq: failed to write category %s: %s", category, exc)
+                    failed.append(category)
 
             if failed:
-                logger.warning("Logseq: %d properties failed: %s", len(failed), failed)
+                logger.warning("Logseq: %d categories failed: %s", len(failed), failed)
                 return False
 
             logger.info(
-                "Logseq: successfully wrote %d properties to '%s'",
-                len(flat_props), page_name,
+                "Logseq: successfully wrote %d categories to '%s'",
+                len(props), page_name,
             )
             return True
 
