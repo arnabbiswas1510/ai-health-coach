@@ -132,22 +132,15 @@ def generate_workout_of_the_day(
         logger.info("WOTD (dry-run): would push workout: %s", json.dumps(ai_json, indent=2))
         return
 
-    # ── Step 5: delete yesterday's WOTD ──────────────────────────────────────
-    id_file = user_data_dir / "wotd_last_id.txt"
-    prev_id = id_file.read_text(encoding="utf-8").strip() if id_file.exists() else _NO_PREVIOUS_ID
-
-    if prev_id:
-        deleted = _delete_previous_wotd(client, prev_id)
-        if not deleted:
-            logger.warning(
-                "WOTD: could not confirm deletion of previous workout id=%s — "
-                "aborting push to avoid duplicate workouts on watch.", prev_id
-            )
-            return
+    # ── Step 5: sweep ALL stale WOTD workouts from the library ─────────────
+    # More robust than deleting a single stored ID:
+    # handles first-run (no stored ID), container restarts, and any duplicates.
+    _sweep_stale_wotd_workouts(client)
 
     # ── Step 6: push today's WOTD ─────────────────────────────────────────────
     new_id = _push_wotd(client, ai_json)
     if new_id:
+        id_file = user_data_dir / "wotd_last_id.txt"
         id_file.write_text(new_id, encoding="utf-8")
         logger.info("WOTD: successfully pushed. id=%s, saved to %s", new_id, id_file)
     else:
@@ -378,30 +371,47 @@ For structured workouts with run/walk intervals, populate "intervals":
 
 
 # ---------------------------------------------------------------------------
-# Step 5 — Delete previous WOTD
+# Step 5 — Sweep all stale WOTD workouts from the library
 # ---------------------------------------------------------------------------
 
-def _delete_previous_wotd(client: Any, workout_id: str) -> bool:
-    """Delete the previously pushed WOTD from Garmin Connect.
+def _sweep_stale_wotd_workouts(client: Any) -> int:
+    """Delete every WOTD:-prefixed workout from the Garmin workout library.
 
-    Returns True if deletion succeeded or the workout was already gone (404).
-    Returns False on any other error — caller should abort the push.
+    This is a full sweep rather than a single-ID delete, so it handles:
+    - First run (no stored ID file)
+    - Workouts that accumulated before the ID file existed
+    - Any duplicates that crept in via manual pushes
+
+    Returns the count of workouts deleted.
     """
     try:
-        client.delete_workout(workout_id)
-        logger.info("WOTD: deleted previous workout id=%s", workout_id)
-        return True
+        workouts = client.get_workouts(0, 100) or []
     except Exception as exc:
-        exc_str = str(exc).lower()
-        # 404 = already deleted or never existed — safe to proceed
-        if "404" in exc_str or "not found" in exc_str:
-            logger.info("WOTD: previous workout id=%s already gone (404) — proceeding.", workout_id)
-            return True
-        logger.warning(
-            "WOTD: failed to delete previous workout id=%s: %s — aborting push.",
-            workout_id, exc,
-        )
-        return False
+        logger.warning("WOTD sweep: could not list workouts from library: %s", exc)
+        return 0
+
+    deleted = 0
+    for w in workouts:
+        name = (w.get("workoutName") or "").strip()
+        wid  = str(w.get("workoutId", ""))
+        if not name.startswith(WOTD_NAME_PREFIX) or not wid:
+            continue
+        try:
+            client.delete_workout(wid)
+            logger.info("WOTD sweep: deleted '%s' (id=%s)", name, wid)
+            deleted += 1
+        except Exception as exc:
+            exc_str = str(exc).lower()
+            if "404" in exc_str or "not found" in exc_str:
+                logger.info("WOTD sweep: '%s' (id=%s) already gone — skipping.", name, wid)
+            else:
+                logger.warning("WOTD sweep: could not delete '%s' (id=%s): %s", name, wid, exc)
+
+    if deleted:
+        logger.info("WOTD sweep: removed %d stale workout(s) from library.", deleted)
+    else:
+        logger.info("WOTD sweep: no stale WOTD workouts found in library.")
+    return deleted
 
 
 # ---------------------------------------------------------------------------
