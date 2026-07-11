@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import logging
 import os
-import subprocess
 import time
 from datetime import date
 from pathlib import Path
@@ -163,88 +162,86 @@ def check_and_run():  # noqa: C901
 
     user_data_dir = data_dir / display_name
     user_data_dir.mkdir(parents=True, exist_ok=True)
-    last_id_file = user_data_dir / "last_processed_id.txt"
 
-    # 3. Retrieve latest activity
+    # ── Trigger 1: New completed run → lightweight post-run feedback ──────────────
+    # Check if a new activity has been uploaded since the last poll.
+    # Generates 3-4 sentences of coaching feedback via a single AI call.
+    last_id_file = user_data_dir / "last_processed_activity_id.txt"
+    last_processed_id = last_id_file.read_text(encoding="utf-8").strip() if last_id_file.exists() else ""
+
     try:
-        activities = client.get_activities(0, 1)
-    except Exception as e:
-        logger.error("Failed to fetch activities: %s", e)
-        return
+        latest_activities = client.get_activities(0, 1) or []
+        if latest_activities:
+            latest_activity = latest_activities[0]
+            activity_id = str(latest_activity.get("activityId", ""))
+            activity_type = (latest_activity.get("activityType") or {}).get("typeKey", "")
+            is_run = "run" in activity_type.lower()
 
-    if not activities:
-        logger.info("No activities found on your account.")
-        return
-
-    latest_activity = activities[0]
-    activity_id = str(latest_activity.get("activityId"))
-    activity_name = latest_activity.get("activityName", "Activity")
-    start_time = latest_activity.get("startTimeLocal", "")
-
-    logger.info("Latest activity: ID=%s (%s, start=%s)", activity_id, activity_name, start_time)
-
-    # 4. Compare with last processed ID
-    last_processed_id = ""
-    if last_id_file.exists():
-        last_processed_id = last_id_file.read_text(encoding="utf-8").strip()
-
-    should_run = False
-    run_reason = ""
-
-    if activity_id != last_processed_id:
-        # Trigger 1: new workout uploaded
-        should_run = True
-        run_reason = f"New activity detected (ID: {activity_id} != {last_processed_id})"
-
-    if not should_run:
-        # Trigger 2: new overnight sleep data available
-        # Garmin uploads sleep data in the morning after you sync your watch.
-        # We check once per day whether yesterday's sleep record has arrived.
-        last_sleep_file = user_data_dir / "last_processed_sleep_date.txt"
-        today_iso = date.today().isoformat()
-        last_sleep_date = ""
-        if last_sleep_file.exists():
-            last_sleep_date = last_sleep_file.read_text(encoding="utf-8").strip()
-
-        if last_sleep_date != today_iso:
-            logger.info("Checking Garmin Connect for last night's sleep data (%s)...", today_iso)
-            try:
-                sleep_data = client.get_sleep_data(today_iso) or {}
-                daily_sleep = (sleep_data.get("dailySleepDTO") or {})
-                sleep_seconds = daily_sleep.get("sleepTimeSeconds") or 0
-                if sleep_seconds and int(sleep_seconds) > 0:
-                    sleep_hours = round(int(sleep_seconds) / 3600, 1)
+            if activity_id and activity_id != last_processed_id:
+                # Mark processed immediately to prevent re-trigger on error
+                last_id_file.write_text(activity_id, encoding="utf-8")
+                if is_run:
                     logger.info(
-                        "Sleep data for %s received (%.1fh) — generating Workout of the Day.",
-                        today_iso, sleep_hours,
+                        "New run detected (id=%s) — generating post-run coaching feedback.",
+                        activity_id,
                     )
-                    # Mark as processed before calling WOTD to prevent re-trigger on error.
-                    last_sleep_file.write_text(today_iso, encoding="utf-8")
-
-                    # ── WOTD: generate and push today's workout based on sleep ──────────
-                    # This replaces the old should_run = True path for the sleep trigger.
-                    # The full 28-day pipeline only runs on Trigger 1 (new completed run).
                     try:
-                        from services.garmin.wotd_generator import generate_workout_of_the_day
-                        generate_workout_of_the_day(
+                        from services.garmin.run_coach_feedback import generate_run_feedback
+                        generate_run_feedback(
                             client=client,
+                            activity=latest_activity,
                             config=config,
                             user_data_dir=user_data_dir,
-                            sleep_data=sleep_data,
                         )
-                    except Exception as wotd_exc:
-                        logger.error("WOTD generation failed: %s", wotd_exc, exc_info=True)
-                    # ── End WOTD ──────────────────────────────────────────────────────────
-                    # Note: should_run is intentionally NOT set here.
-                    # The full plan pipeline fires only on Trigger 1 (new activity).
+                    except Exception as fb_exc:
+                        logger.error("Post-run feedback failed: %s", fb_exc, exc_info=True)
                 else:
-                    logger.info("Sleep data for %s not yet available. Will check again next poll.", today_iso)
-            except Exception as e:
-                logger.warning("Could not fetch sleep data for %s: %s", today_iso, e)
+                    logger.info(
+                        "New non-run activity detected (id=%s, type=%s) — no feedback generated.",
+                        activity_id, activity_type,
+                    )
+    except Exception as e:
+        logger.warning("Could not check for new activities: %s", e)
 
+    # ── Sleep-triggered Workout of the Day ────────────────────────────────────
+    # Check once per day whether last night's sleep data has arrived.
+    # When it has, generate and push today's WOTD via AI (wotd_generator.py).
+    last_sleep_file = user_data_dir / "last_processed_sleep_date.txt"
+    today_iso = date.today().isoformat()
+    last_sleep_date = ""
+    if last_sleep_file.exists():
+        last_sleep_date = last_sleep_file.read_text(encoding="utf-8").strip()
 
-    if not should_run:
-        logger.info("No new runs or sleep data detected for %s. Plan is up to date.", display_name)
+    if last_sleep_date != today_iso:
+        logger.info("Checking Garmin Connect for last night's sleep data (%s)...", today_iso)
+        try:
+            sleep_data = client.get_sleep_data(today_iso) or {}
+            daily_sleep = (sleep_data.get("dailySleepDTO") or {})
+            sleep_seconds = daily_sleep.get("sleepTimeSeconds") or 0
+            if sleep_seconds and int(sleep_seconds) > 0:
+                sleep_hours = round(int(sleep_seconds) / 3600, 1)
+                logger.info(
+                    "Sleep data for %s received (%.1fh) — generating Workout of the Day.",
+                    today_iso, sleep_hours,
+                )
+                # Mark as processed before calling WOTD to prevent re-trigger on error.
+                last_sleep_file.write_text(today_iso, encoding="utf-8")
+                try:
+                    from services.garmin.wotd_generator import generate_workout_of_the_day
+                    generate_workout_of_the_day(
+                        client=client,
+                        config=config,
+                        user_data_dir=user_data_dir,
+                        sleep_data=sleep_data,
+                    )
+                except Exception as wotd_exc:
+                    logger.error("WOTD generation failed: %s", wotd_exc, exc_info=True)
+            else:
+                logger.info("Sleep data for %s not yet available. Will check again next poll.", today_iso)
+        except Exception as e:
+            logger.warning("Could not fetch sleep data for %s: %s", today_iso, e)
+    else:
+        logger.info("Sleep already processed for %s — WOTD skipped.", today_iso)
 
     # ── Daily Logseq Sync ─────────────────────────────────────────────────────
     # Runs once per day regardless of whether the full pipeline triggered.
@@ -375,31 +372,6 @@ def check_and_run():  # noqa: C901
     else:
         logger.info("Logseq journal already synced today (%s). Skipping.", today_iso)
     # ── End Daily Logseq Sync ─────────────────────────────────────────────────
-
-    if not should_run:
-        return
-
-    # 5. Trigger detected — run the CLI analysis
-    logger.info("%s: %s", display_name, run_reason)
-    logger.info("Running coach analysis workflow...")
-
-    # Run the python CLI script directly inside the container
-    cmd = ["python", "cli/garmin_ai_coach_cli.py"]
-    if config_path.exists():
-        cmd.extend(["--config", str(config_path)])
-
-    try:
-        res = subprocess.run(cmd, cwd=str(project_dir), capture_output=True, text=True, check=False)
-        if res.returncode == 0:
-            logger.info("Coach analysis completed successfully!")
-            # Update the activity sentinel so we don't re-trigger on the same activity
-            last_id_file.write_text(activity_id, encoding="utf-8")
-            logger.info("Updated last processed ID to %s", activity_id)
-        else:
-            logger.error("Coach analysis execution failed:")
-            logger.error(res.stderr)
-    except Exception as e:
-        logger.error("Failed to run coach command: %s", e)
 
 def run_withings_sync():
     """Push Withings scale measurements to Garmin Connect.

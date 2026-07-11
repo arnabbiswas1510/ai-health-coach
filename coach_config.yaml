@@ -49,5 +49,5 @@ workout_of_the_day:
   weekend_max_duration_min: 105    # Allow longer runs Sat-Sun
   recent_runs_count: 10            # Number of recent runs to include in weighted baseline
   decay_factor: 0.85               # Recency decay: last run ~6x weight of oldest in window
-  push_to_garmin: false            # Set to true when ready to push to watch (dry-run until then)
+  push_to_garmin: true             # Set to false to log only (dry-run) without pushing to watch
 
