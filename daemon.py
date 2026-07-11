@@ -214,18 +214,34 @@ def check_and_run():  # noqa: C901
                 sleep_seconds = daily_sleep.get("sleepTimeSeconds") or 0
                 if sleep_seconds and int(sleep_seconds) > 0:
                     sleep_hours = round(int(sleep_seconds) / 3600, 1)
-                    should_run = True
-                    run_reason = (
-                        f"New sleep data for {today_iso} received "
-                        f"({sleep_hours}h) — re-calculating next workout based on recovery"
+                    logger.info(
+                        "Sleep data for %s received (%.1fh) — generating Workout of the Day.",
+                        today_iso, sleep_hours,
                     )
-                    # Mark this date as processed regardless of pipeline outcome
-                    # (prevents repeated triggers on the same day's sleep)
+                    # Mark as processed before calling WOTD to prevent re-trigger on error.
                     last_sleep_file.write_text(today_iso, encoding="utf-8")
+
+                    # ── WOTD: generate and push today's workout based on sleep ──────────
+                    # This replaces the old should_run = True path for the sleep trigger.
+                    # The full 28-day pipeline only runs on Trigger 1 (new completed run).
+                    try:
+                        from services.garmin.wotd_generator import generate_workout_of_the_day
+                        generate_workout_of_the_day(
+                            client=client,
+                            config=config,
+                            user_data_dir=user_data_dir,
+                            sleep_data=sleep_data,
+                        )
+                    except Exception as wotd_exc:
+                        logger.error("WOTD generation failed: %s", wotd_exc, exc_info=True)
+                    # ── End WOTD ──────────────────────────────────────────────────────────
+                    # Note: should_run is intentionally NOT set here.
+                    # The full plan pipeline fires only on Trigger 1 (new activity).
                 else:
                     logger.info("Sleep data for %s not yet available. Will check again next poll.", today_iso)
             except Exception as e:
                 logger.warning("Could not fetch sleep data for %s: %s", today_iso, e)
+
 
     if not should_run:
         logger.info("No new runs or sleep data detected for %s. Plan is up to date.", display_name)

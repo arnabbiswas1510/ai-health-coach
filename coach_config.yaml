@@ -4,7 +4,7 @@ athlete:
   email: "arnabbiswas@yahoo.com"  # Garmin Connect email
   age: 53                        # Athlete age (used for estimating Max HR and Zone 2 boundaries)
   target_goal: "base_building"   # Training goal: e.g., "base_building", "maintenance"
-  sync_calendar: true            # Set to true to automatically sync the 28-day AI plan to your Garmin Calendar/watch
+  sync_calendar: false            # Set to true to automatically sync the 28-day AI plan to your Garmin Calendar/watch
   missed_runs_count: 0           # Count of missed runs to trigger adaptive training adjustments
   accumulated_debt_km: 0.0       # Accumulated mileage debt carried forward (km)
   height: "5'9\""                # Athlete height (Golden source is Garmin Connect, fallback to this value if unset)
@@ -37,3 +37,17 @@ extraction:
 # Output Settings
 output:
   directory: "./data"
+
+# Workout of the Day (WOTD) Settings
+# Triggered each morning when overnight sleep data arrives from Garmin.
+# Generates exactly one AI-designed workout and pushes it to Garmin Connect,
+# replacing any previously pushed WOTD to prevent watch errors.
+workout_of_the_day:
+  enabled: true
+  target_weight_lbs: 160           # Weight loss goal (passed to AI for context)
+  weekday_max_duration_min: 60     # Hard cap Mon-Fri (you can only run 1h on work days)
+  weekend_max_duration_min: 105    # Allow longer runs Sat-Sun
+  recent_runs_count: 10            # Number of recent runs to include in weighted baseline
+  decay_factor: 0.85               # Recency decay: last run ~6x weight of oldest in window
+  push_to_garmin: false            # Set to true when ready to push to watch (dry-run until then)
+
