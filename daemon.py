@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 import logging
 import os
 import time
@@ -267,16 +267,24 @@ def check_and_run():  # noqa: C901
             import datetime as _dt
             yesterday_date = date.today() - _dt.timedelta(days=1)
             yesterday_iso = yesterday_date.isoformat()
-            
+
             # First, fetch and sync yesterday's actual workout to yesterday's Logseq page
             try:
-                activities = client.client.get_activities_by_date(yesterday_iso, yesterday_iso, activitytype="running")
-                if activities and len(activities) > 0:
+                # get_activities_by_date not available in all garminconnect versions.
+                # Use get_activities() + manual date filter instead.
+                all_recent = client.get_activities(0, 10) or []
+                activities = [
+                    a for a in all_recent
+                    if (a.get("startTimeLocal") or "").startswith(yesterday_iso)
+                    and (a.get("activityType") or {}).get("typeKey", "").lower()
+                    in ("running", "trail_running", "treadmill_running")
+                ]
+                if activities:
                     act = activities[0]
                     y_dist = round(act.get("distance", 0) / 1000.0, 2) if act.get("distance") else None
                     y_spd = act.get("averageSpeed")
                     y_hr = int(act.get("averageHR")) if act.get("averageHR") else None
-                    
+
                     y_props = build_props(
                         run_distance_km=y_dist,
                         run_avg_speed_ms=y_spd,
