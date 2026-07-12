@@ -1035,6 +1035,10 @@ class TriathlonCoachDataExtractor(DataExtractor):
         avg_weight_g = _to_float(total_average.get("weight"))
         average_weight = _round((avg_weight_g or 0) / 1000.0, 2) if avg_weight_g is not None else None
 
+        # Sort ascending by calendarDate so [-1] is always the most recent entry,
+        # regardless of the order Garmin's API returns them.
+        processed_weight_data.sort(key=lambda e: e.get("date") or "")
+
         return BodyMetrics(
             weight={"data": processed_weight_data, "average": average_weight},
             hydration=processed_hydration_data,
