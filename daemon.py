@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 import logging
 import os
 import time
@@ -195,6 +195,15 @@ def check_and_run():  # noqa: C901
                         )
                     except Exception as fb_exc:
                         logger.error("Post-run feedback failed: %s", fb_exc, exc_info=True)
+
+                    # Advance zone calibration counter (recalibration fires every 10 runs
+                    # at the next WOTD generation via maybe_recalibrate in wotd_generator.py)
+                    try:
+                        from services.garmin.zone_calibrator import increment_run_counter
+                        n = increment_run_counter(user_data_dir)
+                        logger.info("ZoneCal: run counter advanced to %d/%d.", n, 10)
+                    except Exception as cal_exc:
+                        logger.warning("ZoneCal: could not advance run counter: %s", cal_exc)
                 else:
                     logger.info(
                         "New non-run activity detected (id=%s, type=%s) — no feedback generated.",

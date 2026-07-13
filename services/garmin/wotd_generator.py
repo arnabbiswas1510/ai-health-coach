@@ -15,6 +15,8 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
+from services.garmin.zone_calibrator import maybe_recalibrate, increment_run_counter
+
 logger = logging.getLogger(__name__)
 
 # Sentinel ID written to disk when no previous WOTD exists
@@ -123,6 +125,12 @@ def generate_workout_of_the_day(
             "Ensure at least one recent run with a known lactate threshold is synced to Garmin Connect."
         )
 
+    # ── Auto-recalibrate zone % constants every 10 runs ──────────────────────
+    # maybe_recalibrate() checks run counter in zone_calibration.json.
+    # Returns current calibration dict (updated in-place if recalibration ran).
+    # LTHR is the live anchor; percentages are the stable athlete constants.
+    zone_cal = maybe_recalibrate(client, lthr, user_data_dir)
+
     # ── All 5 HR zones from LTHR ─────────────────────────────────────────────────
     # CALIBRATION BASIS (2026-07-13, LTHR=177):
     # Empirically derived from Garmin HR-in-timezones data across 3 recent runs:
@@ -149,22 +157,24 @@ def generate_workout_of_the_day(
     # Z5 Max           : > 105% LTHR     (VO2max; irrelevant for weight-loss phase)
     #
     # With LTHR=177: walk-break trigger=155, Z2=132–154, walk-recovery<132
-    Z2_FLOOR_PCT    = 0.746   # empirically: lowest HR athlete can sustain a run (~132 @ LTHR=177)
-    Z2_CEILING_PCT  = 0.870   # empirically: ceiling never exceeded in well-paced runs (~154 @ LTHR=177)
-    WALK_BREAK_PCT  = 0.876   # one bpm above Z2 ceiling → walk break triggered (~155 @ LTHR=177)
+    # Load persisted percentages — updated by auto-calibration every 10 runs.
+    # Falls back to empirical factory defaults (2026-07-13) if no file exists yet.
+    Z2_FLOOR_PCT   = zone_cal["z2_floor_pct"]
+    Z2_CEILING_PCT = zone_cal["z2_ceiling_pct"]
+    WALK_BREAK_PCT = zone_cal["walk_break_pct"]
 
-    max_hr       = int(lthr / 0.88)
-    z1_high      = int(lthr * Z2_FLOOR_PCT)      # top of Z1 = bottom of Z2
-    z2_low       = int(lthr * Z2_FLOOR_PCT)      # run-start floor
-    z2_high      = int(lthr * Z2_CEILING_PCT)    # run ceiling (walk break imminent above this)
-    walk_break_hr = int(lthr * WALK_BREAK_PCT)   # HR at which to immediately start walking
-    z3_high      = int(lthr * 0.94)
-    z4_high      = int(lthr * 1.05)
+    max_hr        = int(lthr / 0.88)
+    z1_high       = int(lthr * Z2_FLOOR_PCT)
+    z2_low        = int(lthr * Z2_FLOOR_PCT)
+    z2_high       = int(lthr * Z2_CEILING_PCT)
+    walk_break_hr = int(lthr * WALK_BREAK_PCT)
+    z3_high       = int(lthr * 0.94)
+    z4_high       = int(lthr * 1.05)
     # Z5 = above z4_high
     logger.info(
-        "WOTD: zones from LTHR=%d | Z2=%d–%d (%.0f–%.0f%%) | walk_break≥%d | Z3–Z4=%d–%d | max_hr=%d",
-        lthr, z2_low, z2_high, Z2_FLOOR_PCT*100, Z2_CEILING_PCT*100,
-        walk_break_hr, z2_high+1, z3_high, max_hr
+        "WOTD: zones from LTHR=%d | Z2=%d\u2013%d (%.1f\u2013%.1f%%) | walk_break\u2265%d | max_hr=%d",
+        lthr, z2_low, z2_high, Z2_FLOOR_PCT * 100, Z2_CEILING_PCT * 100,
+        walk_break_hr, max_hr,
     )
 
     # Manual coach_config override always takes highest priority
