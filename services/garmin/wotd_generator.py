@@ -51,11 +51,28 @@ def generate_workout_of_the_day(
     if dry_run:
         logger.info("WOTD: push_to_garmin=false — dry-run mode (no Garmin writes).")
 
-    # ── Step 1: weighted run baseline ────────────────────────────────────────
+    # ── Step 1: weighted run baseline (pace, HR, distance) ───────────────────
     n_runs   = int(wotd_cfg.get("recent_runs_count", 10))
     decay    = float(wotd_cfg.get("decay_factor", 0.85))
     baseline = _weighted_run_baseline(client, n=n_runs, decay=decay)
     logger.info("WOTD: baseline from last %d runs (decay=%.2f): %s", n_runs, decay, baseline)
+
+    # ── Step 1b: HRM-600 running dynamics (last 3 runs only — older runs pre-date HRM-600) ──
+    dynamics = _fetch_run_dynamics(client, n=3)
+    if dynamics["run_count"] > 0:
+        logger.info("WOTD: running dynamics from last %d run(s): %s", dynamics["run_count"], dynamics)
+    else:
+        logger.info("WOTD: no HRM-600 dynamics data available yet.")
+
+    # ── Step 1c: HRV + Training Readiness ─────────────────────────────────────
+    hrv_data   = _fetch_hrv(client)
+    readiness  = _fetch_training_readiness(client)
+    if hrv_data:
+        logger.info("WOTD: HRV: %s ms (%s), weekly avg %s ms",
+                    hrv_data.get("last_night_avg"), hrv_data.get("status"), hrv_data.get("weekly_avg"))
+    if readiness:
+        logger.info("WOTD: Training Readiness: %s/100 (%s), limiting: %s",
+                    readiness.get("score"), readiness.get("level"), readiness.get("limiting_factor"))
 
     # ── Step 2: sleep quality ─────────────────────────────────────────────────
     sleep_summary = _extract_sleep_summary(sleep_data)
@@ -66,23 +83,97 @@ def generate_workout_of_the_day(
     context_cfg = config.get("context", {})
     age         = int(athlete_cfg.get("age", 53))
 
-    # Zone 2 HR — derive from LTHR if available, otherwise age-based
+    # Zone 2 HR — priority: (1) get_user_profile (primary, same as data_extractor.py),
+    #                        (2) recent training_status scan (secondary),
+    #                        (3) manual coach_config override (always wins if set)
+    # NEVER falls back to age-based formula — LTHR absence is a hard error.
     lthr = None
+
+    # Primary: get_user_profile → userData.lactateThresholdHeartRate
     try:
-        profile_data = client.get_training_status()
-        lthr = (profile_data or {}).get("lactateThresholdHeartRate")
-    except Exception:
-        pass
+        profile = client.get_user_profile() or {}
+        user_data = profile.get("userData") or {}
+        raw_lthr = user_data.get("lactateThresholdHeartRate")
+        if raw_lthr:
+            lthr = int(raw_lthr)
+            logger.info("WOTD: LTHR from get_user_profile: %d bpm", lthr)
+    except Exception as exc:
+        logger.warning("WOTD: get_user_profile failed: %s", exc)
 
-    max_hr    = int(lthr / 0.88) if lthr else (220 - age)
-    z2_low    = int(lthr * 0.80) if lthr else int(max_hr * 0.60)
-    z2_high   = int(lthr * 0.89) if lthr else int(max_hr * 0.72)
+    # Secondary: scan last 14 days of training_status
+    if not lthr:
+        logger.info("WOTD: LTHR not in user profile — scanning recent training_status dates...")
+        from datetime import timedelta
+        for days_ago in range(0, 15):
+            d = (date.today() - timedelta(days=days_ago)).isoformat()
+            try:
+                ts = client.get_training_status(d) or {}
+                raw_lthr = ts.get("lactateThresholdHeartRate") or ts.get("latestLactateThresholdHeartRate")
+                if raw_lthr:
+                    lthr = int(raw_lthr)
+                    logger.info("WOTD: LTHR from training_status(%s): %d bpm", d, lthr)
+                    break
+            except Exception:
+                continue
 
-    # Override with manual config if provided
+    if not lthr:
+        raise ValueError(
+            "WOTD: LTHR is unavailable from all sources (get_user_profile + last 14 days of "
+            "training_status). Cannot compute Zone 2 without LTHR — WOTD aborted. "
+            "Ensure at least one recent run with a known lactate threshold is synced to Garmin Connect."
+        )
+
+    # ── All 5 HR zones from LTHR ─────────────────────────────────────────────────
+    # CALIBRATION BASIS (2026-07-13, LTHR=177):
+    # Empirically derived from Garmin HR-in-timezones data across 3 recent runs:
+    #   - Today (walk-run):  96.8 min in 132–154 bpm; 0 min above 155 → ceiling=154=87%
+    #   - Jul 11 (cont run): 15 min above 155 bpm → ceiling was too high, confirmed 87% is right
+    #   - Jul 10 (cont run): 8.8 min above 155 bpm → same
+    # Walk recovery naturally lands in 110–131 bpm (Garmin Z2 in their own scale).
+    # Run segments start at ~132 bpm → floor = 132 = 74.6% of LTHR.
+    #
+    # AUTO-RECALIBRATION:
+    # These PERCENTAGES are stable athlete constants — they represent the athlete's
+    # body relationship to LTHR and change slowly with long-term fitness adaptation.
+    # The ABSOLUTE bpm values auto-scale every day because LTHR is fetched live from
+    # get_user_profile() — as Garmin updates LTHR from training data, all zone
+    # boundaries shift automatically without any code change.
+    # Example: if LTHR rises from 177 → 185 (fitness gain), Z2 becomes 138–161 bpm.
+    # Recalibrate percentages only when athlete feedback signals a sustained shift
+    # (e.g. 'feels too easy' or 'always hitting ceiling') — not on a single run.
+    #
+    # Z1 Recovery      : < 74.6% LTHR    (walk recovery; HR naturally drifts here)
+    # Z2 Aerobic (RUN) : 74.6 – 87% LTHR  (empirically: run segments land here)
+    # Z3 Tempo         : 87 – 94% LTHR   (aerobic threshold; walk break triggered at Z3 floor)
+    # Z4 Threshold     : 94 – 105% LTHR  (lactate threshold; avoid)
+    # Z5 Max           : > 105% LTHR     (VO2max; irrelevant for weight-loss phase)
+    #
+    # With LTHR=177: walk-break trigger=155, Z2=132–154, walk-recovery<132
+    Z2_FLOOR_PCT    = 0.746   # empirically: lowest HR athlete can sustain a run (~132 @ LTHR=177)
+    Z2_CEILING_PCT  = 0.870   # empirically: ceiling never exceeded in well-paced runs (~154 @ LTHR=177)
+    WALK_BREAK_PCT  = 0.876   # one bpm above Z2 ceiling → walk break triggered (~155 @ LTHR=177)
+
+    max_hr       = int(lthr / 0.88)
+    z1_high      = int(lthr * Z2_FLOOR_PCT)      # top of Z1 = bottom of Z2
+    z2_low       = int(lthr * Z2_FLOOR_PCT)      # run-start floor
+    z2_high      = int(lthr * Z2_CEILING_PCT)    # run ceiling (walk break imminent above this)
+    walk_break_hr = int(lthr * WALK_BREAK_PCT)   # HR at which to immediately start walking
+    z3_high      = int(lthr * 0.94)
+    z4_high      = int(lthr * 1.05)
+    # Z5 = above z4_high
+    logger.info(
+        "WOTD: zones from LTHR=%d | Z2=%d–%d (%.0f–%.0f%%) | walk_break≥%d | Z3–Z4=%d–%d | max_hr=%d",
+        lthr, z2_low, z2_high, Z2_FLOOR_PCT*100, Z2_CEILING_PCT*100,
+        walk_break_hr, z2_high+1, z3_high, max_hr
+    )
+
+    # Manual coach_config override always takes highest priority
     if athlete_cfg.get("zone2_min"):
         z2_low = int(athlete_cfg["zone2_min"])
+        logger.info("WOTD: z2_low overridden by config: %d", z2_low)
     if athlete_cfg.get("zone2_max"):
         z2_high = int(athlete_cfg["zone2_max"])
+        logger.info("WOTD: z2_high overridden by config: %d", z2_high)
 
     # Current weight from body metrics if available
     weight_kg = None
@@ -109,11 +200,19 @@ def generate_workout_of_the_day(
         z2_low=z2_low,
         z2_high=z2_high,
         baseline=baseline,
+        dynamics=dynamics,
         sleep_summary=sleep_summary,
+        hrv_data=hrv_data,
+        readiness=readiness,
         is_weekday=is_weekday,
         max_duration_min=max_duration,
         planning_context=planning_context,
         n_runs=n_runs,
+        lthr=lthr,
+        z1_high=z1_high,
+        z3_high=z3_high,
+        z4_high=z4_high,
+        max_hr=max_hr,
     )
     if not ai_json:
         logger.error("WOTD: AI returned no workout — aborting.")
@@ -217,6 +316,160 @@ def _weighted_run_baseline(client: Any, n: int = 10, decay: float = 0.85) -> dic
 
 
 # ---------------------------------------------------------------------------
+# Step 1b — HRM-600 Running Dynamics (last N detailed runs)
+# ---------------------------------------------------------------------------
+
+def _fetch_run_dynamics(client: Any, n: int = 3) -> dict:
+    """Fetch detailed activity summaries for the last N runs and compute
+    exponentially-weighted running dynamics from HRM-600.
+
+    Returns a dict with avg power, cadence, GCT, stride, vertical metrics,
+    plus the most recent run's compliance and RPE.
+    Silently returns empty dict on any API failure.
+    """
+    empty = {"run_count": 0}
+    try:
+        activities = client.get_activities(0, max(n * 3, 15)) or []
+    except Exception as exc:
+        logger.warning("WOTD dynamics: could not fetch activity list: %s", exc)
+        return empty
+
+    runs = [
+        a for a in activities
+        if (a.get("activityType") or {}).get("typeKey", "").lower()
+        in ("running", "trail_running", "treadmill_running")
+    ][:n]
+
+    if not runs:
+        return empty
+
+    # Most recent first → reversed for weighting (index 0 = oldest in window)
+    runs_rev = list(reversed(runs))
+    decay = 0.85
+    weights = [decay ** (len(runs_rev) - 1 - i) for i in range(len(runs_rev))]
+    total_w = sum(weights)
+
+    w_power = w_norm = w_cad = w_gct = w_bal = w_stride = w_osc = w_ratio = 0.0
+    cnt_power = cnt_cad = cnt_gct = cnt_bal = cnt_stride = cnt_osc = cnt_ratio = 0.0
+
+    last_compliance = last_rpe = last_feeling = None
+
+    for idx, (run, w) in enumerate(zip(runs_rev, weights)):
+        act_id = run.get("activityId")
+        if not act_id:
+            continue
+        try:
+            detail = client.get_activity(act_id) or {}
+            s = detail.get("summaryDTO") or {}
+        except Exception as exc:
+            logger.warning("WOTD dynamics: could not fetch activity %s: %s", act_id, exc)
+            continue
+
+        def _wt(field, acc, cnt):
+            v = s.get(field)
+            if v is not None and float(v) > 0:
+                return acc + w * float(v), cnt + w
+            return acc, cnt
+
+        w_power,  cnt_power  = _wt("averagePower",              w_power,  cnt_power)
+        w_norm,   cnt_power  = _wt("normalizedPower",           w_norm,   cnt_power)
+        w_cad,    cnt_cad    = _wt("averageRunCadence",         w_cad,    cnt_cad)
+        w_gct,    cnt_gct    = _wt("groundContactTime",         w_gct,    cnt_gct)
+        w_bal,    cnt_bal    = _wt("groundContactBalanceLeft",  w_bal,    cnt_bal)
+        w_stride, cnt_stride = _wt("strideLength",              w_stride, cnt_stride)
+        w_osc,    cnt_osc    = _wt("verticalOscillation",       w_osc,    cnt_osc)
+        w_ratio,  cnt_ratio  = _wt("verticalRatio",             w_ratio,  cnt_ratio)
+
+        # Capture most recent run's compliance + RPE (runs[0] = most recent)
+        if idx == len(runs_rev) - 1:
+            last_compliance = s.get("directWorkoutComplianceScore")
+            last_rpe        = s.get("directWorkoutRpe")
+            last_feeling    = s.get("directWorkoutFeel")  # numeric → convert below
+
+    def _avg(acc, cnt): return round(acc / cnt, 1) if cnt > 0 else None
+
+    # Convert Garmin's 0-100 feel scale to label
+    feeling_label = None
+    if last_feeling is not None:
+        feel = int(last_feeling)
+        if feel <= 20:    feeling_label = "very_rough"
+        elif feel <= 40:  feeling_label = "rough"
+        elif feel <= 60:  feeling_label = "ok"
+        elif feel <= 80:  feeling_label = "good"
+        else:             feeling_label = "very_good"
+
+    return {
+        "run_count":          len(runs),
+        "avg_power_w":        _avg(w_power,  cnt_power),
+        "norm_power_w":       _avg(w_norm,   cnt_power),
+        "avg_cadence_spm":    _avg(w_cad,    cnt_cad),
+        "avg_gct_ms":         _avg(w_gct,    cnt_gct),
+        "avg_gct_balance":    _avg(w_bal,    cnt_bal),
+        "avg_stride_cm":      _avg(w_stride, cnt_stride),
+        "avg_vert_osc_cm":    _avg(w_osc,    cnt_osc),
+        "avg_vert_ratio_pct": _avg(w_ratio,  cnt_ratio),
+        "last_compliance":    int(last_compliance) if last_compliance is not None else None,
+        "last_rpe":           int(last_rpe)         if last_rpe is not None else None,
+        "last_feeling":       feeling_label,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Step 1c — HRV & Training Readiness
+# ---------------------------------------------------------------------------
+
+def _fetch_hrv(client: Any) -> dict:
+    """Fetch today's overnight HRV summary. Returns {} on failure."""
+    try:
+        data = client.get_hrv_data(date.today().isoformat()) or {}
+        summary = data.get("hrvSummary") or {}
+        baseline = summary.get("baseline") or {}
+        return {
+            "last_night_avg": summary.get("lastNightAvg"),
+            "weekly_avg":     summary.get("weeklyAvg"),
+            "status":         summary.get("status"),          # BALANCED / UNBALANCED / LOW
+            "baseline_low":   baseline.get("balancedLow"),
+            "baseline_high":  baseline.get("balancedUpper"),
+        }
+    except Exception as exc:
+        logger.warning("WOTD: could not fetch HRV data: %s", exc)
+        return {}
+
+
+def _fetch_training_readiness(client: Any) -> dict:
+    """Fetch today's Training Readiness score. Returns {} on failure."""
+    try:
+        data = client.get_training_readiness(date.today().isoformat()) or []
+        rec = data[0] if isinstance(data, list) and data else (data or {})
+        # Find the most limiting factor (lowest factor percentage)
+        factors = {
+            "sleep":   rec.get("sleepScoreFactorPercent"),
+            "hrv":     rec.get("hrvFactorPercent"),
+            "load":    rec.get("acwrFactorPercent"),
+            "stress":  rec.get("stressHistoryFactorPercent"),
+        }
+        limiting = min(
+            ((k, v) for k, v in factors.items() if v is not None),
+            key=lambda x: x[1],
+            default=(None, None),
+        )[0]
+        return {
+            "score":          rec.get("score"),
+            "level":          rec.get("level"),          # LOW / MODERATE / HIGH
+            "recovery_time_h": rec.get("recoveryTime"),
+            "acute_load":     rec.get("acuteLoad"),
+            "limiting_factor": limiting,
+            "hrv_factor_pct":   rec.get("hrvFactorPercent"),
+            "sleep_factor_pct": rec.get("sleepScoreFactorPercent"),
+            "stress_factor_pct": rec.get("stressHistoryFactorPercent"),
+            "load_factor_pct":  rec.get("acwrFactorPercent"),
+        }
+    except Exception as exc:
+        logger.warning("WOTD: could not fetch training readiness: %s", exc)
+        return {}
+
+
+# ---------------------------------------------------------------------------
 # Step 2 — Sleep quality
 # ---------------------------------------------------------------------------
 
@@ -262,28 +515,128 @@ def _call_ai_for_workout(
     z2_low: int,
     z2_high: int,
     baseline: dict,
+    dynamics: dict,
     sleep_summary: dict,
+    hrv_data: dict,
+    readiness: dict,
     is_weekday: bool,
     max_duration_min: int,
     planning_context: str,
     n_runs: int,
+    # Full zone chart from LTHR
+    lthr: int = 0,
+    z1_high: int = 0,
+    z3_high: int = 0,
+    z4_high: int = 0,
+    max_hr: int = 0,
 ) -> dict | None:
-    """Build prompt and call Gemini (via langchain) to get today's workout JSON."""
+    """Build prompt and call Gemini to get today's workout JSON."""
     weight_str = f"{weight_kg:.1f} kg" if weight_kg else "unknown"
     day_type   = "Weekday" if is_weekday else "Weekend"
     recovery   = sleep_summary["recovery_status"]
     sleep_h    = sleep_summary["sleep_hours"]
     sleep_s    = sleep_summary["sleep_score"]
+    score_str  = f"{sleep_s}/100" if sleep_s is not None else "not available"
 
-    score_str = f"{sleep_s}/100" if sleep_s is not None else "not available"
+    # ── Format running dynamics section ──────────────────────────────────────
+    if dynamics.get("run_count", 0) > 0:
+        cadence    = dynamics.get("avg_cadence_spm")
+        power      = dynamics.get("avg_power_w")
+        norm_pwr   = dynamics.get("norm_power_w")
+        gct        = dynamics.get("avg_gct_ms")
+        gct_bal    = dynamics.get("avg_gct_balance")
+        stride     = dynamics.get("avg_stride_cm")
+        vert_osc   = dynamics.get("avg_vert_osc_cm")
+        vert_ratio = dynamics.get("avg_vert_ratio_pct")
+        compliance = dynamics.get("last_compliance")
+        last_rpe   = dynamics.get("last_rpe")
+        feeling    = dynamics.get("last_feeling")
+
+        # Cadence coaching note
+        cadence_note = ""
+        if cadence and cadence < 160:
+            cadence_note = f" ← LOW (target 170+ spm — consider shorter, quicker steps)"
+        elif cadence and cadence < 170:
+            cadence_note = f" ← approaching target (goal: 170+ spm)"
+        else:
+            cadence_note = f" ← good"
+
+        # Compliance signal for difficulty adjustment
+        compliance_note = ""
+        if compliance is not None:
+            if compliance >= 80:
+                compliance_note = f"{compliance}% ✅ — can nudge today slightly harder"
+            elif compliance < 60:
+                compliance_note = f"{compliance}% ⚠️ — consider slightly easier today"
+            else:
+                compliance_note = f"{compliance}%"
+
+        # Vertical ratio efficiency
+        vert_note = ""
+        if vert_ratio:
+            if vert_ratio > 10:
+                vert_note = " ← high bounce (energy wastage — cue: run tall, drive hips)"
+            elif vert_ratio > 8:
+                vert_note = " ← moderate (improving)"
+            else:
+                vert_note = " ← good efficiency"
+
+        dynamics_section = f"""\nRUNNING DYNAMICS (HRM-600, weighted avg last {dynamics['run_count']} run(s)):
+  Running power:      {power or 'n/a'} W avg / {norm_pwr or 'n/a'} W normalized
+  Cadence:            {cadence or 'n/a'} spm{cadence_note}
+  Ground contact:     {gct or 'n/a'} ms | balance left: {gct_bal or 'n/a'}% (ideal ~50%)
+  Stride length:      {stride or 'n/a'} cm
+  Vertical oscillation: {vert_osc or 'n/a'} cm | vertical ratio: {vert_ratio or 'n/a'}%{vert_note}
+  Last WOTD compliance: {compliance_note or 'n/a'}
+  Last run RPE:       {last_rpe or 'n/a'}/100 | feeling: {feeling or 'n/a'}"""
+    else:
+        dynamics_section = "\nRUNNING DYNAMICS: Not yet available (HRM-600 recently added)."
+
+    # ── Format HRV section ────────────────────────────────────────────────────
+    if hrv_data.get("last_night_avg"):
+        hrv_status = hrv_data.get("status", "unknown")
+        hrv_last   = hrv_data["last_night_avg"]
+        hrv_wkly   = hrv_data.get("weekly_avg", "n/a")
+        hrv_low    = hrv_data.get("baseline_low", "n/a")
+        hrv_high   = hrv_data.get("baseline_high", "n/a")
+        hrv_delta  = hrv_last - hrv_wkly if isinstance(hrv_wkly, (int, float)) else 0
+        hrv_trend  = f"+{hrv_delta}" if hrv_delta >= 0 else str(hrv_delta)
+        hrv_section = f"""\nHRV (overnight, HRM-600 correlated):
+  Last night: {hrv_last} ms (weekly avg: {hrv_wkly} ms, trend: {hrv_trend} ms)
+  Status:     {hrv_status} (athlete baseline: {hrv_low}–{hrv_high} ms)"""
+    else:
+        hrv_section = "\nHRV: Not available."
+
+    # ── Format Training Readiness section ────────────────────────────────────
+    if readiness.get("score") is not None:
+        r_score    = readiness["score"]
+        r_level    = readiness.get("level", "unknown")
+        r_limit    = readiness.get("limiting_factor", "none")
+        r_recov_h  = readiness.get("recovery_time_h", "n/a")
+        r_load     = readiness.get("acute_load", "n/a")
+        readiness_section = f"""\nTRAINING READINESS (composite — HRV + recovery + load + sleep + stress):
+  Score:            {r_score}/100 ({r_level})
+  Recovery time:    {r_recov_h} h remaining
+  Acute training load: {r_load}
+  Limiting factor:  {r_limit} (the factor most holding the score down)
+  Factors:          sleep {readiness.get('sleep_factor_pct', 'n/a')}% | hrv {readiness.get('hrv_factor_pct', 'n/a')}% | load {readiness.get('load_factor_pct', 'n/a')}% | stress {readiness.get('stress_factor_pct', 'n/a')}%"""
+    else:
+        readiness_section = "\nTRAINING READINESS: Not available."
 
     prompt = f"""You are an expert running coach AI specialising in weight-loss training for recreational runners.
+You have access to detailed HRM-600 running dynamics and Garmin's physiological metrics.
 
 ATHLETE PROFILE:
   Age: {age}
   Weight: {weight_str}
   Target weight: {target_lbs} lbs (~{round(target_lbs * 0.453592, 1)} kg)
-  Zone 2 HR range: {z2_low}–{z2_high} bpm
+  Zone chart (Coggan modified model, all from LTHR = {lthr} bpm):
+    Z1 Recovery   < {z1_high} bpm    (< 76% LTHR — warm-up / cool-down only)
+    Z2 Aerobic    {z2_low}–{z2_high} bpm  (76–90% LTHR — TARGET ZONE: fat-burning, aerobic base; widest practical range)
+    Z3 Tempo      {z2_high+1}–{z3_high} bpm  (90–94% LTHR — aerobic threshold; avoid on easy days)
+    Z4 Threshold  {z3_high+1}–{z4_high} bpm  (94–105% LTHR — hard; only in explicit threshold work)
+    Z5 Max        > {z4_high} bpm    (> 105% LTHR — maximum; not relevant for weight loss phase)
+  Max HR (estimated): {max_hr} bpm
 
 TRAINING CONTEXT:
 {planning_context.strip()}
@@ -292,12 +645,15 @@ LAST NIGHT'S SLEEP:
   Duration:        {sleep_h} hours
   Sleep score:     {score_str}
   Recovery status: {recovery}
+{hrv_section}
+{readiness_section}
 
 RECENT FITNESS BASELINE (exponentially-weighted last {n_runs} runs, recent = higher weight):
   Avg distance:  {baseline['avg_dist_km']} km
   Avg pace:      {baseline['avg_pace_min_km']} min/km
   Avg HR:        {baseline['avg_hr']} bpm
   Avg duration:  {baseline['avg_duration_min']} min
+{dynamics_section}
 
 TODAY:
   Day type:     {day_type}
@@ -305,36 +661,50 @@ TODAY:
 
 DESIGN exactly ONE workout for today. Rules:
 1. Total duration (warmup + main + cooldown) MUST NOT exceed {max_duration_min} minutes.
-2. Adjust intensity based on recovery:
-   - well_rested: normal or slightly progressive effort
-   - adequate: normal effort, stay aerobic
-   - tired: reduce distance by ~20%, keep entirely Zone 2
-   - very_tired: short easy jog or walk-run, 25-30 min max
-3. Use walk-run intervals if needed to keep HR in Zone 2 (athlete struggles to stay in Z2 while running).
-4. Optimise for weight loss: prioritise fat-burning aerobic work over speed.
-5. workout_type must be one of: "simple", "structured", "long"
+2. Use Training Readiness as the PRIMARY intensity driver:
+   - Score ≥ 70 (HIGH): can assign normal/progressive effort
+   - Score 50–69 (MODERATE): keep fully aerobic, reduce intensity ~10%
+   - Score < 50 (LOW): easy recovery run or walk-run only
+3. Use sleep recovery as a SECONDARY signal (reinforces readiness).
+4. Use walk-run intervals to keep HR in Zone 2 (athlete's HR spikes to Z3/4 when running continuously).
+5. Optimise for weight loss: prioritise fat-burning aerobic volume over speed.
+6. Compliance signal: if last WOTD compliance was ≥ 80%, you can push slightly harder today.
+   If compliance was < 60% AND readiness is < 65, ease off slightly.
+7. Cadence coaching: if avg cadence < 165 spm, prefer structured intervals so the athlete
+   can focus on quick short steps during run segments (target: 170+ spm).
+8. Power targets (if available): design intervals where target effort is ~{int(dynamics.get('avg_power_w', 0) * 0.90) if dynamics.get('avg_power_w') else 'n/a'} W Z2 power.
+9. workout_type must be one of: "simple", "structured", "long"
    - Use "long" ONLY on weekends when duration > 60 min
-   - Use "structured" for interval work (e.g. run 4 min / walk 1 min repeats)
+   - Use "structured" for interval/walk-run work (preferred when cadence < 165)
    - Use "simple" for steady-pace aerobic runs
+10. WALK-BREAK RULE (critical for knee health and zone compliance):
+    - Run segments: target HR {z2_low}–{z2_high} bpm (empirically calibrated Z2)
+    - Walk break trigger: START WALKING immediately if HR reaches {walk_break_hr} bpm or above
+    - Resume running when HR drops back below {z2_low} bpm (full Z1 recovery)
+    - This is non-negotiable: crossing {walk_break_hr} bpm risks knee fatigue and Z3 drift
+    - The walk-run method is the PREFERRED format for this athlete (knees, injury prevention)
 
 Return ONLY valid JSON (no markdown, no explanation):
 {{
   "workout_name": "WOTD: [short descriptive name]",
-  "workout_type": "simple",
+  "workout_type": "structured",
   "description": "2-3 sentence description shown in Garmin Connect",
-  "duration_min": 45,
-  "distance_km": 6.0,
+  "duration_min": 60,
+  "distance_km": 7.0,
   "target_hr_low": {z2_low},
   "target_hr_high": {z2_high},
+  "target_power_low": null,
+  "target_power_high": null,
   "warmup_min": 5,
-  "main_min": 35,
+  "main_min": 50,
   "cooldown_min": 5,
-  "coach_note": "Why this workout today in 1-2 sentences",
+  "cadence_target_spm": 170,
+  "coach_note": "Why this workout today, what to focus on, 2-3 sentences",
   "intervals": []
 }}
 
 For structured workouts with run/walk intervals, populate "intervals":
-[{{"iterations": 4, "work_min": 4, "recovery_min": 1, "hr_low": {z2_low}, "hr_high": {z2_high}}}]
+[{{"iterations": 6, "work_min": 5, "recovery_min": 1, "hr_low": {z2_low}, "hr_high": {z2_high}, "cadence_spm": 170}}]
 """
 
     try:
@@ -363,6 +733,21 @@ For structured workouts with run/walk intervals, populate "intervals":
         # Enforce workout name prefix
         if not result["workout_name"].startswith(WOTD_NAME_PREFIX):
             result["workout_name"] = WOTD_NAME_PREFIX + " " + result["workout_name"]
+
+        # ── Hard duration clamp (safety net — prompt should already enforce this) ──
+        # Guarantees weekday ≤ 60 min and weekend ≤ 105 min regardless of AI output.
+        total = result.get("duration_min", 0)
+        if total > max_duration_min:
+            overflow = total - max_duration_min
+            # Trim from main block first; never trim warmup/cooldown below 3 min each
+            main_min = result.get("main_min", total - result.get("warmup_min", 5) - result.get("cooldown_min", 5))
+            new_main = max(main_min - overflow, 3)
+            result["main_min"] = new_main
+            result["duration_min"] = result.get("warmup_min", 5) + new_main + result.get("cooldown_min", 5)
+            logger.warning(
+                "WOTD: AI returned duration_min=%d > cap=%d — clamped to %d min (main: %d→%d).",
+                total, max_duration_min, result["duration_min"], main_min, new_main,
+            )
 
         return result
     except Exception as exc:
