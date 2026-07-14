@@ -541,12 +541,15 @@ def _call_ai_for_workout(
     max_hr: int = 0,
 ) -> dict | None:
     """Build prompt and call Gemini to get today's workout JSON."""
-    weight_str = f"{weight_kg:.1f} kg" if weight_kg else "unknown"
-    day_type   = "Weekday" if is_weekday else "Weekend"
-    recovery   = sleep_summary["recovery_status"]
-    sleep_h    = sleep_summary["sleep_hours"]
-    sleep_s    = sleep_summary["sleep_score"]
-    score_str  = f"{sleep_s}/100" if sleep_s is not None else "not available"
+    weight_str    = f"{weight_kg:.1f} kg" if weight_kg else "unknown"
+    day_type      = "Weekday" if is_weekday else "Weekend"
+    recovery      = sleep_summary["recovery_status"]
+    sleep_h       = sleep_summary["sleep_hours"]
+    sleep_s       = sleep_summary["sleep_score"]
+    score_str     = f"{sleep_s}/100" if sleep_s is not None else "not available"
+    # Walk-break trigger: one beat above the Z2 ceiling (entry into Z3).
+    # Athlete must start walking the instant HR hits this value.
+    walk_break_hr = z2_high + 1
 
     # ── Format running dynamics section ──────────────────────────────────────
     if dynamics.get("run_count", 0) > 0:
