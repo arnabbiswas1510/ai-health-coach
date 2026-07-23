@@ -1,46 +1,54 @@
 """
 services/logseq/logseq_client.py
 
-Writes health metrics from Garmin Connect into the Logseq daily journal
-by calling the Logseq built-in HTTP API directly (enabled via
-Settings → Features → Enable HTTP APIs server).
+Writes Garmin health metrics directly into Logseq daily journal .md files
+via SSH/SFTP — no Logseq process required, no HTTP API, no Windows agent.
 
 Architecture:
-    container (192.168.1.50)
-      → POST http://192.168.1.17:3000/api   (Logseq HTTP API, Bearer token)
-        → Logseq (running on Windows machine 192.168.1.17)
-          → upserts properties on the target journal page's first block
+    container (DietPi)
+      → SSH/SFTP → host machine (Windows / macOS / Linux)
+        → journals/YYYY_MM_DD.md  (written/updated directly on disk)
+          → Logseq picks it up automatically on next open
 
-    NOTE: Logseq's API listens on 127.0.0.1:3000 by default.
-    A portproxy rule on Windows must forward LAN → localhost:
-        netsh interface portproxy add v4tov4 ^
-            listenport=3001 listenaddress=0.0.0.0 ^
-            connectport=3000 connectaddress=127.0.0.1
-    And allow inbound in the firewall:
-        New-NetFirewallRule -DisplayName "Logseq HTTP API" ^
-            -Direction Inbound -LocalPort 3001 -Protocol TCP -Action Allow
+Migration to a new machine: update three env vars — nothing else.
+No port forwarding rules. No Windows netsh. No Logseq settings to change.
 
-Properties written (Logseq page-level property format  key:: value):
-  sleep/duration      decimal hours,    e.g. 7.5
-  sleep/bed-time      24h HH:MM string, e.g. "23:30"
-  sleep/wake-up-time  24h HH:MM string, e.g. "06:45"
-  sleep/quality       integer 0-100     (Garmin overall sleep score)
-  run/distance        km float,         e.g. 6.2
-  run/avg-speed       min/km pace,      e.g. 5.75  (decimal, 5.75 = 5:45/km)
-  run/avg-heart-rate  integer bpm,      e.g. 152
+Env vars (all from .env — never hard-coded):
+  LOGSEQ_SSH_HOST      Hostname or IP of the host machine  (e.g. 192.168.1.17)
+  LOGSEQ_SSH_USER      SSH username                        (e.g. arnab)
+  LOGSEQ_SSH_PORT      SSH port, optional                  (default: 22)
+  LOGSEQ_SSH_KEY_PATH  Private key on DietPi               (default: /root/.ssh/id_rsa)
+  LOGSEQ_GRAPH_PATH    Absolute path to the Logseq graph root on the HOST machine:
+                         macOS/Linux: /Users/arnab/Documents/Logseq
+                         Windows:     C:/Users/arnab/Documents/Logseq
+                       The bot appends  /journals/YYYY_MM_DD.md  automatically.
 
-Public API:
-  build_props(...)         → dict  — convert raw Garmin values to formatted props
-  write_props_dict(...)    → bool  — write a pre-built props dict to a specific date
-  write_daily_properties(...)→bool — convenience wrapper (build + write in one call)
+One-time host-machine setup (any OS):
+  1. Enable SSH:
+       macOS:   sudo systemsetup -setremotelogin on
+       Windows: Settings → Optional Features → OpenSSH Server → Install + Start
+       Linux:   (usually already on)
+  2. Add DietPi's public key:
+       cat /root/.ssh/id_rsa.pub   # on DietPi — copy this output
+       # then append to ~/.ssh/authorized_keys on the host machine
 
-Environment variables:
-  LOGSEQ_HOST         Base URL of the Logseq HTTP API  (defined in .env)
-  LOGSEQ_API_TOKEN    Bearer token set in Logseq Settings → HTTP API → Authorization tokens
-  LOGSEQ_API_TIMEOUT  Request timeout in seconds, default 5
+Journal file format (Logseq page-level properties at top of file):
+    sleep/duration:: 7.5
+    sleep/bed-time:: 23:30
+    sleep/wake-up-time:: 06:45
+    sleep/quality:: 78
+    run/distance:: 6.2
+    run/avg-speed:: 5.75
+    run/avg-heart-rate:: 152
 
-The client is intentionally silent on failure — a sync error should
-never abort the main pipeline.
+Existing keys are updated in-place. New keys are prepended at the top.
+Non-property content (notes, bullets) is preserved unchanged after the
+property block.
+
+Public API (same signatures as before — daemon.py needs no changes):
+  build_props(...)             → dict  — convert raw Garmin values to props
+  write_props_dict(...)        → bool  — write a pre-built props dict to a date
+  write_daily_properties(...)  → bool  — convenience wrapper (build + write)
 """
 from __future__ import annotations
 
@@ -50,130 +58,238 @@ import os
 import re
 from typing import Any
 
-import httpx
+import paramiko
 
 logger = logging.getLogger(__name__)
 
-# ── Configuration (values come from .env — do NOT hard-code here) ────────────
+# ── Configuration (from .env — never hard-code here) ─────────────────────────
 
-_LOGSEQ_HOST  = os.environ.get("LOGSEQ_HOST", "")
-_API_TOKEN    = os.environ.get("LOGSEQ_API_TOKEN", "")
-_API_TIMEOUT  = int(os.environ.get("LOGSEQ_API_TIMEOUT", "5"))   # seconds
+_SSH_HOST     = os.environ.get("LOGSEQ_SSH_HOST", "")
+_SSH_USER     = os.environ.get("LOGSEQ_SSH_USER", "")
+_SSH_PORT     = int(os.environ.get("LOGSEQ_SSH_PORT", "22"))
+_SSH_KEY_PATH = os.environ.get("LOGSEQ_SSH_KEY_PATH", "/root/.ssh/id_rsa")
+_GRAPH_PATH   = os.environ.get("LOGSEQ_GRAPH_PATH", "")  # graph root, e.g. /Users/arnab/Logseq
 
-# NOTE: We validate _LOGSEQ_HOST lazily (inside _api_call) so that importing
-# this module in tests or CI without a real Logseq instance does not crash.
+# ── Journal path helper ───────────────────────────────────────────────────────
+
+def _journal_sftp_path(date: datetime.date | None = None) -> str:
+    """Return the SFTP path for the target journal file on the host machine."""
+    d = date or datetime.date.today()
+    filename = d.strftime("%Y_%m_%d") + ".md"
+    graph = _GRAPH_PATH.rstrip("/\\").replace("\\", "/")
+    return f"{graph}/journals/{filename}"
 
 
-# ── Logseq HTTP API helpers ────────────────────────────────────────────────────
+# ── Property file helpers ─────────────────────────────────────────────────────
 
-def _api_call(client: httpx.Client, method: str, args: list[Any]) -> Any:
-    """POST a single Logseq Plugin API call and return the parsed result."""
-    if not _LOGSEQ_HOST:
-        raise RuntimeError(
-            "LOGSEQ_HOST env var is not set. "
-            "Add it to your .env file, e.g.: LOGSEQ_HOST=http://192.168.1.17:3000"
-        )
-    resp = client.post(
-        f"{_LOGSEQ_HOST}/api",
-        json={"method": method, "args": args},
-        headers={
-            "Authorization": f"Bearer {_API_TOKEN}",
-            "Content-Type": "application/json",
-        },
-        timeout=_API_TIMEOUT,
+def _is_property_line(line: str) -> bool:
+    """True if the line is a Logseq page-level property (key:: value)."""
+    return bool(re.match(r"^[a-zA-Z0-9_/\-].*::", line))
+
+
+def _flatten_props(props: dict[str, Any]) -> dict[str, str]:
+    """Flatten nested {'sleep': {'duration': 7.5}} → {'sleep/duration': '7.5'}.
+
+    Also passes through already-flat keys like {'sleep/duration': 7.5} unchanged.
+    """
+    flat: dict[str, str] = {}
+    for k, v in props.items():
+        if isinstance(v, dict):
+            for sub_k, sub_v in v.items():
+                flat[f"{k}/{sub_k}"] = str(sub_v)
+        else:
+            flat[k] = str(v)
+    return flat
+
+
+def _upsert_properties(content: str, flat_props: dict[str, str]) -> str:
+    """Write/update page-level properties in a Logseq journal .md string.
+
+    Strategy:
+    - Lines at the top of the file that look like ``key:: value`` form the
+      property block. All other lines are the body.
+    - Existing property keys are updated in-place with the new value.
+    - New keys are prepended before the existing property block.
+    - Body content (notes, bullets) is preserved unchanged.
+    """
+    lines = content.splitlines(keepends=True)
+
+    # Split into property block (top) and body (rest)
+    prop_block: list[str] = []
+    body: list[str] = []
+    in_props = True
+    for line in lines:
+        stripped = line.rstrip("\n\r")
+        if in_props and (not stripped or _is_property_line(stripped)):
+            prop_block.append(line)
+        else:
+            in_props = False
+            body.append(line)
+
+    # Parse existing property keys → their current full "key:: value" strings
+    existing: dict[str, str] = {}
+    for line in prop_block:
+        stripped = line.rstrip("\n\r")
+        if _is_property_line(stripped):
+            key = stripped.split("::")[0].strip()
+            existing[key] = stripped
+
+    # Merge: new values overwrite existing; new keys added
+    merged = {**existing, **flat_props}
+    prop_lines = [f"{v}\n" for v in merged.values()]
+
+    # Reassemble: properties → (blank separator if body follows) → body
+    separator = ["\n"] if body and prop_lines else []
+    return "".join(prop_lines + separator + body)
+
+
+# ── SSH/SFTP connection ───────────────────────────────────────────────────────
+
+def _ssh_connect() -> paramiko.SSHClient:
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(
+        hostname=_SSH_HOST,
+        username=_SSH_USER,
+        port=_SSH_PORT,
+        key_filename=_SSH_KEY_PATH if os.path.exists(_SSH_KEY_PATH) else None,
+        timeout=10,
+        banner_timeout=10,
     )
-    resp.raise_for_status()
-    return resp.json()
+    return client
 
 
-def _journal_page_name(for_date: datetime.date | None = None) -> str:
-    """Return the Logseq journal page name for a given date, e.g. 'Jun 20th, 2026'."""
-    d = for_date or datetime.date.today()
-    day = d.day
-    # Ordinal suffix
-    if 11 <= day <= 13:
-        suffix = "th"
-    else:
-        suffix = {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
-    return d.strftime(f"%b {day}{suffix}, %Y")
+def _write_via_sftp(props: dict[str, Any], date: datetime.date | None = None) -> bool:
+    """SSH into the host machine and write/update the journal .md file directly.
 
-
-def _get_journal_first_block_uuid(
-    client: httpx.Client,
-    page_name: str,
-) -> str | None:
-    # Deprecated: kept for backwards compatibility if needed, but not used by write_props_dict
-    pass
-
-def _ensure_journal_page(client: httpx.Client, page_name: str) -> str | None:
+    Returns True on success. Logs a clear warning and returns False on any
+    failure — never raises, so it can never abort the main daemon pipeline.
     """
-    Ensure the journal page exists and return the UUID of the root block.
-    This creates an independent block (sibling to the first block) so it doesn't
-    overwrite existing page bullets or properties.
+    if not _SSH_HOST or not _SSH_USER or not _GRAPH_PATH:
+        logger.warning(
+            "Logseq SSH writer not configured — set LOGSEQ_SSH_HOST, "
+            "LOGSEQ_SSH_USER, LOGSEQ_GRAPH_PATH in .env."
+        )
+        return False
+
+    flat = _flatten_props(props)
+    if not flat:
+        logger.info("Logseq: no properties to write")
+        return False
+
+    sftp_path = _journal_sftp_path(date)
+    logger.info(
+        "Logseq: writing %d properties to %s on %s@%s",
+        len(flat), sftp_path, _SSH_USER, _SSH_HOST,
+    )
+
+    try:
+        ssh = _ssh_connect()
+        try:
+            sftp = ssh.open_sftp()
+            try:
+                # Read the existing journal file (create empty string if new)
+                try:
+                    with sftp.file(sftp_path, "r") as fh:
+                        existing_content = fh.read().decode("utf-8")
+                    logger.debug("Logseq: read existing file %s", sftp_path)
+                except FileNotFoundError:
+                    existing_content = ""
+                    logger.debug("Logseq: journal %s does not exist — will create", sftp_path)
+
+                # Upsert properties into the file content
+                updated_content = _upsert_properties(existing_content, flat)
+
+                # Ensure journals/ directory exists on the remote host
+                journals_dir = sftp_path.rsplit("/", 1)[0]
+                try:
+                    sftp.stat(journals_dir)
+                except FileNotFoundError:
+                    logger.info("Logseq: creating journals/ directory at %s", journals_dir)
+                    sftp.mkdir(journals_dir)
+
+                # Write back (overwrite the whole file — atomically safe for .md)
+                with sftp.file(sftp_path, "w") as fh:
+                    fh.write(updated_content.encode("utf-8"))
+
+                logger.info(
+                    "Logseq: ✓ wrote %d propert%s to %s — %s",
+                    len(flat),
+                    "y" if len(flat) == 1 else "ies",
+                    sftp_path.split("/")[-1],
+                    ", ".join(flat.keys()),
+                )
+                return True
+
+            finally:
+                sftp.close()
+        finally:
+            ssh.close()
+
+    except paramiko.AuthenticationException:
+        logger.warning(
+            "Logseq SSH auth failed for %s@%s:%s — "
+            "add DietPi's public key to ~/.ssh/authorized_keys on the host machine.\n"
+            "  Run on DietPi:  cat %s  (copy that output)\n"
+            "  Then on host:   echo '<paste>' >> ~/.ssh/authorized_keys",
+            _SSH_USER, _SSH_HOST, _SSH_PORT, _SSH_KEY_PATH,
+        )
+        return False
+    except (paramiko.SSHException, OSError) as exc:
+        logger.warning(
+            "Logseq SSH connection failed (%s@%s:%s): %s",
+            _SSH_USER, _SSH_HOST, _SSH_PORT, exc,
+        )
+        return False
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Logseq: unexpected error writing journal: %s", exc)
+        return False
+
+
+# ── Garmin value formatters (pure helpers, no I/O) ───────────────────────────
+
+
+def _format_time(raw: str | None) -> str | None:
+    """Convert Garmin time value to display 'HH:MM', or None if invalid.
+
+    Handles two formats Garmin returns:
+      - 'HH:MM:SS' string  → strip seconds → 'HH:MM'
+      - Unix epoch milliseconds (int or digit-only string, e.g. 1784597526000)
+        → convert to local time → 'HH:MM'
     """
-    try:
-        blocks = _api_call(client, "logseq.Editor.getPageBlocksTree", [page_name])
-        if blocks and isinstance(blocks, list) and len(blocks) > 0:
-            # Check if any block already is our sync root
-            for block in blocks:
-                content = block.get("content", "")
-                if "Garmin Health Sync" in content:
-                    logger.debug("Logseq: found existing health root block for '%s'", page_name)
-                    return block.get("uuid")
-            
-            # If not, create a new block after the first block
-            first_uuid = blocks[0].get("uuid")
-            if first_uuid:
-                result = _api_call(client, "logseq.Editor.insertBlock", [first_uuid, "Garmin Health Sync", {"sibling": True}])
-                if result and isinstance(result, dict):
-                    uuid = result.get("uuid")
-                    logger.info("Logseq: created health root block %s on '%s'", uuid, page_name)
-                    return uuid
-    except Exception as exc:
-        logger.debug("Logseq: could not get blocks for '%s': %s", page_name, exc)
+    if not raw:
+        return None
+    s = str(raw).strip()
 
-    # Page doesn't exist yet — create it
-    logger.info("Logseq: journal page '%s' not found — creating it", page_name)
-    try:
-        result = _api_call(client, "logseq.Editor.appendBlockInPage", [page_name, "Garmin Health Sync"])
-        if result and isinstance(result, dict):
-            return result.get("uuid")
-    except Exception as exc:
-        logger.warning("Logseq: could not create journal page '%s': %s", page_name, exc)
+    # Epoch milliseconds: all digits, length > 10 (ms timestamps are 13 digits)
+    if s.isdigit() and len(s) > 10:
+        try:
+            import datetime as _dt
+            ts = int(s) / 1000.0
+            t = _dt.datetime.fromtimestamp(ts)
+            return f"{t.hour:02d}:{t.minute:02d}"
+        except Exception:
+            return None
 
+    # HH:MM:SS or HH:MM string
+    parts = s.split(":")
+    if len(parts) >= 2:
+        try:
+            return f"{int(parts[0]):02d}:{parts[1]}"
+        except ValueError:
+            return None
     return None
 
 
-# ── Property value formatters ──────────────────────────────────────────────────
-
-def _format_pace(avg_speed_ms: float | None) -> float | None:
-    """Convert Garmin average speed (m/s) to pace in min/km (decimal minutes)."""
-    if not avg_speed_ms or avg_speed_ms <= 0:
+def _format_pace(speed_ms: float | None) -> float | None:
+    """Convert m/s to decimal min/km pace (e.g. 2.78 m/s → 5.99 min/km)."""
+    if speed_ms is None or speed_ms <= 0:
         return None
-    pace_sec_per_km = 1000.0 / avg_speed_ms
-    return round(pace_sec_per_km / 60.0, 2)  # e.g. 5.75 means 5:45/km
+    pace_sec_per_km = 1000.0 / speed_ms
+    return round(pace_sec_per_km / 60.0, 2)
 
 
-def _format_time(time_str: str | None) -> str | None:
-    """Parse a Garmin time string (HH:MM:SS, ISO string with T, or epoch-ms) → 'HH:MM'."""
-    if not time_str:
-        return None
-    # Try finding HH:MM inside the string (handles "22:30", "22:30:00", and "2024-05-18T22:30:00")
-    m = re.search(r"(\d{2}):(\d{2})", str(time_str))
-    if m:
-        return f"{m.group(1)}:{m.group(2)}"
-    # Try epoch ms (numeric string)
-    try:
-        import datetime as _dt
-        ts = int(time_str)
-        if ts > 1_000_000_000_000:  # ms
-            ts //= 1000
-        return _dt.datetime.fromtimestamp(ts).strftime("%H:%M")
-    except (ValueError, TypeError, OSError):
-        return None
-
-
-# ── Public API ─────────────────────────────────────────────────────────────────
+# ── Public API ────────────────────────────────────────────────────────────────
 
 def build_props(
     *,
@@ -216,7 +332,7 @@ def build_props(
     if run_avg_heart_rate is not None:
         props["run"]["avg-heart-rate"] = int(run_avg_heart_rate)
 
-    # Remove empty categories
+    # Drop empty categories
     return {k: v for k, v in props.items() if v}
 
 
@@ -229,127 +345,42 @@ def write_props_dict(
 
     Args:
         props:  Formatted props dict (as returned by build_props()).
+                Also accepts old flat-key format from queued entries:
+                  {"sleep/duration": 7.5, "run/distance": 6.2}
         date:   Target journal date. Defaults to today. Pass a past date to
-                backfill a missed sync (e.g. after a vacation with Logseq closed).
+                backfill a missed sync (e.g. after the host machine was off).
 
-    Returns True if all properties were accepted by Logseq.
+    Returns True if the file was written successfully.
     """
     if not props:
         logger.info("Logseq: no properties to write — empty dict")
         return False
 
-    # Normalize flat properties (e.g. from old queue: "sleep-duration": 7.5) to nested format
-    normalized_props = {}
+    # Normalize flat keys (backward-compat with old pending-sync queue entries)
+    # e.g. "sleep/duration" → {"sleep": {"duration": ...}}
+    # e.g. "sleep-duration" → {"sleep": {"duration": ...}}  (old hyphen style)
+    normalized: dict[str, Any] = {}
     for k, v in props.items():
         if isinstance(v, dict):
-            if k not in normalized_props:
-                normalized_props[k] = {}
-            normalized_props[k].update(v)
+            # Already nested — keep as-is
+            normalized.setdefault(k, {}).update(v)
         else:
-            cat = "misc"
-            key = k
+            # Flat key: split on "/" first, then on first "-"
             if "/" in k:
-                parts = k.split("/")
-                cat = parts[0].strip()
-                key = parts[-1].strip()
+                cat, _, key = k.partition("/")
             elif "-" in k:
-                parts = k.split("-")
-                cat = parts[0].strip()
-                key = "-".join(parts[1:]).strip()
-                
-            if cat not in normalized_props:
-                normalized_props[cat] = {}
-            normalized_props[cat][key] = v
-            
-    props = normalized_props
+                parts = k.split("-", 1)
+                cat, key = parts[0], parts[1]
+            else:
+                cat, key = "misc", k
+            normalized.setdefault(cat, {})[key] = v
 
-    page_name = _journal_page_name(date)
+    page_name = (date or datetime.date.today()).strftime("%Y_%m_%d")
     logger.info(
-        "Logseq: writing %d properties to journal '%s' via HTTP API at %s",
-        len(props), page_name, _LOGSEQ_HOST,
+        "Logseq: writing %d categories to journal '%s' via SSH direct-write",
+        len(normalized), page_name,
     )
-
-    try:
-        with httpx.Client() as client:
-            block_uuid = _ensure_journal_page(client, page_name)
-            if not block_uuid:
-                logger.warning(
-                    "Logseq: could not obtain first block UUID for '%s' — "
-                    "is Logseq running and is the HTTP API enabled? "
-                    "(Settings → Features → Enable HTTP APIs server)",
-                    page_name,
-                )
-                return False
-
-            failed: list[str] = []
-            
-            # Get existing children to avoid duplicates
-            cat_uuid_map = {}
-            block_data = _api_call(client, "logseq.Editor.getBlock", [block_uuid, {"includeChildren": True}])
-            if block_data and isinstance(block_data, dict):
-                children = block_data.get("children", [])
-                for child in children:
-                    child_uuid = None
-                    if isinstance(child, list) and len(child) == 2 and child[0] == "uuid":
-                        child_uuid = child[1]
-                    elif isinstance(child, dict):
-                        child_uuid = child.get("uuid")
-                        
-                    if child_uuid:
-                        child_block = _api_call(client, "logseq.Editor.getBlock", [child_uuid])
-                        if child_block and isinstance(child_block, dict):
-                            content = child_block.get("content", "")
-                            for cat in props.keys():
-                                if content.startswith(f"{cat}::"):
-                                    cat_uuid_map[cat] = child_uuid
-
-            for category, category_props in props.items():
-                try:
-                    cat_uuid = cat_uuid_map.get(category)
-                    if not cat_uuid:
-                        # Create the category block as a child of the root block
-                        cat_block = _api_call(
-                            client, 
-                            "logseq.Editor.insertBlock", 
-                            [block_uuid, f"{category}:: ", {"sibling": False}]
-                        )
-                        cat_uuid = cat_block.get("uuid") if cat_block else None
-
-                    if not cat_uuid:
-                        continue
-                        
-                    for key, value in category_props.items():
-                        _api_call(
-                            client,
-                            "logseq.Editor.upsertBlockProperty",
-                            [cat_uuid, key, str(value)],
-                        )
-                        logger.debug("Logseq: wrote %s=%s on block %s", key, value, cat_uuid)
-                except Exception as exc:
-                    logger.warning("Logseq: failed to write category %s: %s", category, exc)
-                    failed.append(category)
-
-            if failed:
-                logger.warning("Logseq: %d categories failed: %s", len(failed), failed)
-                return False
-
-            logger.info(
-                "Logseq: successfully wrote %d categories to '%s'",
-                len(props), page_name,
-            )
-            return True
-
-    except httpx.ConnectError:
-        logger.warning(
-            "Logseq HTTP API not reachable at %s/api — "
-            "is Logseq running, the HTTP API enabled, and port 3001 "
-            "forwarded via netsh portproxy?",
-            _LOGSEQ_HOST,
-        )
-        return False
-    except Exception as exc:
-        logger.warning("Logseq HTTP API error: %s", exc)
-        return False
+    return _write_via_sftp(normalized, date=date)
 
 
 def write_daily_properties(
@@ -366,8 +397,6 @@ def write_daily_properties(
     """Build and write health properties to today's (or a specific) Logseq journal.
 
     Convenience wrapper around build_props() + write_props_dict().
-    For backfilling missed syncs, prefer calling both separately so you can
-    persist the props dict before the write attempt.
     """
     props = build_props(
         sleep_duration_hours=sleep_duration_hours,
