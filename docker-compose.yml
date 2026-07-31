@@ -57,14 +57,13 @@ services:
       - HITL_ENABLED=${HITL_ENABLED:-true}
       - SKIP_SYNTHESIS=${SKIP_SYNTHESIS:-false}
       - FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
-      # ── Logseq Integration ──────────────────────────────────────────────────
-      # Points to the Logseq built-in HTTP API (Settings → Features → Enable HTTP APIs server).
-      # Logseq listens on 127.0.0.1:3000 by default; expose on LAN via netsh portproxy:
-      #   netsh interface portproxy add v4tov4 listenport=3001 listenaddress=0.0.0.0 connectport=3000 connectaddress=127.0.0.1
-      # Host/port defined in .env as LOGSEQ_HOST.
-      - LOGSEQ_HOST=${LOGSEQ_HOST}
-      - LOGSEQ_API_TOKEN=${LOGSEQ_API_TOKEN:-}
-      # ── Paths & Daemon ─────────────────────────────────────────────────────
+      # ── Logseq SSH direct-write (no Logseq process required) ──────────────
+      # Migration to new machine: update LOGSEQ_SSH_HOST + LOGSEQ_GRAPH_PATH only.
+      - LOGSEQ_SSH_HOST=${LOGSEQ_SSH_HOST}
+      - LOGSEQ_SSH_USER=${LOGSEQ_SSH_USER}
+      - LOGSEQ_SSH_PORT=${LOGSEQ_SSH_PORT:-22}
+      - LOGSEQ_SSH_KEY_PATH=${LOGSEQ_SSH_KEY_PATH:-/root/.ssh/id_ed25519}
+      - LOGSEQ_GRAPH_PATH=${LOGSEQ_GRAPH_PATH}
       - OUTPUT_DIR=/app/data
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
     volumes:
@@ -73,3 +72,4 @@ services:
       - ./coach_config.yaml:/app/coach_config.yaml  # Athlete config
       - ./daemon.py:/app/daemon.py                  # Hot-reload: local overrides image
       - ./services/logseq:/app/services/logseq      # Hot-reload: local overrides image
+      - /root/.ssh:/root/.ssh:ro                    # SSH key for Logseq direct-write
