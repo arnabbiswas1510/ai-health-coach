@@ -62,13 +62,22 @@ import paramiko
 
 logger = logging.getLogger(__name__)
 
-# ── Configuration (from .env — never hard-code here) ─────────────────────────
+# ── Dynamic Configuration (from os.environ — evaluated at runtime) ───────────
 
-_SSH_HOST     = os.environ.get("LOGSEQ_SSH_HOST", "")
-_SSH_USER     = os.environ.get("LOGSEQ_SSH_USER", "")
-_SSH_PORT     = int(os.environ.get("LOGSEQ_SSH_PORT", "22"))
-_SSH_KEY_PATH = os.environ.get("LOGSEQ_SSH_KEY_PATH", "/root/.ssh/id_rsa")
-_GRAPH_PATH   = os.environ.get("LOGSEQ_GRAPH_PATH", "")  # graph root, e.g. /Users/arnab/Logseq
+def _get_ssh_host() -> str:
+    return os.environ.get("LOGSEQ_SSH_HOST", "")
+
+def _get_ssh_user() -> str:
+    return os.environ.get("LOGSEQ_SSH_USER", "")
+
+def _get_ssh_port() -> int:
+    return int(os.environ.get("LOGSEQ_SSH_PORT", "22"))
+
+def _get_ssh_key_path() -> str:
+    return os.environ.get("LOGSEQ_SSH_KEY_PATH", "/root/.ssh/id_rsa")
+
+def _get_graph_path() -> str:
+    return os.environ.get("LOGSEQ_GRAPH_PATH", "")
 
 # ── Journal path helper ───────────────────────────────────────────────────────
 
@@ -76,7 +85,7 @@ def _journal_sftp_path(date: datetime.date | None = None) -> str:
     """Return the SFTP path for the target journal file on the host machine."""
     d = date or datetime.date.today()
     filename = d.strftime("%Y_%m_%d") + ".md"
-    graph = _GRAPH_PATH.rstrip("/\\").replace("\\", "/")
+    graph = _get_graph_path().rstrip("/\\").replace("\\", "/")
     return f"{graph}/journals/{filename}"
 
 
@@ -102,57 +111,147 @@ def _flatten_props(props: dict[str, Any]) -> dict[str, str]:
     return flat
 
 
-def _upsert_properties(content: str, flat_props: dict[str, str]) -> str:
-    """Write/update page-level properties in a Logseq journal .md string.
-
-    Strategy:
-    - Lines at the top of the file that look like ``key:: value`` form the
-      property block. All other lines are the body.
-    - Existing property keys are updated in-place with the new value.
-    - New keys are prepended before the existing property block.
-    - Body content (notes, bullets) is preserved unchanged.
+def _build_garmin_block(props: dict[str, Any]) -> str:
+    """Build the Logseq block format:
+    - Garmin Health Sync
+      - sleep:
+        duration:: 6.58
+        bed-time:: 03:07
+        wake-up-time:: 09:48
+        quality:: 70
+      - run:
+        distance:: 6.12
+        avg-speed:: 9.23
     """
-    lines = content.splitlines(keepends=True)
+    lines = ["- Garmin Health Sync"]
+    for cat, cat_props in props.items():
+        if isinstance(cat_props, dict) and cat_props:
+            lines.append(f"  - {cat}:")
+            for k, v in cat_props.items():
+                lines.append(f"    {k}:: {v}")
+        elif isinstance(cat_props, (str, int, float)):
+            if "/" in cat:
+                c, _, k = cat.partition("/")
+                lines.append(f"  - {c}:")
+                lines.append(f"    {k}:: {cat_props}")
+            else:
+                lines.append(f"  - {cat}:: {cat_props}")
+    return "\n".join(lines)
 
-    # Split into property block (top) and body (rest)
-    prop_block: list[str] = []
-    body: list[str] = []
-    in_props = True
+
+def _parse_existing_garmin_block(content: str) -> dict[str, Any]:
+    """Extract the existing Garmin Health Sync block from journal content.
+
+    Parses the structured block:
+        - Garmin Health Sync
+          - sleep:
+            duration:: 6.58
+          - run:
+            distance:: 5.1
+
+    Returns a nested dict like {"sleep": {"duration": "6.58"}, "run": {"distance": "5.1"}}.
+    Returns {} if no block exists.
+    """
+    existing: dict[str, Any] = {}
+    lines = content.splitlines()
+    in_garmin_block = False
+    current_cat: str | None = None
+
     for line in lines:
-        stripped = line.rstrip("\n\r")
-        if in_props and (not stripped or _is_property_line(stripped)):
-            prop_block.append(line)
+        stripped = line.strip()
+
+        if stripped == "- Garmin Health Sync":
+            in_garmin_block = True
+            continue
+
+        if in_garmin_block:
+            # Stop at any top-level bullet that is NOT an indented child
+            if line.startswith("- ") and not line.startswith("  "):
+                break
+
+            # Sub-category header: "  - sleep:" or "  - run:"
+            cat_match = re.match(r"^\s{2}-\s+(\w+):$", line)
+            if cat_match:
+                current_cat = cat_match.group(1)
+                existing.setdefault(current_cat, {})
+                continue
+
+            # Property line: "    key:: value"
+            if current_cat and "::" in stripped:
+                key, _, value = stripped.partition("::")
+                existing[current_cat][key.strip()] = value.strip()
+
+    return existing
+
+
+def _upsert_properties(content: str, props: dict[str, Any]) -> str:
+    """Write/update Garmin Health Sync block in a Logseq journal .md string.
+
+    The incoming ``props`` are **merged** into any existing Garmin block so that
+    a sleep write followed by a run write (or vice-versa) preserves both sets of
+    data.  Only the specific keys provided in ``props`` are overwritten; all
+    other existing categories are kept intact.
+    """
+    # Merge existing block data with incoming props (incoming wins on conflicts)
+    existing = _parse_existing_garmin_block(content)
+    merged: dict[str, Any] = {}
+    for cat, cat_data in existing.items():
+        merged[cat] = dict(cat_data)  # copy existing categories
+    for cat, cat_data in props.items():
+        if isinstance(cat_data, dict):
+            merged.setdefault(cat, {}).update(cat_data)
         else:
-            in_props = False
-            body.append(line)
+            merged[cat] = cat_data
 
-    # Parse existing property keys → their current full "key:: value" strings
-    existing: dict[str, str] = {}
-    for line in prop_block:
-        stripped = line.rstrip("\n\r")
-        if _is_property_line(stripped):
-            key = stripped.split("::")[0].strip()
-            existing[key] = stripped
+    garmin_block = _build_garmin_block(merged)
 
-    # Merge: new values overwrite existing; new keys added
-    merged = {**existing, **flat_props}
-    prop_lines = [f"{v}\n" for v in merged.values()]
+    lines = content.splitlines()
+    cleaned_lines: list[str] = []
+    skip_garmin_block = False
 
-    # Reassemble: properties → (blank separator if body follows) → body
-    separator = ["\n"] if body and prop_lines else []
-    return "".join(prop_lines + separator + body)
+    for line in lines:
+        stripped = line.strip()
+        # Filter out old raw numerical values from previous bug
+        if stripped and re.match(r"^[\d.:\s]+$", stripped):
+            continue
+
+        if stripped == "- Garmin Health Sync":
+            skip_garmin_block = True
+            continue
+
+        if skip_garmin_block:
+            if line.startswith(" ") or line.startswith("\t") or stripped.startswith("- ") or "::" in stripped:
+                if line.startswith("- ") and not line.startswith("  - ") and not line.startswith("\t- "):
+                    skip_garmin_block = False
+                    cleaned_lines.append(line)
+                continue
+            else:
+                skip_garmin_block = False
+
+        cleaned_lines.append(line)
+
+    body_text = "\n".join(cleaned_lines).strip()
+    if body_text:
+        return garmin_block + "\n\n" + body_text + "\n"
+    else:
+        return garmin_block + "\n"
 
 
 # ── SSH/SFTP connection ───────────────────────────────────────────────────────
 
 def _ssh_connect() -> paramiko.SSHClient:
+    ssh_host     = _get_ssh_host()
+    ssh_user     = _get_ssh_user()
+    ssh_port     = _get_ssh_port()
+    ssh_key_path = _get_ssh_key_path()
+
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(
-        hostname=_SSH_HOST,
-        username=_SSH_USER,
-        port=_SSH_PORT,
-        key_filename=_SSH_KEY_PATH if os.path.exists(_SSH_KEY_PATH) else None,
+        hostname=ssh_host,
+        username=ssh_user,
+        port=ssh_port,
+        key_filename=ssh_key_path if os.path.exists(ssh_key_path) else None,
         timeout=10,
         banner_timeout=10,
     )
@@ -165,22 +264,27 @@ def _write_via_sftp(props: dict[str, Any], date: datetime.date | None = None) ->
     Returns True on success. Logs a clear warning and returns False on any
     failure — never raises, so it can never abort the main daemon pipeline.
     """
-    if not _SSH_HOST or not _SSH_USER or not _GRAPH_PATH:
+    ssh_host     = _get_ssh_host()
+    ssh_user     = _get_ssh_user()
+    ssh_port     = _get_ssh_port()
+    ssh_key_path = _get_ssh_key_path()
+    graph_path   = _get_graph_path()
+
+    if not ssh_host or not ssh_user or not graph_path:
         logger.warning(
             "Logseq SSH writer not configured — set LOGSEQ_SSH_HOST, "
             "LOGSEQ_SSH_USER, LOGSEQ_GRAPH_PATH in .env."
         )
         return False
 
-    flat = _flatten_props(props)
-    if not flat:
+    if not props:
         logger.info("Logseq: no properties to write")
         return False
 
     sftp_path = _journal_sftp_path(date)
     logger.info(
-        "Logseq: writing %d properties to %s on %s@%s",
-        len(flat), sftp_path, _SSH_USER, _SSH_HOST,
+        "Logseq: writing properties to %s on %s@%s:%d",
+        sftp_path, ssh_user, ssh_host, ssh_port,
     )
 
     try:
@@ -198,7 +302,7 @@ def _write_via_sftp(props: dict[str, Any], date: datetime.date | None = None) ->
                     logger.debug("Logseq: journal %s does not exist — will create", sftp_path)
 
                 # Upsert properties into the file content
-                updated_content = _upsert_properties(existing_content, flat)
+                updated_content = _upsert_properties(existing_content, props)
 
                 # Ensure journals/ directory exists on the remote host
                 journals_dir = sftp_path.rsplit("/", 1)[0]
@@ -213,11 +317,9 @@ def _write_via_sftp(props: dict[str, Any], date: datetime.date | None = None) ->
                     fh.write(updated_content.encode("utf-8"))
 
                 logger.info(
-                    "Logseq: ✓ wrote %d propert%s to %s — %s",
-                    len(flat),
-                    "y" if len(flat) == 1 else "ies",
-                    sftp_path.split("/")[-1],
-                    ", ".join(flat.keys()),
+                    "Logseq: ✓ wrote properties for %s to %s",
+                    ", ".join(props.keys()),
+                    os.path.basename(sftp_path),
                 )
                 return True
 
@@ -232,13 +334,13 @@ def _write_via_sftp(props: dict[str, Any], date: datetime.date | None = None) ->
             "add DietPi's public key to ~/.ssh/authorized_keys on the host machine.\n"
             "  Run on DietPi:  cat %s  (copy that output)\n"
             "  Then on host:   echo '<paste>' >> ~/.ssh/authorized_keys",
-            _SSH_USER, _SSH_HOST, _SSH_PORT, _SSH_KEY_PATH,
+            ssh_user, ssh_host, ssh_port, ssh_key_path,
         )
         return False
     except (paramiko.SSHException, OSError) as exc:
         logger.warning(
             "Logseq SSH connection failed (%s@%s:%s): %s",
-            _SSH_USER, _SSH_HOST, _SSH_PORT, exc,
+            ssh_user, ssh_host, ssh_port, exc,
         )
         return False
     except Exception as exc:  # noqa: BLE001
@@ -300,13 +402,18 @@ def build_props(
     run_distance_km: float | None = None,
     run_avg_speed_ms: float | None = None,   # m/s → converted to min/km pace
     run_avg_heart_rate: int | None = None,
+    body_weight_lbs: float | None = None,
+    wotd_name: str | None = None,
+    wotd_duration_min: int | float | None = None,
+    wotd_distance_km: float | None = None,
+    wotd_coach_note: str | None = None,
 ) -> dict[str, Any]:
     """Convert raw Garmin values into a formatted Logseq properties dict.
 
     Only non-None values are included. The returned dict can be persisted
     and later passed to write_props_dict() to write to any past date.
     """
-    props: dict[str, Any] = {"sleep": {}, "run": {}}
+    props: dict[str, Any] = {"sleep": {}, "run": {}, "body": {}, "wotd": {}}
 
     if sleep_duration_hours is not None:
         props["sleep"]["duration"] = round(sleep_duration_hours, 2)
@@ -331,6 +438,21 @@ def build_props(
 
     if run_avg_heart_rate is not None:
         props["run"]["avg-heart-rate"] = int(run_avg_heart_rate)
+
+    if body_weight_lbs is not None:
+        props["body"]["weight"] = round(body_weight_lbs, 1)
+
+    if wotd_name:
+        props["wotd"]["name"] = wotd_name
+
+    if wotd_duration_min is not None:
+        props["wotd"]["duration"] = f"{int(wotd_duration_min)} min"
+
+    if wotd_distance_km is not None:
+        props["wotd"]["distance"] = f"{round(float(wotd_distance_km), 1)} km"
+
+    if wotd_coach_note:
+        props["wotd"]["coach-note"] = wotd_coach_note
 
     # Drop empty categories
     return {k: v for k, v in props.items() if v}
@@ -392,6 +514,7 @@ def write_daily_properties(
     run_distance_km: float | None = None,
     run_avg_speed_ms: float | None = None,
     run_avg_heart_rate: int | None = None,
+    body_weight_lbs: float | None = None,
     date: datetime.date | None = None,
 ) -> bool:
     """Build and write health properties to today's (or a specific) Logseq journal.
@@ -406,8 +529,10 @@ def write_daily_properties(
         run_distance_km=run_distance_km,
         run_avg_speed_ms=run_avg_speed_ms,
         run_avg_heart_rate=run_avg_heart_rate,
+        body_weight_lbs=body_weight_lbs,
     )
     if not props:
         logger.info("Logseq: no properties to write — all values are None")
         return False
     return write_props_dict(props, date=date)
+
