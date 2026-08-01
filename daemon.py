@@ -406,6 +406,7 @@ def check_and_run():  # noqa: C901
         try:
             import datetime as _dt
             all_recent = client.get_activities(0, 15) or []
+            today_date = _dt.date.today()
             for act in all_recent:
                 type_key = (act.get("activityType") or {}).get("typeKey", "").lower()
                 if type_key in ("running", "trail_running", "treadmill_running"):
@@ -418,8 +419,27 @@ def check_and_run():  # noqa: C901
                     except ValueError:
                         continue
 
-                    dist = round(act.get("distance", 0) / 1000.0, 2) if act.get("distance") else None
+                    # Skip today and future dates — backfill is for past days only.
+                    # This also filters out scheduled/planned WOTD calendar entries
+                    # that appear in get_activities before the run is actually done.
+                    if act_date >= today_date:
+                        logger.debug(
+                            "Logseq backfill: skipping activity on %s (today or future)",
+                            act_date_str,
+                        )
+                        continue
+
+                    # Require actual run metrics — planned workouts have distance
+                    # but no averageSpeed, so this guards against writing WOTD data.
                     spd = act.get("averageSpeed")
+                    if not spd or float(spd) <= 0:
+                        logger.debug(
+                            "Logseq backfill: skipping activity on %s — no averageSpeed (planned/incomplete?)",
+                            act_date_str,
+                        )
+                        continue
+
+                    dist = round(act.get("distance", 0) / 1000.0, 2) if act.get("distance") else None
                     hr = int(act.get("averageHR")) if act.get("averageHR") else None
 
                     run_props = build_props(
