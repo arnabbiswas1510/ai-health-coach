@@ -403,6 +403,7 @@ def build_props(
     run_avg_speed_ms: float | None = None,   # m/s → converted to min/km pace
     run_avg_heart_rate: int | None = None,
     body_weight_lbs: float | None = None,
+    body_steps: int | None = None,           # total daily steps
     wotd_name: str | None = None,
     wotd_duration_min: int | float | None = None,
     wotd_distance_km: float | None = None,
@@ -441,6 +442,9 @@ def build_props(
 
     if body_weight_lbs is not None:
         props["body"]["weight"] = round(body_weight_lbs, 1)
+
+    if body_steps is not None:
+        props["body"]["steps"] = int(body_steps)
 
     if wotd_name:
         props["wotd"]["name"] = wotd_name

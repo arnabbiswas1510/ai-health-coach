@@ -102,6 +102,128 @@ def _flush_pending_syncs(path: Path) -> int:
         logger.info("Logseq: flushed %d pending sync(s), %d still queued.", flushed, len(still_pending))
     return len(still_pending)
 
+
+def _sync_sleep_to_logseq(
+    client,
+    user_data_dir,
+    sleep_data: dict,
+    sleep_hours: float,
+    pending_sync_path,
+    today_iso: str,
+) -> None:
+    """Write sleep + weight to today's Logseq journal page.
+
+    WOTD is intentionally NOT included — only actual completed runs
+    (written by the daily run backfill) and sleep/weight appear in Logseq.
+    If SSH is unavailable the props are queued to pending_logseq_syncs.json.
+    """
+    import datetime as _dt
+    import json as _json
+
+    daily_dto = sleep_data.get("dailySleepDTO") or {}
+
+    # Bed time / wake time — prefer local timestamp, fall back to GMT
+    def _garmin_ts_to_hhmm(local_key: str, gmt_key: str) -> str | None:
+        val = daily_dto.get(local_key)
+        if val:
+            return str(val)
+        gmt_ms = daily_dto.get(gmt_key)
+        if gmt_ms:
+            return _dt.datetime.fromtimestamp(int(gmt_ms) / 1000).strftime("%H:%M")
+        return None
+
+    bed_time = _garmin_ts_to_hhmm("sleepStartTimestampLocal", "sleepStartTimestampGMT")
+    wake_time = _garmin_ts_to_hhmm("sleepEndTimestampLocal", "sleepEndTimestampGMT")
+    sleep_quality = ((daily_dto.get("sleepScores") or {}).get("overall") or {}).get("value")
+
+    # Weight — only log if changed by >= 1.0 lb since last logged
+    weight_lbs = None
+    last_weight_file = user_data_dir / "last_logged_weight.json"
+    try:
+        start_w = (_dt.date.today() - _dt.timedelta(days=14)).isoformat()
+        body_data = (
+            client.get_body_composition(start_w, today_iso)
+            if hasattr(client, "get_body_composition")
+            else (client.client.get_body_composition(start_w, today_iso) if hasattr(client, "client") else {})
+        )
+        weight_list = (body_data.get("dateWeightList") or []) if isinstance(body_data, dict) else []
+        valid_w = [w for w in weight_list if w.get("weight") and float(w["weight"]) > 0]
+        if valid_w:
+            latest_w = sorted(valid_w, key=lambda x: (x.get("calendarDate", ""), x.get("samplePk", 0)))[-1]
+            cur_lbs = round(float(latest_w["weight"]) / 453.59237, 1)
+            last_logged_lbs = None
+            if last_weight_file.exists():
+                try:
+                    last_logged_lbs = _json.loads(last_weight_file.read_text(encoding="utf-8")).get("weight_lbs")
+                except Exception:
+                    pass
+            delta = round(cur_lbs - last_logged_lbs, 1) if last_logged_lbs is not None else None
+            if last_logged_lbs is None or (delta is not None and abs(delta) >= 1.0):
+                weight_lbs = cur_lbs
+                direction = "initial log" if last_logged_lbs is None else f"delta: {'+' if delta > 0 else ''}{delta:.1f} lbs"
+                logger.info("Logseq weight sync: logging %.1f lbs (%s)", cur_lbs, direction)
+                last_weight_file.write_text(_json.dumps({
+                    "weight_lbs": cur_lbs,
+                    "logged_date": latest_w.get("calendarDate"),
+                    "updated_at": _dt.datetime.now().isoformat(),
+                }, indent=2), encoding="utf-8")
+            else:
+                logger.info(
+                    "Logseq weight sync: %.1f lbs change below 1.0 lb threshold (last: %.1f lbs, delta: %+.1f) — skipping.",
+                    cur_lbs, last_logged_lbs, delta,
+                )
+    except Exception as e:
+        logger.warning("Logseq sync: could not fetch weight data: %s", e)
+
+    props = build_props(
+        sleep_duration_hours=sleep_hours,
+        sleep_bed_time=bed_time,
+        sleep_wake_time=wake_time,
+        sleep_quality=sleep_quality,
+        body_weight_lbs=weight_lbs,
+        # ← wotd_* args intentionally omitted
+    )
+
+    if props:
+        from datetime import date as _date
+        synced = write_props_dict(props, date=_date.today())
+        if synced:
+            logger.info("Logseq: synced sleep+weight to journal for %s", today_iso)
+        else:
+            _queue_pending_sync(pending_sync_path, today_iso, props)
+            logger.warning("Logseq: SSH unavailable — queued sleep+weight for %s", today_iso)
+    else:
+        logger.warning("Logseq: no sleep/weight properties built for %s (unexpected)", today_iso)
+
+    # ── Yesterday's step count → yesterday's journal page ────────────────────
+    # Garmin finalises the previous day's step total overnight. Sleep arriving
+    # in the morning is our trigger to capture it and write it to the correct
+    # past journal page so it never needs backfilling.
+    try:
+        yesterday = (_dt.date.today() - _dt.timedelta(days=1))
+        yesterday_iso = yesterday.isoformat()
+        stats = client.get_stats(yesterday_iso) or {}
+        total_steps = stats.get("totalSteps") or stats.get("totalSteps", None)
+        if total_steps and int(total_steps) > 0:
+            step_props = build_props(body_steps=int(total_steps))
+            if step_props:
+                synced = write_props_dict(step_props, date=yesterday)
+                if synced:
+                    logger.info(
+                        "Logseq: synced %d steps to journal for %s",
+                        int(total_steps), yesterday_iso,
+                    )
+                else:
+                    _queue_pending_sync(pending_sync_path, yesterday_iso, step_props)
+                    logger.warning(
+                        "Logseq: SSH unavailable — queued steps for %s", yesterday_iso,
+                    )
+        else:
+            logger.info("Logseq: no step data available for %s", yesterday_iso)
+    except Exception as e:
+        logger.warning("Logseq: could not fetch/write steps for yesterday: %s", e)
+
+
 def check_and_run():  # noqa: C901
     project_dir = Path(__file__).parent.resolve()
     config_path = project_dir / "coach_config.yaml"
@@ -212,6 +334,9 @@ def check_and_run():  # noqa: C901
     except Exception as e:
         logger.warning("Could not check for new activities: %s", e)
 
+    # ── Shared state paths (used by sleep-triggered block and run backfill) ───
+    pending_sync_path = user_data_dir / "pending_logseq_syncs.json"
+
     # ── Sleep-triggered Workout of the Day ────────────────────────────────────
     # Check once per day whether last night's sleep data has arrived.
     # When it has, generate and push today's WOTD via AI (wotd_generator.py).
@@ -225,16 +350,20 @@ def check_and_run():  # noqa: C901
         logger.info("Checking Garmin Connect for last night's sleep data (%s)...", today_iso)
         try:
             sleep_data = client.get_sleep_data(today_iso) or {}
-            daily_sleep = (sleep_data.get("dailySleepDTO") or {})
-            sleep_seconds = daily_sleep.get("sleepTimeSeconds") or 0
-            if sleep_seconds and int(sleep_seconds) > 0:
-                sleep_hours = round(int(sleep_seconds) / 3600, 1)
+            daily_sleep = sleep_data.get("dailySleepDTO") or {}
+            sleep_seconds = int(daily_sleep.get("sleepTimeSeconds") or 0)
+
+            if sleep_seconds > 0:
+                sleep_hours = round(sleep_seconds / 3600, 1)
                 logger.info(
-                    "Sleep data for %s received (%.1fh) — generating Workout of the Day.",
+                    "Sleep data for %s received (%.1fh) — triggering WOTD + Logseq sleep sync.",
                     today_iso, sleep_hours,
                 )
-                # Mark as processed before calling WOTD to prevent re-trigger on error.
+
+                # ① Mark as processed FIRST — prevents re-trigger if WOTD or Logseq errors
                 last_sleep_file.write_text(today_iso, encoding="utf-8")
+
+                # ② Generate and push WOTD to Garmin (never written to Logseq)
                 try:
                     from services.garmin.wotd_generator import generate_workout_of_the_day
                     generate_workout_of_the_day(
@@ -245,6 +374,16 @@ def check_and_run():  # noqa: C901
                     )
                 except Exception as wotd_exc:
                     logger.error("WOTD generation failed: %s", wotd_exc, exc_info=True)
+
+                # ③ Write sleep + weight to Logseq (no WOTD props)
+                _sync_sleep_to_logseq(
+                    client=client,
+                    user_data_dir=user_data_dir,
+                    sleep_data=sleep_data,
+                    sleep_hours=sleep_hours,
+                    pending_sync_path=pending_sync_path,
+                    today_iso=today_iso,
+                )
             else:
                 logger.info("Sleep data for %s not yet available. Will check again next poll.", today_iso)
         except Exception as e:
@@ -252,143 +391,55 @@ def check_and_run():  # noqa: C901
     else:
         logger.info("Sleep already processed for %s — WOTD skipped.", today_iso)
 
-    # ── Daily Logseq Sync ─────────────────────────────────────────────────────
-    # Runs once per day regardless of whether the full pipeline triggered.
-    # Reads yesterday's sleep from Garmin + today's suggested_run.json.
-    #
-    # If Logseq is closed (e.g. vacation), the formatted props + target date are
-    # saved to pending_logseq_syncs.json and replayed to the CORRECT past journal
-    # page once Logseq comes back online.
-    logseq_sync_file   = user_data_dir / "last_logseq_sync_date.txt"
-    pending_sync_path  = user_data_dir / "pending_logseq_syncs.json"
-    today_iso          = date.today().isoformat()
-    last_logseq_date   = logseq_sync_file.read_text(encoding="utf-8").strip() if logseq_sync_file.exists() else ""
+    # ── Daily run backfill + pending flush ───────────────────────────────────
+    # Pending flush runs EVERY poll so queued items land as soon as Logseq opens.
+    # Run backfill is once-per-day: writes last 15 completed runs to their correct
+    # journal pages. Sleep/weight are handled by the sleep-triggered path above.
+    run_backfill_file = user_data_dir / "last_run_backfill_date.txt"
+    last_run_backfill = run_backfill_file.read_text(encoding="utf-8").strip() if run_backfill_file.exists() else ""
 
-    # 1. Flush any pending syncs from previous days when Logseq was closed.
-    #    Stops immediately if Logseq is still unreachable.
+    # Always flush pending syncs (stops at first failure if Logseq still closed)
     _flush_pending_syncs(pending_sync_path)
 
-    # 2. Run today's sync if not already done.
-    if last_logseq_date != today_iso:
-        logger.info("Running daily Logseq journal sync for %s...", today_iso)
+    if last_run_backfill != today_iso:
+        logger.info("Running daily run backfill to Logseq for %s...", today_iso)
         try:
-            import json
             import datetime as _dt
-            yesterday_date = date.today() - _dt.timedelta(days=1)
-            yesterday_iso = yesterday_date.isoformat()
+            all_recent = client.get_activities(0, 15) or []
+            for act in all_recent:
+                type_key = (act.get("activityType") or {}).get("typeKey", "").lower()
+                if type_key in ("running", "trail_running", "treadmill_running"):
+                    st = act.get("startTimeLocal") or ""
+                    if not st:
+                        continue
+                    act_date_str = st.split()[0]
+                    try:
+                        act_date = _dt.date.fromisoformat(act_date_str)
+                    except ValueError:
+                        continue
 
-            # First, fetch and sync yesterday's actual workout to yesterday's Logseq page
-            try:
-                # get_activities_by_date not available in all garminconnect versions.
-                # Use get_activities() + manual date filter instead.
-                all_recent = client.get_activities(0, 10) or []
-                activities = [
-                    a for a in all_recent
-                    if (a.get("startTimeLocal") or "").startswith(yesterday_iso)
-                    and (a.get("activityType") or {}).get("typeKey", "").lower()
-                    in ("running", "trail_running", "treadmill_running")
-                ]
-                if activities:
-                    act = activities[0]
-                    y_dist = round(act.get("distance", 0) / 1000.0, 2) if act.get("distance") else None
-                    y_spd = act.get("averageSpeed")
-                    y_hr = int(act.get("averageHR")) if act.get("averageHR") else None
+                    dist = round(act.get("distance", 0) / 1000.0, 2) if act.get("distance") else None
+                    spd = act.get("averageSpeed")
+                    hr = int(act.get("averageHR")) if act.get("averageHR") else None
 
-                    y_props = build_props(
-                        run_distance_km=y_dist,
-                        run_avg_speed_ms=y_spd,
-                        run_avg_heart_rate=y_hr
+                    run_props = build_props(
+                        run_distance_km=dist,
+                        run_avg_speed_ms=spd,
+                        run_avg_heart_rate=hr,
                     )
-                    if y_props:
-                        y_synced = write_props_dict(y_props, date=yesterday_date)
-                        if y_synced:
-                            logger.info("Logseq: synced actual run for yesterday %s", yesterday_iso)
+                    if run_props:
+                        synced = write_props_dict(run_props, date=act_date)
+                        if synced:
+                            logger.info("Logseq: synced actual run for %s (%s km)", act_date_str, dist)
                         else:
-                            _queue_pending_sync(pending_sync_path, yesterday_iso, y_props)
-            except Exception as e:
-                logger.warning("Logseq sync: could not fetch yesterday's actual workout: %s", e)
-
-
-            # Sleep fields — from yesterday's Garmin sleep data (already fetched above)
-            _sleep_hours   = None
-            _bed_time      = None
-            _wake_time     = None
-            _sleep_quality = None
-            try:
-                sleep_raw  = client.get_sleep_data(today_iso) or {}
-                daily_dto  = sleep_raw.get("dailySleepDTO") or {}
-                secs       = daily_dto.get("sleepTimeSeconds") or 0
-                if secs:
-                    _sleep_hours = round(int(secs) / 3600, 2)
-                # bed / wake times stored as epoch ms in sleepStartTimestampGMT / sleepEndTimestampGMT
-                # but Garmin also exposes them as local HH:MM strings in the DTO
-                _bed_time  = daily_dto.get("sleepStartTimestampLocal")  # may be None
-                _wake_time = daily_dto.get("sleepEndTimestampLocal")    # may be None
-                # Fallback: parse from epoch ms
-                if not _bed_time:
-                    gmt_ms = daily_dto.get("sleepStartTimestampGMT")
-                    if gmt_ms:
-                        import datetime as _dt
-                        _bed_time = _dt.datetime.fromtimestamp(int(gmt_ms) / 1000).strftime("%H:%M")
-                if not _wake_time:
-                    gmt_ms = daily_dto.get("sleepEndTimestampGMT")
-                    if gmt_ms:
-                        import datetime as _dt
-                        _wake_time = _dt.datetime.fromtimestamp(int(gmt_ms) / 1000).strftime("%H:%M")
-                scores = daily_dto.get("sleepScores") or {}
-                overall = scores.get("overall") or {}
-                _sleep_quality = overall.get("value")
-            except Exception as e:
-                logger.warning("Logseq sync: could not fetch sleep data: %s", e)
-
-            # Run fields — from persisted suggested_run.json
-            _run_distance = None
-            _run_speed_ms = None
-            _run_avg_hr   = None
-            suggested_run_path = user_data_dir / "suggested_run.json"
-            if suggested_run_path.exists():
-                try:
-                    sr = json.loads(suggested_run_path.read_text(encoding="utf-8"))
-                    _run_distance = sr.get("distance_km")
-                    # target_pace_str is e.g. "6:01 /km" — strip any suffix after MM:SS
-                    pace_str = sr.get("target_pace_str", "")
-                    import re as _re
-                    m = _re.match(r"(\d+):(\d+)", pace_str)
-                    if m:
-                        pace_sec = int(m.group(1)) * 60 + int(m.group(2))
-                        if pace_sec > 0:
-                            _run_speed_ms = 1000.0 / pace_sec  # m/s
-                except Exception as e:
-                    logger.warning("Logseq sync: could not read suggested_run.json: %s", e)
-
-            # Build the formatted props dict BEFORE the write attempt so we can
-            # persist it to the pending queue if Logseq happens to be closed.
-            props_today = build_props(
-                sleep_duration_hours=_sleep_hours,
-                sleep_bed_time=_bed_time,
-                sleep_wake_time=_wake_time,
-                sleep_quality=_sleep_quality,
-                run_distance_km=_run_distance,
-                run_avg_speed_ms=_run_speed_ms,
-                run_avg_heart_rate=_run_avg_hr,
-            )
-
-            if not props_today:
-                logger.info("Logseq sync: no properties to write for %s.", today_iso)
-            else:
-                synced = write_props_dict(props_today, date=date.today())
-                if synced:
-                    logseq_sync_file.write_text(today_iso, encoding="utf-8")
-                    logger.info("Logseq journal sync complete for %s.", today_iso)
-                else:
-                    # Logseq is closed — queue so it writes to the RIGHT date later.
-                    _queue_pending_sync(pending_sync_path, today_iso, props_today)
-
+                            _queue_pending_sync(pending_sync_path, act_date_str, run_props)
+            run_backfill_file.write_text(today_iso, encoding="utf-8")
         except Exception as e:
-            logger.exception("Logseq journal sync failed — daemon continues: %s", e)
+            logger.warning("Logseq run backfill failed: %s", e)
     else:
-        logger.info("Logseq journal already synced today (%s). Skipping.", today_iso)
-    # ── End Daily Logseq Sync ─────────────────────────────────────────────────
+        logger.info("Logseq run backfill already done for %s. Skipping.", today_iso)
+    # ── End Daily Run Backfill ────────────────────────────────────────────────
+
 
 def run_withings_sync():
     """Push Withings scale measurements to Garmin Connect.
