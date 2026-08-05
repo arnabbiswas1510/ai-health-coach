@@ -26,6 +26,73 @@ It is powered by a LangGraph multi-agent workflow with optional human-in-the-loo
 
 ---
 
+## 🖥️ New Machine Setup (REQUIRED BEFORE ANY WORK)
+
+If `graphify-out/graph.json` exists but the `graphify` CLI is missing, install it first:
+
+```bash
+pip install -r requirements-dev.txt
+# Verify:
+python -m graphify --version   # should print 0.9.24 or later
+```
+
+The `graphify` CLI is mandatory for this project (see Graph-First Rule below).
+The graph is pre-built and committed — no API key or rebuild needed on a fresh clone.
+
+---
+
+## 🔍 MANDATORY: Graph-First Rule
+
+> **Before reading any source file or running grep for any architectural, structural,
+> or cross-file question — ALWAYS query the knowledge graph first.**
+
+`graphify-out/graph.json` is the persistent, pre-computed knowledge graph of this
+entire codebase. It covers 1,120+ nodes, 2,760+ edges, and 47 named communities
+including code, docs, and ADRs in `decisions/`.
+
+### Step 1 — Query the graph
+
+```bash
+# Ask a free-form question (BFS traversal across the graph)
+python -m graphify query "what triggers WOTD generation"
+
+# Explain a specific node and all its neighbours
+python -m graphify explain "generate_workout_of_the_day"
+```
+
+### Step 2 — Only go to source files if the graph is insufficient
+
+### Step 3 — Keep the graph fresh after code changes
+
+```bash
+python -m graphify update .   # free, no API key, re-extracts changed files only
+```
+
+---
+
+## ✏️ MANDATORY: Update Graph & Decisions After Every Code Change
+
+> **After making any code change — before committing — you MUST:**
+> 1. **Run `python -m graphify update .`** to keep `graphify-out/graph.json` current
+> 2. **Write or update a `decisions/` ADR** if the change qualifies (architectural changes, feature design, state logic redesign)
+
+### What triggers both actions
+
+| Change type | Update graph? | Write ADR? |
+|---|---|---|
+| Core coach/WOTD logic | ✅ Always | ✅ Always |
+| State persistence / workflow change | ✅ Always | ✅ Always |
+| Feature removed or replaced | ✅ Always | ✅ Always |
+| Significant refactor | ✅ Always | ✅ Always |
+| Bug fix (obvious root cause) | ✅ Always | ❌ Skip |
+| Test added or updated | ✅ Always | ❌ Skip |
+| UI tweak / dependency bump | ✅ Always | ❌ Skip |
+
+The graph update is **always** required after any code change (it is fast and free).
+The ADR is required for meaningful architectural decisions.
+
+---
+
 ## ⚙️ Withings-Garmin Background Weight Sync
 
 We integrated full body composition and scale weight synchronization directly into the `ai-health-coach` container, avoiding the overhead of secondary daemon containers:
@@ -117,3 +184,29 @@ Evidence basis:
 - **Fires**: `maybe_recalibrate(client, lthr, user_data_dir)` called at top of `generate_workout_of_the_day()` when counter ≥ 10
 - **Persistence**: `/app/data/{user}/zone_calibration.json` on production server
 - **Guard rails**: ±4% max shift/cycle, floor 68–82%, ceiling 80–94%, needs ≥5 valid runs
+
+---
+
+## 📝 Logseq Journal SSH Direct-Sync
+
+Logseq runs on Linux host machine with journals at `/home/pom/Logseq_Brain/journals/`:
+- **Protocol**: Direct SFTP write over SSH from DietPi container via `services/logseq/logseq_client.py`.
+- **Environment variables** (configured in `.env` / `docker-compose.yml`):
+  - `LOGSEQ_SSH_HOST`: IP/hostname of Logseq machine (e.g. `192.168.1.50` or host IP)
+  - `LOGSEQ_SSH_USER`: SSH user (e.g. `pom`)
+  - `LOGSEQ_SSH_KEY_PATH`: Private SSH key on DietPi (default `/root/.ssh/id_ed25519`)
+  - `LOGSEQ_GRAPH_PATH`: `/home/pom/Logseq_Brain/journals` (or `/home/pom/Logseq_Brain`)
+- **Path Resolution**: `_journal_sftp_path()` automatically normalizes the graph path and appends `/journals/YYYY_MM_DD.md`.
+
+---
+
+## ⏰ 6:20 AM Time-Gated WOTD Generation & Fallback
+
+- **Trigger Logic**: `daemon.py` evaluates WOTD generation on hourly polls:
+  * **Before 06:20 AM**: If today's sleep data is ready (`sleepTimeSeconds > 0`), WOTD generates immediately using live metrics.
+  * **At or after 06:20 AM**: If WOTD has not been pushed yet today, WOTD generation is forced regardless of today's sleep sync status.
+- **Fallback Sleep Data**: `_extract_sleep_summary(sleep_data, fallback_sleep_data)` uses yesterday's sleep data (or default baseline) if today's sleep metrics are unsynced/missing.
+- **Decoupled Persistence**: `last_pushed_wotd_date.txt` tracks WOTD completion independently from Logseq sleep sync (`last_processed_sleep_date.txt`) and updates **only after** WOTD is successfully generated and pushed.
+- **Documentation**: Details and architecture documented in `docs/wotd_resilience_fix.md`.
+
+

@@ -35,14 +35,16 @@ def generate_workout_of_the_day(
     config: dict,         # parsed coach_config.yaml
     user_data_dir: Path,
     sleep_data: dict,
+    fallback_sleep_data: dict | None = None,
 ) -> None:
-    """Main entry point called from daemon.py on the sleep trigger.
+    """Main entry point called from daemon.py on the sleep trigger or 6:20 AM time gate.
 
     Args:
-        client:        Authenticated garminconnect.Garmin instance.
-        config:        Full coach_config.yaml as dict.
-        user_data_dir: Per-user data directory (Path).
-        sleep_data:    Raw Garmin sleep API response (dict).
+        client:              Authenticated garminconnect.Garmin instance.
+        config:              Full coach_config.yaml as dict.
+        user_data_dir:       Per-user data directory (Path).
+        sleep_data:          Raw Garmin sleep API response for today (dict).
+        fallback_sleep_data: Optional raw Garmin sleep response for yesterday (dict).
     """
     wotd_cfg = config.get("workout_of_the_day", {})
     if not wotd_cfg.get("enabled", True):
@@ -77,7 +79,7 @@ def generate_workout_of_the_day(
                     readiness.get("score"), readiness.get("level"), readiness.get("limiting_factor"))
 
     # ── Step 2: sleep quality ─────────────────────────────────────────────────
-    sleep_summary = _extract_sleep_summary(sleep_data)
+    sleep_summary = _extract_sleep_summary(sleep_data, fallback_sleep_data)
     logger.info("WOTD: sleep summary: %s", sleep_summary)
 
     # ── Step 3: athlete profile & constraints ─────────────────────────────────
@@ -483,22 +485,36 @@ def _fetch_training_readiness(client: Any) -> dict:
 # Step 2 — Sleep quality
 # ---------------------------------------------------------------------------
 
-def _extract_sleep_summary(sleep_data: dict) -> dict:
-    """Extract relevant fields from the raw Garmin sleep API response."""
+def _extract_sleep_summary(sleep_data: dict, fallback_sleep_data: dict | None = None) -> dict:
+    """Extract relevant fields from the raw Garmin sleep API response, falling back if empty."""
     daily = (sleep_data.get("dailySleepDTO") or {})
     secs  = daily.get("sleepTimeSeconds") or 0
-    hours = round(int(secs) / 3600, 1) if secs else 0.0
 
+    is_fallback = False
+    if not secs and fallback_sleep_data:
+        fb_daily = (fallback_sleep_data.get("dailySleepDTO") or {})
+        fb_secs  = fb_daily.get("sleepTimeSeconds") or 0
+        if fb_secs:
+            daily = fb_daily
+            secs  = fb_secs
+            is_fallback = True
+            logger.info("WOTD: using yesterday's sleep data as fallback (%.1fh)", round(int(secs) / 3600, 1))
+
+    secs  = int(secs) if secs else 0
+    hours = round(secs / 3600, 1) if secs > 0 else 7.0
     scores  = daily.get("sleepScores") or {}
     overall = scores.get("overall") or {}
-    score   = overall.get("value")   # 0-100
+    score   = overall.get("value") or 70
 
     recovery = _classify_recovery(hours, score)
+    if is_fallback or secs == 0:
+        recovery = f"{recovery} (fallback)"
 
     return {
         "sleep_hours":    hours,
         "sleep_score":    score,
         "recovery_status": recovery,
+        "is_fallback":     is_fallback or (secs == 0),
     }
 
 

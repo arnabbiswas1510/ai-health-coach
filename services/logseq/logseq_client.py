@@ -74,7 +74,12 @@ def _get_ssh_port() -> int:
     return int(os.environ.get("LOGSEQ_SSH_PORT", "22"))
 
 def _get_ssh_key_path() -> str:
-    return os.environ.get("LOGSEQ_SSH_KEY_PATH", "/root/.ssh/id_rsa")
+    key_path = os.environ.get("LOGSEQ_SSH_KEY_PATH", "")
+    if key_path:
+        return key_path
+    if os.path.exists("/root/.ssh/id_ed25519"):
+        return "/root/.ssh/id_ed25519"
+    return "/root/.ssh/id_rsa"
 
 def _get_graph_path() -> str:
     return os.environ.get("LOGSEQ_GRAPH_PATH", "")
@@ -82,11 +87,18 @@ def _get_graph_path() -> str:
 # ── Journal path helper ───────────────────────────────────────────────────────
 
 def _journal_sftp_path(date: datetime.date | None = None) -> str:
-    """Return the SFTP path for the target journal file on the host machine."""
+    """Return the SFTP path for the target journal file on the host machine.
+    
+    Handles both graph root (e.g. '/home/pom/Logseq_Brain') and explicit
+    journals directory (e.g. '/home/pom/Logseq_Brain/journals').
+    """
     d = date or datetime.date.today()
     filename = d.strftime("%Y_%m_%d") + ".md"
     graph = _get_graph_path().rstrip("/\\").replace("\\", "/")
+    if graph.lower().endswith("/journals"):
+        graph = graph[:-len("/journals")].rstrip("/")
     return f"{graph}/journals/{filename}"
+
 
 
 # ── Property file helpers ─────────────────────────────────────────────────────

@@ -1,45 +1,77 @@
+import datetime
 import os
-import pytest
-import httpx
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from services.logseq.logseq_client import _LOGSEQ_HOST, build_props, write_props_dict
+from services.logseq.logseq_client import (
+    _get_ssh_key_path,
+    _journal_sftp_path,
+    _upsert_properties,
+    _write_via_sftp,
+    build_props,
+    write_daily_properties,
+    write_props_dict,
+)
 
-def test_logseq_default_host_uses_3001():
-    """Verify that the host uses port 3001 (netsh portproxy endpoint: 3001→3000 on the Windows machine)."""
-    assert "3001" in _LOGSEQ_HOST, f"Expected 3001 in host, got {_LOGSEQ_HOST}"
 
-@patch("services.logseq.logseq_client._api_call")
-def test_logseq_connection_success(mock_api_call):
-    """
-    Simulates a successful connection to the Logseq API on the new proxy port.
-    This ensures that when the proxy is correctly forwarding 3001 -> 3000,
-    the app handles the request properly without being blocked by iphlpsvc.
-    """
-    def mock_api_handler(client, method, args):
-        if method == "logseq.Editor.getPageBlocksTree":
-            return [{"uuid": "test-root-uuid", "content": "Garmin Health Sync"}]
-        return {"uuid": "test-uuid"}
-        
-    mock_api_call.side_effect = mock_api_handler
+def test_journal_sftp_path_resolution():
+    """Verify that graph path normalization works for both root directory and explicit /journals folder."""
+    target_date = datetime.date(2026, 8, 5)
 
-    import datetime
-    props = build_props(sleep_quality=85)
-    success = write_props_dict(props, date=datetime.date(2026, 6, 25))
-    
-    assert success is True
-    assert mock_api_call.call_count >= 1
+    with patch.dict(os.environ, {"LOGSEQ_GRAPH_PATH": "/home/pom/Logseq_Brain/journals/"}):
+        path = _journal_sftp_path(target_date)
+        assert path == "/home/pom/Logseq_Brain/journals/2026_08_05.md"
 
-@patch("services.logseq.logseq_client._api_call")
-def test_logseq_connection_refused(mock_api_call):
-    """
-    Simulates a connection refused error (e.g., Logseq not running or proxy not set up).
-    Verifies that the app handles it gracefully and logs the correct port (3001) in the warning.
-    """
-    mock_api_call.side_effect = httpx.ConnectError("Connection refused")
-    
-    import datetime
-    props = build_props(sleep_quality=85)
-    success = write_props_dict(props, date=datetime.date(2026, 6, 25))
-    
-    assert success is False
+    with patch.dict(os.environ, {"LOGSEQ_GRAPH_PATH": "/home/pom/Logseq_Brain"}):
+        path = _journal_sftp_path(target_date)
+        assert path == "/home/pom/Logseq_Brain/journals/2026_08_05.md"
+
+    with patch.dict(os.environ, {"LOGSEQ_GRAPH_PATH": "C:\\Users\\arnab\\Logseq_Brain\\journals"}):
+        path = _journal_sftp_path(target_date)
+        assert path == "C:/Users/arnab/Logseq_Brain/journals/2026_08_05.md"
+
+
+def test_ssh_key_path_fallback():
+    """Verify key path fallback logic."""
+    with patch.dict(os.environ, {"LOGSEQ_SSH_KEY_PATH": "/custom/path/id_rsa"}):
+        assert _get_ssh_key_path() == "/custom/path/id_rsa"
+
+
+def test_upsert_properties_merging():
+    """Verify that property block is built cleanly without corrupting existing markdown body."""
+    existing_md = "- Existing note bullet\n- Another note\n"
+    props = build_props(sleep_duration_hours=7.5, sleep_quality=85, body_weight_lbs=162.0)
+    updated = _upsert_properties(existing_md, props)
+
+    assert "- Garmin Health Sync" in updated
+    assert "duration:: 7.5" in updated
+    assert "quality:: 85" in updated
+    assert "weight:: 162.0" in updated
+    assert "- Existing note bullet" in updated
+
+
+@patch("services.logseq.logseq_client._ssh_connect")
+def test_write_via_sftp_success(mock_ssh_connect):
+    """Simulate successful SFTP journal write on Linux host."""
+    mock_ssh = MagicMock()
+    mock_sftp = MagicMock()
+    mock_ssh_connect.return_value = mock_ssh
+    mock_ssh.open_sftp.return_value = mock_sftp
+
+    # Simulate existing journal file read
+    mock_file = MagicMock()
+    mock_file.read.return_value = b"- Old notes\n"
+    mock_sftp.file.return_value.__enter__.return_value = mock_file
+
+    with patch.dict(
+        os.environ,
+        {
+            "LOGSEQ_SSH_HOST": "192.168.1.50",
+            "LOGSEQ_SSH_USER": "pom",
+            "LOGSEQ_GRAPH_PATH": "/home/pom/Logseq_Brain/journals",
+        },
+    ):
+        props = build_props(sleep_quality=90)
+        success = write_props_dict(props, date=datetime.date(2026, 8, 5))
+        assert success is True
+        mock_ssh_connect.assert_called_once()
+

@@ -337,59 +337,88 @@ def check_and_run():  # noqa: C901
     # ── Shared state paths (used by sleep-triggered block and run backfill) ───
     pending_sync_path = user_data_dir / "pending_logseq_syncs.json"
 
-    # ── Sleep-triggered Workout of the Day ────────────────────────────────────
-    # Check once per day whether last night's sleep data has arrived.
-    # When it has, generate and push today's WOTD via AI (wotd_generator.py).
+    # ── Time-Gated & Sleep-Triggered Workout of the Day (WOTD) ────────────────
+    # Rules:
+    # 1. If today's sleep data arrives early (< 06:20 AM), generate and push WOTD immediately.
+    # 2. If at or after 06:20 AM and today's WOTD hasn't been pushed yet, force WOTD generation.
+    #    If today's sleep metrics are still missing, use yesterday's sleep data as fallback.
+    # 3. Only mark last_pushed_wotd_date.txt AFTER WOTD is successfully generated and pushed.
+    from datetime import datetime as _dt_cls, time as _time_cls, timedelta as _td_cls
+
     last_sleep_file = user_data_dir / "last_processed_sleep_date.txt"
+    last_wotd_file = user_data_dir / "last_pushed_wotd_date.txt"
     today_iso = date.today().isoformat()
-    last_sleep_date = ""
-    if last_sleep_file.exists():
-        last_sleep_date = last_sleep_file.read_text(encoding="utf-8").strip()
+    yesterday_iso = (date.today() - _td_cls(days=1)).isoformat()
 
-    if last_sleep_date != today_iso:
-        logger.info("Checking Garmin Connect for last night's sleep data (%s)...", today_iso)
-        try:
-            sleep_data = client.get_sleep_data(today_iso) or {}
-            daily_sleep = sleep_data.get("dailySleepDTO") or {}
-            sleep_seconds = int(daily_sleep.get("sleepTimeSeconds") or 0)
+    last_sleep_date = last_sleep_file.read_text(encoding="utf-8").strip() if last_sleep_file.exists() else ""
+    last_wotd_date = last_wotd_file.read_text(encoding="utf-8").strip() if last_wotd_file.exists() else ""
 
-            if sleep_seconds > 0:
-                sleep_hours = round(sleep_seconds / 3600, 1)
-                logger.info(
-                    "Sleep data for %s received (%.1fh) — triggering WOTD + Logseq sleep sync.",
-                    today_iso, sleep_hours,
-                )
+    now_time = _dt_cls.now().time()
+    cutoff_time = _time_cls(6, 20)  # 06:20 AM cutoff
 
-                # ① Mark as processed FIRST — prevents re-trigger if WOTD or Logseq errors
-                last_sleep_file.write_text(today_iso, encoding="utf-8")
+    sleep_data = {}
+    sleep_seconds = 0
 
-                # ② Generate and push WOTD to Garmin (never written to Logseq)
-                try:
-                    from services.garmin.wotd_generator import generate_workout_of_the_day
-                    generate_workout_of_the_day(
-                        client=client,
-                        config=config,
-                        user_data_dir=user_data_dir,
-                        sleep_data=sleep_data,
-                    )
-                except Exception as wotd_exc:
-                    logger.error("WOTD generation failed: %s", wotd_exc, exc_info=True)
+    try:
+        sleep_data = client.get_sleep_data(today_iso) or {}
+        daily_sleep = sleep_data.get("dailySleepDTO") or {}
+        sleep_seconds = int(daily_sleep.get("sleepTimeSeconds") or 0)
+    except Exception as e:
+        logger.warning("Could not fetch sleep data for %s: %s", today_iso, e)
 
-                # ③ Write sleep + weight to Logseq (no WOTD props)
-                _sync_sleep_to_logseq(
+    # Logseq sleep sync (handled independently when sleep data is ready)
+    if sleep_seconds > 0 and last_sleep_date != today_iso:
+        sleep_hours = round(sleep_seconds / 3600, 1)
+        last_sleep_file.write_text(today_iso, encoding="utf-8")
+        _sync_sleep_to_logseq(
+            client=client,
+            user_data_dir=user_data_dir,
+            sleep_data=sleep_data,
+            sleep_hours=sleep_hours,
+            pending_sync_path=pending_sync_path,
+            today_iso=today_iso,
+        )
+
+    # WOTD Generation & Push logic
+    if last_wotd_date != today_iso:
+        should_generate = False
+        fallback_sleep_data = None
+
+        if sleep_seconds > 0:
+            logger.info("Sleep data for %s ready (%.1fh) — generating WOTD.", today_iso, round(sleep_seconds / 3600, 1))
+            should_generate = True
+        elif now_time >= cutoff_time:
+            logger.info(
+                "Time cutoff reached (%s >= 06:20 AM) without today's sleep data — forcing WOTD generation using fallback data.",
+                now_time.strftime("%H:%M"),
+            )
+            should_generate = True
+            try:
+                fallback_sleep_data = client.get_sleep_data(yesterday_iso) or {}
+            except Exception as fb_err:
+                logger.warning("Could not fetch yesterday's sleep data (%s) for fallback: %s", yesterday_iso, fb_err)
+        else:
+            logger.info(
+                "Sleep data for %s not yet available and before cutoff (%s < 06:20 AM). Will check again next poll.",
+                today_iso, now_time.strftime("%H:%M"),
+            )
+
+        if should_generate:
+            try:
+                from services.garmin.wotd_generator import generate_workout_of_the_day
+                generate_workout_of_the_day(
                     client=client,
+                    config=config,
                     user_data_dir=user_data_dir,
                     sleep_data=sleep_data,
-                    sleep_hours=sleep_hours,
-                    pending_sync_path=pending_sync_path,
-                    today_iso=today_iso,
+                    fallback_sleep_data=fallback_sleep_data,
                 )
-            else:
-                logger.info("Sleep data for %s not yet available. Will check again next poll.", today_iso)
-        except Exception as e:
-            logger.warning("Could not fetch sleep data for %s: %s", today_iso, e)
+                last_wotd_file.write_text(today_iso, encoding="utf-8")
+                logger.info("WOTD: successfully pushed and recorded for %s.", today_iso)
+            except Exception as wotd_exc:
+                logger.error("WOTD generation/push failed for %s (will retry next poll): %s", today_iso, wotd_exc, exc_info=True)
     else:
-        logger.info("Sleep already processed for %s — WOTD skipped.", today_iso)
+        logger.info("WOTD already pushed for %s — skipping.", today_iso)
 
     # ── Daily run backfill + pending flush ───────────────────────────────────
     # Pending flush runs EVERY poll so queued items land as soon as Logseq opens.

@@ -1,0 +1,5 @@
+# Developer dependencies — install on any machine used for AI-assisted development
+-r requirements.txt
+
+# ── AI agent tooling ──────────────────────────────────────────────────────────
+graphifyy>=0.9.24
