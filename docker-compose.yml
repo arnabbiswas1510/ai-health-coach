@@ -71,5 +71,7 @@ services:
       - ./data:/app/data                            # Generated HTML + JSON (persisted)
       - ./coach_config.yaml:/app/coach_config.yaml  # Athlete config
       - ./daemon.py:/app/daemon.py                  # Hot-reload: local overrides image
+      - ./force_wotd.py:/app/force_wotd.py          # Hot-reload: local overrides image
+      - ./services/garmin:/app/services/garmin      # Hot-reload: local overrides image
       - ./services/logseq:/app/services/logseq      # Hot-reload: local overrides image
       - /root/.ssh:/root/.ssh:ro                    # SSH key for Logseq direct-write
