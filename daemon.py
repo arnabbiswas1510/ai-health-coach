@@ -347,13 +347,15 @@ def check_and_run():  # noqa: C901
 
     last_sleep_file = user_data_dir / "last_processed_sleep_date.txt"
     last_wotd_file = user_data_dir / "last_pushed_wotd_date.txt"
-    today_iso = date.today().isoformat()
-    yesterday_iso = (date.today() - _td_cls(days=1)).isoformat()
+
+    now_dt = _dt_cls.now().astimezone()
+    today_iso = now_dt.date().isoformat()
+    yesterday_iso = (now_dt.date() - _td_cls(days=1)).isoformat()
 
     last_sleep_date = last_sleep_file.read_text(encoding="utf-8").strip() if last_sleep_file.exists() else ""
     last_wotd_date = last_wotd_file.read_text(encoding="utf-8").strip() if last_wotd_file.exists() else ""
 
-    now_time = _dt_cls.now().time()
+    now_time = now_dt.time()
     cutoff_time = _time_cls(6, 20)  # 06:20 AM cutoff
 
     sleep_data = {}

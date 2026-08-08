@@ -94,7 +94,7 @@ Keep it concise, personal, and actionable. No bullet points — flowing sentence
     try:
         from langchain_google_genai import ChatGoogleGenerativeAI
         model = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash",
+            model="gemini-2.0-flash",
             google_api_key=os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"),
             temperature=0.4,
         )

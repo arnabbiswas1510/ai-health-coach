@@ -1,11 +1,11 @@
 # Graph Report - ai-health-coach  (2026-08-08)
 
 ## Corpus Check
-- 111 files · ~106,333 words
+- 111 files · ~106,319 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1142 nodes · 2788 edges · 44 communities (40 shown, 4 thin omitted)
+- 1142 nodes · 2788 edges · 45 communities (40 shown, 5 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 160 edges (avg confidence: 0.6)
 - Token cost: 0 input · 0 output
 
@@ -46,6 +46,7 @@
 - extract_text_content
 - analysis_template.py
 - analysis_workflow.py
+- Exception
 - ProxyHTTPRequestHandler
 - startup.sh
 - competition_models.py
@@ -83,7 +84,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (44 total, 4 thin omitted)
+## Communities (45 total, 5 thin omitted)
 
 ### Community 0 - "TriathlonCoachDataExtractor"
 Cohesion: 0.06
@@ -197,10 +198,6 @@ Nodes (4): AgentCostSummary, CostTracker, ModelUsage, Any
 Cohesion: 0.15
 Nodes (20): AgentRole, Enum, create_data_summarizer_node(), AgentType, Any, _parse_json_safely(), Formatter Node (analysis.html / Physiology & Metrics tab). Asks the LLM for a…, _strip_fences() (+12 more)
 
-### Community 29 - "extract_text_content"
-Cohesion: 0.15
-Nodes (7): Exception, extract_text_content(), APIOverloadError, RetryableError, If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted., TestExtractTextContent
-
 ### Community 30 - "analysis_template.py"
 Cohesion: 0.44
 Nodes (9): _e(), Static HTML template for analysis.html (Physiology & Metrics tab). The LLM…, Render the full analysis.html from structured data., render_analysis_html(), _render_deep_dive(), _render_kpis(), _render_recommendations(), _render_summary() (+1 more)
@@ -208,6 +205,10 @@ Nodes (9): _e(), Static HTML template for analysis.html (Physiology & Metrics ta
 ### Community 31 - "analysis_workflow.py"
 Cohesion: 0.15
 Nodes (15): combined_summarizer_node(), formatter_node(), plot_resolution_node(), Any, synthesis_node(), create_analysis_workflow(), create_simple_sequential_workflow(), run_training_analysis() (+7 more)
+
+### Community 32 - "Exception"
+Cohesion: 0.25
+Nodes (5): Exception, APIOverloadError, RetryableError, If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted.
 
 ### Community 34 - "startup.sh"
 Cohesion: 0.53
@@ -232,12 +233,12 @@ Nodes (5): extract_agent_content(), extract_expert_output(), _get_field(), Any, 
 ## Knowledge Gaps
 - **119 isolated node(s):** `garmin-ai-coach`, `Competition`, `Project Overview`, `Tech Stack & Architecture`, `Key Rules & Guidelines` (+114 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GarminCalendarSyncer` connect `GarminCalendarSyncer` to `TriathlonCoachDataExtractor`, `run_analysis_from_config`, `_make_syncer`, `GarminConnectClient`, `_make_syncer`, `extract_text_content`?**
+- **Why does `GarminCalendarSyncer` connect `GarminCalendarSyncer` to `TriathlonCoachDataExtractor`, `Exception`, `run_analysis_from_config`, `_make_syncer`, `GarminConnectClient`, `_make_syncer`?**
   _High betweenness centrality (0.145) - this node is a cross-community bridge._
 - **Why does `TriathlonCoachDataExtractor` connect `TriathlonCoachDataExtractor` to `GarminConnectClient`, `run_analysis_from_config`?**
   _High betweenness centrality (0.122) - this node is a cross-community bridge._

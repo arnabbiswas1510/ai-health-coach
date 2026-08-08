@@ -228,7 +228,7 @@ def generate_workout_of_the_day(
     )
     if not ai_json:
         logger.error("WOTD: AI returned no workout — aborting.")
-        return
+        raise RuntimeError("WOTD generation failed: AI returned no workout.")
 
     logger.info(
         "WOTD: AI designed '%s' (%s, %d min, %.1f km)",
@@ -256,6 +256,7 @@ def generate_workout_of_the_day(
         logger.info("WOTD: successfully pushed. id=%s, saved to %s", new_id, id_file)
     else:
         logger.error("WOTD: push failed — id_file NOT updated.")
+        raise RuntimeError("WOTD push failed: Garmin API rejected workout upload.")
 
 
 # ---------------------------------------------------------------------------
@@ -739,7 +740,7 @@ For structured workouts with run/walk intervals, populate "intervals":
     try:
         from langchain_google_genai import ChatGoogleGenerativeAI
         model = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash",
+            model="gemini-2.0-flash",
             google_api_key=os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"),
             temperature=0.3,
         )

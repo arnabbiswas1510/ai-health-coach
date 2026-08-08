@@ -47,11 +47,16 @@ def main():
     user_data_dir = Path(os.getenv("OUTPUT_DIR", "./data"))
     user_data_dir.mkdir(parents=True, exist_ok=True)
 
-    # Force remove last_processed_sleep_date.txt if present
+    # Force remove cached completion files if present
     last_sleep_file = user_data_dir / "last_processed_sleep_date.txt"
     if last_sleep_file.exists():
         last_sleep_file.unlink()
         logger.info("Removed cached %s", last_sleep_file)
+
+    last_wotd_file = user_data_dir / "last_pushed_wotd_date.txt"
+    if last_wotd_file.exists():
+        last_wotd_file.unlink()
+        logger.info("Removed cached %s", last_wotd_file)
 
     # Connect to Garmin
     from services.garmin.client import GarminConnectClient

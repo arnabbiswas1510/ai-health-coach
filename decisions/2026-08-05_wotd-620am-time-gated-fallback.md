@@ -28,3 +28,9 @@ Two main operational issues occurred with this design:
 - Today's workout is guaranteed to be on the Garmin Connect calendar/watch by 6:20 AM every morning.
 - Transient network or API errors automatically retry on the next daemon poll until WOTD succeeds.
 - Yesterday's sleep data acts as a safe fallback for AI intensity calculations when today's watch sleep sync is delayed.
+
+## 2026-08-08 Resilience Fix & Model Alignment
+- **Strict Error Escalation**: `generate_workout_of_the_day()` now raises an explicit `RuntimeError` if the AI generation returns `None` or if Garmin workout push fails. This prevents `daemon.py` from falsely recording success in `last_pushed_wotd_date.txt`.
+- **Model Name Fix**: Updated model string from `gemini-2.5-flash` to `gemini-2.0-flash` across `wotd_generator.py` and `run_coach_feedback.py` to match valid Google Generative AI API model identifiers.
+- **Timezone Awareness**: Updated `daemon.py` to evaluate the 6:20 AM cutoff using local timezone-aware datetime objects (`_dt_cls.now().astimezone()`), avoiding premature fallback triggers caused by UTC server offsets.
+
