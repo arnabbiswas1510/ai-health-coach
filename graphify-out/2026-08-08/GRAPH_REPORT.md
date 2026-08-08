@@ -1,16 +1,16 @@
 # Graph Report - ai-health-coach  (2026-08-08)
 
 ## Corpus Check
-- 111 files · ~106,333 words
+- 111 files · ~106,375 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1142 nodes · 2788 edges · 44 communities (40 shown, 4 thin omitted)
+- 1142 nodes · 2794 edges · 44 communities (40 shown, 4 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 160 edges (avg confidence: 0.6)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9143ae06`
+- Built from commit: `397d69bf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -63,7 +63,7 @@
 4. `TestOutsideApiGraphQlClient` - 47 edges
 5. `PlotStorage` - 43 edges
 6. `run_analysis_from_config()` - 36 edges
-7. `AgentRole` - 33 edges
+7. `AgentRole` - 35 edges
 8. `GarminCalendarSyncer` - 30 edges
 9. `create_initial_state()` - 29 edges
 10. `retry_with_backoff()` - 26 edges
@@ -238,9 +238,9 @@ Nodes (5): extract_agent_content(), extract_expert_output(), _get_field(), Any, 
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `GarminCalendarSyncer` connect `GarminCalendarSyncer` to `TriathlonCoachDataExtractor`, `run_analysis_from_config`, `_make_syncer`, `GarminConnectClient`, `_make_syncer`, `extract_text_content`?**
-  _High betweenness centrality (0.145) - this node is a cross-community bridge._
+  _High betweenness centrality (0.137) - this node is a cross-community bridge._
 - **Why does `TriathlonCoachDataExtractor` connect `TriathlonCoachDataExtractor` to `GarminConnectClient`, `run_analysis_from_config`?**
-  _High betweenness centrality (0.122) - this node is a cross-community bridge._
+  _High betweenness centrality (0.115) - this node is a cross-community bridge._
 - **Why does `OutsideApiGraphQlClient` connect `OutsideApiGraphQlClient` to `run_analysis_from_config`?**
   _High betweenness centrality (0.102) - this node is a cross-community bridge._
 - **Are the 17 inferred relationships involving `TriathlonCoachDataExtractor` (e.g. with `GarminEncoder` and `GarminConnectClient`) actually correct?**

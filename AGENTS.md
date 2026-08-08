@@ -174,6 +174,7 @@ Evidence basis:
 4. Max duration weekdays: 60 min; weekends: 105 min
 5. Cadence target: 170+ spm (cue short quick steps during run segments)
 6. Optimise for fat-burning aerobic volume — Z2 time > distance covered
+7. Warmup duration: EXACTLY 5 minutes (never greater than 5 minutes)
 
 ---
 

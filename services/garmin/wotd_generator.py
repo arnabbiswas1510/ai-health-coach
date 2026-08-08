@@ -713,6 +713,7 @@ DESIGN exactly ONE workout for today. Rules:
     - Resume running when HR drops back below {z2_low} bpm (full Z1 recovery)
     - This is non-negotiable: crossing {walk_break_hr} bpm risks knee fatigue and Z3 drift
     - The walk-run method is the PREFERRED format for this athlete (knees, injury prevention)
+11. WARMUP CAP: "warmup_min" MUST BE EXACTLY 5 minutes (never greater than 5 minutes).
 
 Return ONLY valid JSON (no markdown, no explanation):
 {{
@@ -768,6 +769,14 @@ For structured workouts with run/walk intervals, populate "intervals":
         # Enforce workout name prefix
         if not result["workout_name"].startswith(WOTD_NAME_PREFIX):
             result["workout_name"] = WOTD_NAME_PREFIX + " " + result["workout_name"]
+
+        # ── Hard 5-minute warmup cap enforcement ──────────────────────────────
+        warmup_val = result.get("warmup_min", 5)
+        if warmup_val > 5:
+            extra = warmup_val - 5
+            result["warmup_min"] = 5
+            result["main_min"] = result.get("main_min", 0) + extra
+            logger.info("WOTD: Warmup clamped from %d to 5 min (shifted %d min to main block).", warmup_val, extra)
 
         # ── Hard duration clamp (safety net — prompt should already enforce this) ──
         # Guarantees weekday ≤ 60 min and weekend ≤ 105 min regardless of AI output.
