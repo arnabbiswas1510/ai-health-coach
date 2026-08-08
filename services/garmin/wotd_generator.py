@@ -738,12 +738,17 @@ For structured workouts with run/walk intervals, populate "intervals":
 """
 
     try:
-        from langchain_google_genai import ChatGoogleGenerativeAI
-        model = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash",
-            google_api_key=os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"),
-            temperature=0.3,
-        )
+        try:
+            from services.ai.model_config import ModelSelector
+            from services.ai.ai_settings import AgentRole
+            model = ModelSelector.get_llm(AgentRole.WORKOUT)
+        except Exception:
+            from langchain_google_genai import ChatGoogleGenerativeAI
+            model = ChatGoogleGenerativeAI(
+                model="gemini-1.5-flash",
+                google_api_key=os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"),
+                temperature=0.3,
+            )
         response = model.invoke(prompt)
         raw = response.content.strip()
 
