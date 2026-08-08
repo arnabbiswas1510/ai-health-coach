@@ -1,4 +1,4 @@
-[project]
+[workspace]
 name = "garmin-ai-coach"
 version = "2.2.0"
 description = "CLI tool for Garmin data analysis with AI-powered insights"
@@ -42,6 +42,8 @@ ruff = ">=0.14.1, <0.15"
 vulture = ">=2.14, <3"
 types-PyYAML = "*"
 types-requests = "*"
+paramiko = ">=3.0.0, <4"
+withings-sync = ">=4.1.0, <5"
 
 [tasks]
 # Development tasks
