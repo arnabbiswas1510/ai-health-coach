@@ -4,30 +4,30 @@
 # =============================================================================
 # Startup sequence:
 #   1. Clean stale HTML artifacts
-#   2. Run coach analysis (ABORT with error on failure)
-#   3. Start nginx in background
-#   4. Start uvicorn chat-api in background
+#   2. Start nginx in background
+#   3. Start uvicorn chat-api in background
+#   4. Run coach analysis (if no persisted reports found)
 #   5. exec daemon.py as PID 1 (foreground, receives Docker stop signals)
 # =============================================================================
 
 set -euo pipefail
 
-BOLD="\033[1m"
-RED="\033[0;31m"
-GREEN="\033[0;32m"
-YELLOW="\033[1;33m"
-CYAN="\033[0;36m"
-RESET="\033[0m"
+BOLD="[1m"
+RED="[0;31m"
+GREEN="[0;32m"
+YELLOW="[1;33m"
+CYAN="[0;36m"
+RESET="[0m"
 
-log()  { echo -e "${CYAN}[startup]${RESET} $*"; }
-ok()   { echo -e "${GREEN}[startup] ✔${RESET} $*"; }
-warn() { echo -e "${YELLOW}[startup] ⚠${RESET} $*"; }
+log()  { echo -e "${CYAN}[startup]${RESET} "; }
+ok()   { echo -e "${GREEN}[startup] ✔${RESET} "; }
+warn() { echo -e "${YELLOW}[startup] ⚠${RESET} "; }
 die()  {
     echo -e ""
     echo -e "${RED}${BOLD}╔══════════════════════════════════════════════════════════════╗${RESET}"
     echo -e "${RED}${BOLD}║              GARMIN AI COACH — STARTUP FAILED                ║${RESET}"
     echo -e "${RED}${BOLD}╚══════════════════════════════════════════════════════════════╝${RESET}"
-    echo -e "${RED}${BOLD}  ERROR: $*${RESET}"
+    echo -e "${RED}${BOLD}  ERROR: Wait${RESET}"
     echo -e ""
     echo -e "${YELLOW}  Possible causes:${RESET}"
     echo -e "    • Garmin MFA triggered (new IP) → run interactive login below"
@@ -37,11 +37,11 @@ die()  {
     echo -e "    • coach_config.yaml missing or invalid"
     echo -e ""
     echo -e "${YELLOW}  Interactive login (run this on the NAS, then restart the container):${RESET}"
-    echo -e "    docker run -it --rm \\"
-    echo -e "      -v \$(pwd)/tokens:/app/tokens \\"
-    echo -e "      -v \$(pwd)/coach_config.yaml:/app/coach_config.yaml \\"
-    echo -e "      --env-file \$(pwd)/.env \\"
-    echo -e "      ghcr.io/arnabbiswas1510/ai-health-coach:latest \\"
+    echo -e "    docker run -it --rm \"
+    echo -e "      -v \$(pwd)/tokens:/app/tokens \"
+    echo -e "      -v \$(pwd)/coach_config.yaml:/app/coach_config.yaml \"
+    echo -e "      --env-file \$(pwd)/.env \"
+    echo -e "      ghcr.io/arnabbiswas1510/ai-health-coach:latest \"
     echo -e "      python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml"
     echo -e ""
     exit 1
@@ -56,18 +56,13 @@ echo -e ""
 # ── Step 1: Check if analytics are already persisted ─────────────────────────
 FORCE_ANALYTICS=${FORCE_ANALYTICS:-false}
 
-# Skip the expensive AI pipeline on startup if persisted data already exists.
-# The daemon's polling loop handles re-running when new activities/sleep arrive.
-# Only run on startup if:
-#   a) FORCE_ANALYTICS=true is explicitly set, OR
-#   b) No planning.html exists yet (first-ever run)
 SKIP_INITIAL_RUN=false
 
 if [ "$FORCE_ANALYTICS" = "true" ]; then
     log "Step 1/5 — FORCE_ANALYTICS=true: cleaning old HTML and forcing fresh analysis..."
     find /app/data -maxdepth 3 -name "*.html" -print -delete 2>/dev/null || true
     ok "Stale HTML artifacts cleaned."
-elif [ -s "/app/data/Arnab_Biswas/planning.html" ] || [ -s "/app/data/planning.html" ]; then
+elif [ -n "$(find /app/data -name 'planning.html' -size +0 2>/dev/null)" ]; then
     SKIP_INITIAL_RUN=true
     log "Step 1/5 — Found existing analytics in /app/data."
     ok "Skipping initial AI analysis — daemon will re-run when new activity or sleep data is detected."
@@ -75,35 +70,42 @@ else
     log "Step 1/5 — No persisted analytics found (first run). Will run initial analysis."
 fi
 
-# ── Step 3: Start nginx
- ───────────────────────────────────────────────────────
-log "Step 3/5 — Starting nginx..."
 
-# Symlink /app/data as nginx web root so generated HTML is served directly
+# ── Step 2: Start nginx ───────────────────────────────────────────────────────
+log "Step 2/5 — Starting nginx..."
+
 if [ ! -L /usr/share/nginx/html ]; then
     rm -rf /usr/share/nginx/html
     ln -s /app/data /usr/share/nginx/html
 fi
 
-# Always copy the latest index.html to the data directory so that UI updates are applied on container restart/deployment
 if [ -f "/app/index.html" ]; then
     log "Copying latest index.html to /app/data/index.html..."
     cp /app/index.html /app/data/index.html
     ok "Latest index.html copied."
 fi
 
-# Test nginx config before starting
-nginx -t 2>/dev/null || die "nginx configuration test failed. Check nginx.nas.conf."
 nginx
-ok "nginx started (serving on :80)"
+ok "Nginx web dashboard started on port 8085."
 
+# ── Step 3: Start Chat API ────────────────────────────────────────────────────
+log "Step 3/5 — Starting Chat API on :8001..."
+python -m uvicorn services.chat_api.main:app     --host 0.0.0.0     --port 8001     --log-level info     --no-access-log &
+CHAT_PID=$!
+sleep 2  # brief pause to let uvicorn bind its port
 
-# ── Step 2: Run initial coach analysis ────────────────────────────────────────
+# Verify chat-api actually started
+if ! kill -0 "$CHAT_PID" 2>/dev/null; then
+    die "Chat API (uvicorn) failed to start. Check logs above."
+fi
+ok "Chat API started (PID ${CHAT_PID})"
+
+# ── Step 4: Run initial coach analysis ────────────────────────────────────────
 if [ "$SKIP_INITIAL_RUN" = "true" ]; then
-    log "Step 2/5 — Skipping initial AI coach analysis (using persisted reports)."
+    log "Step 4/5 — Skipping initial AI coach analysis (using persisted reports)."
     ok "To force a fresh run: set FORCE_ANALYTICS=true and restart, or wait for daemon polling."
 else
-    log "Step 2/5 — Running initial AI coach analysis (this takes 2–5 minutes)..."
+    log "Step 4/5 — Running initial AI coach analysis (this takes 2–5 minutes)..."
     echo -e ""
     python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml
     COACH_EXIT=$?
@@ -114,23 +116,6 @@ else
     ok "Initial coach analysis completed — fresh HTML artifacts generated."
 fi
 
-
-# ── Step 4: Start Chat API ────────────────────────────────────────────────────
-log "Step 4/5 — Starting Chat API on :8001..."
-python -m uvicorn services.chat_api.main:app \
-    --host 0.0.0.0 \
-    --port 8001 \
-    --log-level info \
-    --no-access-log &
-CHAT_PID=$!
-sleep 2  # brief pause to let uvicorn bind its port
-
-# Verify chat-api actually started
-if ! kill -0 "$CHAT_PID" 2>/dev/null; then
-    die "Chat API (uvicorn) failed to start. Check logs above."
-fi
-ok "Chat API started (PID ${CHAT_PID})"
-
 # ── Step 5: Start Poller Daemon (foreground / PID 1) ─────────────────────────
 log "Step 5/5 — Starting Garmin Poller Daemon (foreground)..."
 echo -e ""
@@ -139,6 +124,4 @@ echo -e "${GREEN}${BOLD}  ✅ All services running. Dashboard → http://\$(host
 echo -e "${GREEN}${BOLD}════════════════════════════════════════════════════════════════${RESET}"
 echo -e ""
 
-# exec replaces this shell — daemon.py becomes PID 1 and receives SIGTERM on
-# `docker stop`, allowing graceful shutdown.
 exec python -u daemon.py
