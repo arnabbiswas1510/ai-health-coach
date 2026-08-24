@@ -116,7 +116,7 @@ The `Deploy to Production Server` workflow connects to your DietPi server (`192.
    * The repository's `DEPLOY_KEY` secret is configured with your SSH private key `id_ed25519` (length 411).
    * To prevent authentication timeouts, the matching public key (`id_ed25519.pub`) was appended to `/root/.ssh/authorized_keys` on the DietPi server.
 3. **Repository Update Stage**:
-   * Modified `.github/workflows/deploy_to_server.yml` to execute `git fetch --all` and `git reset --hard origin/main` inside the `/home/dietpi/docker/garmin-ai-coach` directory on the server *before* pulling/restarting container instances. This ensures all compose, daemon, and helper scripts match the latest repository state.
+   * Modified `.github/workflows/deploy_to_server.yml` to execute `git fetch --all` and `git reset --hard origin/main` inside the `/home/pom/docker/garmin-ai-coach` directory on the server *before* pulling/restarting container instances. This ensures all compose, daemon, and helper scripts match the latest repository state.
 
 ---
 

@@ -51,7 +51,7 @@ jobs:
           timeout: 120s
           debug: true
           script: |
-            cd /home/dietpi/docker/garmin-ai-coach
+            cd /home/pom/docker/garmin-ai-coach
 
             echo "=== Pulling latest repository code ==="
             git fetch --all
