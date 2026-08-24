@@ -109,7 +109,7 @@ We integrated full body composition and scale weight synchronization directly in
 
 ## 🛠️ GitHub Actions SSH Deployment Pipeline
 
-The `Deploy to Production Server` workflow connects to your DietPi server (`192.168.1.50` locally) over the internet via SSH:
+The `Deploy to Production Server` workflow connects to your DietPi server (`192.168.1.2` locally) over the internet via SSH:
 1. **Dynamic DNS Routing**:
    * Connects via port `2222` using the dynamic DNS host `abiswas.duckdns.org`.
 2. **Handshake Key Authorization**:
@@ -193,7 +193,7 @@ Evidence basis:
 Logseq runs on Linux host machine with journals at `/home/pom/Logseq_Brain/journals/`:
 - **Protocol**: Direct SFTP write over SSH from DietPi container via `services/logseq/logseq_client.py`.
 - **Environment variables** (configured in `.env` / `docker-compose.yml`):
-  - `LOGSEQ_SSH_HOST`: IP/hostname of Logseq machine (e.g. `192.168.1.50` or host IP)
+  - `LOGSEQ_SSH_HOST`: IP/hostname of Logseq machine (e.g. `192.168.1.2` or host IP)
   - `LOGSEQ_SSH_USER`: SSH user (e.g. `pom`)
   - `LOGSEQ_SSH_KEY_PATH`: Private SSH key on DietPi (default `/root/.ssh/id_ed25519`)
   - `LOGSEQ_GRAPH_PATH`: `/home/pom/Logseq_Brain/journals` (or `/home/pom/Logseq_Brain`)

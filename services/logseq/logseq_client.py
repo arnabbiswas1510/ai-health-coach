@@ -14,7 +14,7 @@ Migration to a new machine: update three env vars — nothing else.
 No port forwarding rules. No Windows netsh. No Logseq settings to change.
 
 Env vars (all from .env — never hard-coded):
-  LOGSEQ_SSH_HOST      Hostname or IP of the host machine  (e.g. 192.168.1.17)
+  LOGSEQ_SSH_HOST      Hostname or IP of the host machine  (e.g. 192.168.1.2)
   LOGSEQ_SSH_USER      SSH username                        (e.g. arnab)
   LOGSEQ_SSH_PORT      SSH port, optional                  (default: 22)
   LOGSEQ_SSH_KEY_PATH  Private key on DietPi               (default: /root/.ssh/id_rsa)
