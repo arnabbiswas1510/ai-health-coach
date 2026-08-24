@@ -75,24 +75,8 @@ else
     log "Step 1/5 — No persisted analytics found (first run). Will run initial analysis."
 fi
 
-# ── Step 2: Run initial coach analysis ────────────────────────────────────────
-if [ "$SKIP_INITIAL_RUN" = "true" ]; then
-    log "Step 2/5 — Skipping initial AI coach analysis (using persisted reports)."
-    ok "To force a fresh run: set FORCE_ANALYTICS=true and restart, or wait for daemon polling."
-else
-    log "Step 2/5 — Running initial AI coach analysis (this takes 2–5 minutes)..."
-    echo -e ""
-    python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml
-    COACH_EXIT=$?
-    if [ $COACH_EXIT -ne 0 ]; then
-        die "Coach analysis failed (exit code ${COACH_EXIT}). See error output above."
-    fi
-    echo -e ""
-    ok "Initial coach analysis completed — fresh HTML artifacts generated."
-fi
-
-
-# ── Step 3: Start nginx ───────────────────────────────────────────────────────
+# ── Step 3: Start nginx
+ ───────────────────────────────────────────────────────
 log "Step 3/5 — Starting nginx..."
 
 # Symlink /app/data as nginx web root so generated HTML is served directly
@@ -112,6 +96,24 @@ fi
 nginx -t 2>/dev/null || die "nginx configuration test failed. Check nginx.nas.conf."
 nginx
 ok "nginx started (serving on :80)"
+
+
+# ── Step 2: Run initial coach analysis ────────────────────────────────────────
+if [ "$SKIP_INITIAL_RUN" = "true" ]; then
+    log "Step 2/5 — Skipping initial AI coach analysis (using persisted reports)."
+    ok "To force a fresh run: set FORCE_ANALYTICS=true and restart, or wait for daemon polling."
+else
+    log "Step 2/5 — Running initial AI coach analysis (this takes 2–5 minutes)..."
+    echo -e ""
+    python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml
+    COACH_EXIT=$?
+    if [ $COACH_EXIT -ne 0 ]; then
+        die "Coach analysis failed (exit code ${COACH_EXIT}). See error output above."
+    fi
+    echo -e ""
+    ok "Initial coach analysis completed — fresh HTML artifacts generated."
+fi
+
 
 # ── Step 4: Start Chat API ────────────────────────────────────────────────────
 log "Step 4/5 — Starting Chat API on :8001..."

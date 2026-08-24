@@ -145,10 +145,10 @@ class ModelSelector:
         ),
         # Google Models (via OpenRouter) — use when OPENROUTER_API_KEY is set
         # and you want to avoid Google free-tier quota limits
-        "or-gemini-2.0-flash": ModelConfiguration(
-            name="google/gemini-2.0-flash-exp:free", base_url=OPENROUTER_BASE_URL
+        "or-gemini-2.5-flash": ModelConfiguration(
+            name="google/gemini-2.5-flash-exp:free", base_url=OPENROUTER_BASE_URL
         ),
-        "or-gemini-1.5-flash": ModelConfiguration(
+        "or-gemini-2.5-flash": ModelConfiguration(
             name="google/gemini-flash-1.5", base_url=OPENROUTER_BASE_URL
         ),
         "or-gemini-2.5-flash": ModelConfiguration(
@@ -166,16 +166,16 @@ class ModelSelector:
             name="gemini-pro-latest",
             base_url="https://generativelanguage.googleapis.com",
         ),
-        "gemini-1.5-flash": ModelConfiguration(
-            name="gemini-1.5-flash",
+        "gemini-2.5-flash": ModelConfiguration(
+            name="gemini-2.5-flash",
             base_url="https://generativelanguage.googleapis.com",
         ),
         "gemini-1.5-pro": ModelConfiguration(
             name="gemini-1.5-pro",
             base_url="https://generativelanguage.googleapis.com",
         ),
-        "gemini-2.0-flash": ModelConfiguration(
-            name="gemini-2.0-flash",
+        "gemini-2.5-flash": ModelConfiguration(
+            name="gemini-2.5-flash",
             base_url="https://generativelanguage.googleapis.com",
         ),
         "gemini-2.0-pro-exp": ModelConfiguration(
