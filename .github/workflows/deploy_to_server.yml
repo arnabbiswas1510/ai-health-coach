@@ -13,34 +13,19 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
-      - name: Debug secrets
-        run: |
-          HOST="${{ secrets.DEPLOY_HOST }}"
-          if [ -z "$HOST" ]; then
-            echo "DEPLOY_HOST is empty!"
-          else
-            echo "DEPLOY_HOST is set! Length: ${#HOST}"
-            if [[ "$HOST" =~ [[:space:]] ]]; then
-              echo "WARNING: DEPLOY_HOST contains whitespace!"
-            fi
-            if [[ "$HOST" =~ ^http ]]; then
-              echo "WARNING: DEPLOY_HOST contains http/https prefix!"
-            fi
-          fi
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-          USER="${{ secrets.DEPLOY_USER }}"
-          if [ -z "$USER" ]; then
-            echo "DEPLOY_USER is empty!"
-          else
-            echo "DEPLOY_USER is set! Length: ${#USER}"
-          fi
+      - name: Copy docker-compose.yml to production server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 2222
+          source: "docker-compose.yml"
+          target: "/home/pom/docker/garmin-ai-coach"
 
-          KEY="${{ secrets.DEPLOY_KEY }}"
-          if [ -z "$KEY" ]; then
-            echo "DEPLOY_KEY is empty!"
-          else
-            echo "DEPLOY_KEY is set! Length: ${#KEY}"
-          fi
       - name: Deploy new images to server via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -51,11 +36,8 @@ jobs:
           timeout: 120s
           debug: true
           script: |
+            mkdir -p /home/pom/docker/garmin-ai-coach
             cd /home/pom/docker/garmin-ai-coach
-
-            echo "=== Pulling latest repository code ==="
-            git fetch --all
-            git reset --hard origin/main
 
             echo "=== Pulling latest images ==="
             docker compose pull
