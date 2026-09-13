@@ -36,6 +36,7 @@ def generate_workout_of_the_day(
     user_data_dir: Path,
     sleep_data: dict,
     fallback_sleep_data: dict | None = None,
+    target_date: str | None = None,
 ) -> None:
     """Main entry point called from daemon.py on the sleep trigger or 6:20 AM time gate.
 
@@ -249,7 +250,7 @@ def generate_workout_of_the_day(
     _sweep_stale_wotd_workouts(client)
 
     # ── Step 6: push today's WOTD ─────────────────────────────────────────────
-    new_id = _push_wotd(client, ai_json)
+    new_id = _push_wotd(client, ai_json, target_date=target_date)
     if new_id:
         id_file = user_data_dir / "wotd_last_id.txt"
         id_file.write_text(new_id, encoding="utf-8")
@@ -847,7 +848,7 @@ def _sweep_stale_wotd_workouts(client: Any) -> int:
 # Step 6 — Push today's WOTD
 # ---------------------------------------------------------------------------
 
-def _push_wotd(client: Any, ai_json: dict) -> str | None:
+def _push_wotd(client: Any, ai_json: dict, target_date: str | None = None) -> str | None:
     """Build a Garmin RunningWorkout from the AI JSON and push + schedule it for today.
 
     Returns the new workout_id string, or None on failure.
@@ -931,9 +932,9 @@ def _push_wotd(client: Any, ai_json: dict) -> str | None:
 
         upload_result = client.upload_running_workout(workout)
         workout_id    = str(upload_result["workoutId"])
-        today_str     = date.today().isoformat()
-        client.schedule_workout(workout_id, today_str)
-        logger.info("WOTD: uploaded and scheduled id=%s for %s", workout_id, today_str)
+        sched_date    = target_date or date.today().isoformat()
+        client.schedule_workout(workout_id, sched_date)
+        logger.info("WOTD: uploaded and scheduled id=%s for %s", workout_id, sched_date)
         return workout_id
 
     except Exception as exc:
