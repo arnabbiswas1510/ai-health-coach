@@ -156,7 +156,8 @@ Generated files (in output.directory, default `./data`):
 
 ## Environment
 
-Set at least one provider API key in your environment (e.g., `.env`):
+Set at least one provider API key in Bitwarden Secrets Manager, then render
+`.env` from `.env.template` with `scripts/render_env.sh`:
 - OPENAI_API_KEY=...
 - ANTHROPIC_API_KEY=...
 - OPENROUTER_API_KEY=...

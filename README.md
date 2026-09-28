@@ -160,7 +160,8 @@ Generated files in `output.directory` (default: `./data`):
 
 ## 🎛️ Providers & Model Selection
 
-Set at least one provider API key (e.g. in `.env`):
+Set at least one provider API key in Bitwarden Secrets Manager, then render
+`.env` from `.env.template` with `scripts/render_env.sh`:
 
 - `OPENAI_API_KEY`
 - `ANTHROPIC_API_KEY`
@@ -176,6 +177,13 @@ Defaults (role→model mapping) live in:
 Optional:
 
 - `LANGSMITH_API_KEY` enables LangSmith tracing / cost tracking.
+
+On the production host, keep the Bitwarden machine-account token in
+`~/.config/garmin-ai-coach/bws.env` as:
+
+```bash
+export BWS_ACCESS_TOKEN=...
+```
 
 ---
 

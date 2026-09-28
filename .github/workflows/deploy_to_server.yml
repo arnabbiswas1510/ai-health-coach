@@ -16,14 +16,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Copy docker-compose.yml to production server
+      - name: Copy deploy config and Bitwarden resolver to production server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: pom
           key: ${{ secrets.DEPLOY_KEY }}
           port: 2222
-          source: "docker-compose.yml"
+          source: "docker-compose.yml,.env.template,scripts/render_env.sh,scripts/render_env.py"
           target: "/home/pom/docker/garmin-ai-coach"
 
       - name: Deploy new images to server via SSH
@@ -38,6 +38,8 @@ jobs:
           script: |
             mkdir -p /home/pom/docker/garmin-ai-coach
             cd /home/pom/docker/garmin-ai-coach
+
+            chmod +x scripts/render_env.sh
 
             echo "=== Pulling latest images ==="
             docker compose pull

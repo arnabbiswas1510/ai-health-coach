@@ -1,0 +1,672 @@
+{
+  "__init__.py": {
+    "mtime": 1787609569.6662645,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "backfill_logseq.py": {
+    "mtime": 1787609569.6669888,
+    "ast_hash": "e46e6625a6cad5faf3dc873c4feece96",
+    "semantic_hash": ""
+  },
+  "cli/garmin_ai_coach_cli.py": {
+    "mtime": 1787609569.6679704,
+    "ast_hash": "d02fa190daa20c20a76271c7397e1aa0",
+    "semantic_hash": ""
+  },
+  "core/__init__.py": {
+    "mtime": 1787609569.6686053,
+    "ast_hash": "bac6d491314e76d3ecf01432c85d701b",
+    "semantic_hash": ""
+  },
+  "core/config.py": {
+    "mtime": 1787609569.668785,
+    "ast_hash": "2ec1493732490f56f704998aa6f4c9b3",
+    "semantic_hash": ""
+  },
+  "daemon.py": {
+    "mtime": 1787609569.669029,
+    "ast_hash": "2c4edf7835bc4c837ae9b0d78f1c4b64",
+    "semantic_hash": ""
+  },
+  "examples/garmin/test_extractor.py": {
+    "mtime": 1787609569.677084,
+    "ast_hash": "0ae19c911c64e9387535328fa466fbd4",
+    "semantic_hash": ""
+  },
+  "force_wotd.py": {
+    "mtime": 1787609569.6773167,
+    "ast_hash": "fe7880d2c9db691da27debf77525be29",
+    "semantic_hash": ""
+  },
+  "local_dev_server.py": {
+    "mtime": 1787609569.683536,
+    "ast_hash": "2d378c0f03a038e22892f0744a8e5ac5",
+    "semantic_hash": ""
+  },
+  "poll_garmin.py": {
+    "mtime": 1787609569.6859999,
+    "ast_hash": "79ad336bbbb1a4402351ec16517777fc",
+    "semantic_hash": ""
+  },
+  "pyproject.toml": {
+    "mtime": 1787609569.686259,
+    "ast_hash": "ba6ce4c8104f528bd26f4c48914c53a1",
+    "semantic_hash": ""
+  },
+  "services/__init__.py": {
+    "mtime": 1787609569.6871943,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "services/ai/ai_settings.py": {
+    "mtime": 1787609569.6875308,
+    "ast_hash": "d3ae402348e83956a16394bfb69e1719",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/__init__.py": {
+    "mtime": 1787609569.6878803,
+    "ast_hash": "52c54426cf73526f8cb9487d52e9fe34",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/config/__init__.py": {
+    "mtime": 1787609569.6881638,
+    "ast_hash": "7f388be019e515031c1395b58992c79c",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/config/langsmith_config.py": {
+    "mtime": 1787609569.6883552,
+    "ast_hash": "f3a06a799cfaa7abf81ca10775ac0df7",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/__init__.py": {
+    "mtime": 1787609569.6886423,
+    "ast_hash": "ec89203958e70b62275afb1988b172dc",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/activity_expert_node.py": {
+    "mtime": 1787609569.6888673,
+    "ast_hash": "8dccf07257c273c7f0125e1635cae168",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/activity_summarizer_node.py": {
+    "mtime": 1787609569.6890628,
+    "ast_hash": "591bab7b93b4ed277748a9747333aa37",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/analysis_template.py": {
+    "mtime": 1787609569.6893575,
+    "ast_hash": "d0373bc0e0dc69d5989657b5338260fe",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/combined_analyst_node.py": {
+    "mtime": 1787609569.689566,
+    "ast_hash": "fec9bafb2d60f7cc72137affa451e2df",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/combined_summarizer_node.py": {
+    "mtime": 1787609569.6897807,
+    "ast_hash": "cd60db9362ce0f4adaf4bd2f0f961b02",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/data_integration_node.py": {
+    "mtime": 1787609569.6899343,
+    "ast_hash": "512a2bc8ce0851fd40bbb784fbfcaf9f",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/data_summarizer_node.py": {
+    "mtime": 1787609569.6901062,
+    "ast_hash": "57588bb1094a938f24c8d8189f5708d4",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/formatter_node.py": {
+    "mtime": 1787609569.6902914,
+    "ast_hash": "b492d3cd555d0921a3d55bbd35ecdb0b",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/metrics_expert_node.py": {
+    "mtime": 1787609569.6905723,
+    "ast_hash": "b337933b8ae1ec48b1606991f5c3a871",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/metrics_summarizer_node.py": {
+    "mtime": 1787609569.6907525,
+    "ast_hash": "be4675aae05d9d898962c95093fec8e6",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/node_base.py": {
+    "mtime": 1787609569.6909273,
+    "ast_hash": "dd04f918dccc3b62e304e2c96ada6d99",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/orchestrator_node.py": {
+    "mtime": 1787609569.6911635,
+    "ast_hash": "5aae8978f7abfedf56af5b223a7da36d",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/physiology_expert_node.py": {
+    "mtime": 1787609569.6913364,
+    "ast_hash": "6c583789f0f6ffd1e8d1777b84bcafe0",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/physiology_summarizer_node.py": {
+    "mtime": 1787609569.6914728,
+    "ast_hash": "6461333aa1bc085e2e6971bdec339d1a",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/plan_formatter_node.py": {
+    "mtime": 1787609569.6916428,
+    "ast_hash": "da1f2eebbdb7f3fb7ca06b57f7014094",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/planning_template.py": {
+    "mtime": 1787609569.6918585,
+    "ast_hash": "3075b475ab812a56c396c393774eff15",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/plot_resolution_node.py": {
+    "mtime": 1787609569.6920748,
+    "ast_hash": "797f747f5f0c19a979119fc13aa4571e",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/prompt_components.py": {
+    "mtime": 1787609569.6922367,
+    "ast_hash": "053872d4f1bdc934fa3518e22a40ef49",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/season_planner_node.py": {
+    "mtime": 1787609569.6924195,
+    "ast_hash": "875ea11e6cfb99ef5ea0398b0b2b15fc",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/synthesis_node.py": {
+    "mtime": 1787609569.6925945,
+    "ast_hash": "74c41a110d79942264fa36c06409b7bf",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/tool_calling_helper.py": {
+    "mtime": 1787609569.692765,
+    "ast_hash": "895e1da620a2b6f86cda3ba8813b1b6e",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/nodes/weekly_planner_node.py": {
+    "mtime": 1787609569.6929233,
+    "ast_hash": "dcd701f3c2afddce6ccbe6a0907bb750",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/schemas/__init__.py": {
+    "mtime": 1787609569.6931756,
+    "ast_hash": "5b5802fd43f1727188a9b89718c675bb",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/schemas/agent_outputs.py": {
+    "mtime": 1787609569.6933377,
+    "ast_hash": "ab6b277464ecd5b05214e1ae3aec6758",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/schemas/expert_outputs.py": {
+    "mtime": 1787609569.6935873,
+    "ast_hash": "a39e17207661bc311fc0fa7a4d607227",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/state/__init__.py": {
+    "mtime": 1787609569.6938348,
+    "ast_hash": "b4c820f26603ade3c14ec4601c614053",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/state/training_analysis_state.py": {
+    "mtime": 1787609569.6940289,
+    "ast_hash": "2f775d390b9d8646293b4a40c222dcaf",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/utils/__init__.py": {
+    "mtime": 1787609569.6942942,
+    "ast_hash": "799790320a51a5021253669beeca355c",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/utils/langsmith_cost_extractor.py": {
+    "mtime": 1787609569.6945107,
+    "ast_hash": "520c4c684b541b4e369f058915161ca3",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/utils/message_helper.py": {
+    "mtime": 1787609569.6947086,
+    "ast_hash": "0554a4bfde277a2dc5bd3b87d8d731b8",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/utils/output_helper.py": {
+    "mtime": 1787609569.6951618,
+    "ast_hash": "27ca71b41c7c72ea633e313c1e49c6e5",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/utils/workflow_cost_tracker.py": {
+    "mtime": 1787609569.6954308,
+    "ast_hash": "55c557c8566a08fdc79e075a47f5ce6a",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/workflows/analysis_workflow.py": {
+    "mtime": 1787609569.6957393,
+    "ast_hash": "4714bf0a2e8292b2122ec3c0784d49b9",
+    "semantic_hash": ""
+  },
+  "services/ai/langgraph/workflows/planning_workflow.py": {
+    "mtime": 1787609569.6960464,
+    "ast_hash": "7ce85d503c604a7a43381b0ab0c48600",
+    "semantic_hash": ""
+  },
+  "services/ai/model_config.py": {
+    "mtime": 1787609569.696419,
+    "ast_hash": "0a48272e7982680ca8a68e3ab279fc2a",
+    "semantic_hash": ""
+  },
+  "services/ai/tools/__init__.py": {
+    "mtime": 1787609569.6967456,
+    "ast_hash": "5db5b774c303ab0fe275021969a221f7",
+    "semantic_hash": ""
+  },
+  "services/ai/tools/plotting/__init__.py": {
+    "mtime": 1787609569.6970537,
+    "ast_hash": "573315f4de39862690d4068f0f47b401",
+    "semantic_hash": ""
+  },
+  "services/ai/tools/plotting/langgraph_plotting_tool.py": {
+    "mtime": 1787609569.6973343,
+    "ast_hash": "cd5ae477c7d922880301845b71cd1955",
+    "semantic_hash": ""
+  },
+  "services/ai/tools/plotting/plot_storage.py": {
+    "mtime": 1787609569.6975133,
+    "ast_hash": "123f2296981ce823be8ec2386ea7c997",
+    "semantic_hash": ""
+  },
+  "services/ai/tools/plotting/production_secure_executor.py": {
+    "mtime": 1787609569.6976802,
+    "ast_hash": "12a98046dcce4cd369128bc7cf7cfd0f",
+    "semantic_hash": ""
+  },
+  "services/ai/tools/plotting/reference_resolver.py": {
+    "mtime": 1787609569.69787,
+    "ast_hash": "82d9bb2b54726566ec7386ccf2d8892b",
+    "semantic_hash": ""
+  },
+  "services/ai/utils/__init__.py": {
+    "mtime": 1787609569.6981096,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "services/ai/utils/cost_tracker.py": {
+    "mtime": 1787609569.6983433,
+    "ast_hash": "5568c8c9c6696f411493a7ee85763c1d",
+    "semantic_hash": ""
+  },
+  "services/ai/utils/plan_storage.py": {
+    "mtime": 1787609569.6985147,
+    "ast_hash": "40ac40c325edc1e38ae6e74b9ddd8786",
+    "semantic_hash": ""
+  },
+  "services/ai/utils/retry_handler.py": {
+    "mtime": 1787609569.6987014,
+    "ast_hash": "6c8d876d52c4fd0fb4391bc6c9643946",
+    "semantic_hash": ""
+  },
+  "services/chat_api/__init__.py": {
+    "mtime": 1787609569.6990035,
+    "ast_hash": "c60ce87916d2dcec30379ed21aa3abca",
+    "semantic_hash": ""
+  },
+  "services/chat_api/main.py": {
+    "mtime": 1787610080.7154517,
+    "ast_hash": "4fd4e4a2243ec34a758f7c89f288eceb",
+    "semantic_hash": ""
+  },
+  "services/garmin/__init__.py": {
+    "mtime": 1787609569.6996822,
+    "ast_hash": "edbb6a6d4399446e05e07409b5545453",
+    "semantic_hash": ""
+  },
+  "services/garmin/adaptive_coach.py": {
+    "mtime": 1787609569.6999125,
+    "ast_hash": "0ca7651d4f23620eca84593078a79bec",
+    "semantic_hash": ""
+  },
+  "services/garmin/calendar_syncer.py": {
+    "mtime": 1787609569.7002373,
+    "ast_hash": "0585f43175b1cf414da4ffe916fbe08c",
+    "semantic_hash": ""
+  },
+  "services/garmin/client.py": {
+    "mtime": 1787609569.7004318,
+    "ast_hash": "4da6589e41e9856bd928bd850f71cebc",
+    "semantic_hash": ""
+  },
+  "services/garmin/competition_models.py": {
+    "mtime": 1787609569.700667,
+    "ast_hash": "3e87b3f3c4cf935dfd6e3b1fd396ca4b",
+    "semantic_hash": ""
+  },
+  "services/garmin/data_extractor.py": {
+    "mtime": 1787609569.7008967,
+    "ast_hash": "0403e6729e45db305a136de4c73de9ce",
+    "semantic_hash": ""
+  },
+  "services/garmin/models.py": {
+    "mtime": 1787609569.7010808,
+    "ast_hash": "d3da8a86651c1f3755080a19a1077843",
+    "semantic_hash": ""
+  },
+  "services/garmin/plan_parser.py": {
+    "mtime": 1787609569.7014077,
+    "ast_hash": "8baa13d3b688930cc6ad1d62f7976626",
+    "semantic_hash": ""
+  },
+  "services/garmin/run_coach_feedback.py": {
+    "mtime": 1787609569.7015777,
+    "ast_hash": "9cff24a37549001228b84fa49cacaad7",
+    "semantic_hash": ""
+  },
+  "services/garmin/utils/training_metrics.py": {
+    "mtime": 1787609569.7019112,
+    "ast_hash": "74b5a446d19c61725e7057955c7d8874",
+    "semantic_hash": ""
+  },
+  "services/garmin/wotd_generator.py": {
+    "mtime": 1787609569.7021325,
+    "ast_hash": "daeae1419b7853d4b9d154b86ce42bde",
+    "semantic_hash": ""
+  },
+  "services/garmin/zone_calibrator.py": {
+    "mtime": 1787609569.7024903,
+    "ast_hash": "a1db73f274f01baf9fb8172ed1545095",
+    "semantic_hash": ""
+  },
+  "services/logseq/__init__.py": {
+    "mtime": 1787609569.702767,
+    "ast_hash": "8806d497f06a5b546934439884fc7972",
+    "semantic_hash": ""
+  },
+  "services/logseq/logseq_client.py": {
+    "mtime": 1787609569.702981,
+    "ast_hash": "3a112843b14c05e2e78df85bd840c606",
+    "semantic_hash": ""
+  },
+  "services/outside/__init__.py": {
+    "mtime": 1787609569.7032535,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "services/outside/client.py": {
+    "mtime": 1787609569.7034686,
+    "ast_hash": "1143220aa08a372867f3eacd709b28da",
+    "semantic_hash": ""
+  },
+  "services/outside/models.py": {
+    "mtime": 1787609569.7036738,
+    "ast_hash": "cd0d542a09930d2db8b7c377666c19dc",
+    "semantic_hash": ""
+  },
+  "startup.sh": {
+    "mtime": 1787609569.7039032,
+    "ast_hash": "e0ba9b53be38a9a2e0c43ed27bb43ac0",
+    "semantic_hash": ""
+  },
+  "tests/garmin/test_calendar_syncer_workout_limit.py": {
+    "mtime": 1787609569.7047126,
+    "ast_hash": "55aa1f436b38fc984d365711f9471ca8",
+    "semantic_hash": ""
+  },
+  "tests/garmin/test_schedule_workout_for_today.py": {
+    "mtime": 1787609569.7048848,
+    "ast_hash": "0154d9d4af5f97ab3fc88481bfa05535",
+    "semantic_hash": ""
+  },
+  "tests/garmin/test_wotd_time_gate.py": {
+    "mtime": 1787609569.7050416,
+    "ast_hash": "7d28ff20bd2930b642e251d203189d88",
+    "semantic_hash": ""
+  },
+  "tests/test_adaptive_coach.py": {
+    "mtime": 1787609569.7052386,
+    "ast_hash": "9a7912f3203b870d893c83d0c9f777fc",
+    "semantic_hash": ""
+  },
+  "tests/test_cli_e2e.py": {
+    "mtime": 1787609569.7054362,
+    "ast_hash": "2d59753b2d7d1e2e8b60b81810b8a0f5",
+    "semantic_hash": ""
+  },
+  "tests/test_cost_tracking_integration.py": {
+    "mtime": 1787609569.7056384,
+    "ast_hash": "074d2acd17597dfd2790ecab4994316d",
+    "semantic_hash": ""
+  },
+  "tests/test_data_extractor_characterization.py": {
+    "mtime": 1787609569.705854,
+    "ast_hash": "b50b9f3ae645625a7a4de9e92cfbad4b",
+    "semantic_hash": ""
+  },
+  "tests/test_data_summarization_nodes.py": {
+    "mtime": 1787609569.7060258,
+    "ast_hash": "bb168261bd8174216faf02ae3d5c3ff1",
+    "semantic_hash": ""
+  },
+  "tests/test_extract_text_content.py": {
+    "mtime": 1787609569.7062178,
+    "ast_hash": "6a2e12d6b7ee0f01e0ab078ca3da3041",
+    "semantic_hash": ""
+  },
+  "tests/test_garmin_client.py": {
+    "mtime": 1787609569.7063587,
+    "ast_hash": "fc73bbd0a8627c147baf41df1ce190e7",
+    "semantic_hash": ""
+  },
+  "tests/test_langgraph_core_migration.py": {
+    "mtime": 1787609569.7067325,
+    "ast_hash": "ee2c55809c067b2fa617e5b9057e7cc3",
+    "semantic_hash": ""
+  },
+  "tests/test_langgraph_foundation.py": {
+    "mtime": 1787609569.7069023,
+    "ast_hash": "f6abcad5a9a4fe7e2212484c6a623d20",
+    "semantic_hash": ""
+  },
+  "tests/test_langgraph_planning_workflow.py": {
+    "mtime": 1787609569.7071912,
+    "ast_hash": "f0eacfbe799db1250400a96fdf904fbb",
+    "semantic_hash": ""
+  },
+  "tests/test_langgraph_poc.py": {
+    "mtime": 1787609569.7074327,
+    "ast_hash": "1164cefe302be1c3d8639e40df58bb04",
+    "semantic_hash": ""
+  },
+  "tests/test_logseq_connection.py": {
+    "mtime": 1787609569.707801,
+    "ast_hash": "613cba4b22581ab387e504660dc0107e",
+    "semantic_hash": ""
+  },
+  "tests/test_model_config.py": {
+    "mtime": 1787609569.708076,
+    "ast_hash": "07233b4149e3c836291769b7e927990d",
+    "semantic_hash": ""
+  },
+  "tests/test_outside_client.py": {
+    "mtime": 1787609569.708331,
+    "ast_hash": "8927a7888c734b335a38cb171ea94536",
+    "semantic_hash": ""
+  },
+  "tests/test_plotting_tool_integration.py": {
+    "mtime": 1787609569.708501,
+    "ast_hash": "0767c255e7f57e67ebccef847222c39b",
+    "semantic_hash": ""
+  },
+  "tests/test_training_metrics.py": {
+    "mtime": 1787609569.7086496,
+    "ast_hash": "6db0d9b827d8f8947db4b97a2869ff1c",
+    "semantic_hash": ""
+  },
+  "windows_agent/logseq_writer.py": {
+    "mtime": 1787609569.7091203,
+    "ast_hash": "e02ad42d3cc16f21a5835d9b7cf5f3a2",
+    "semantic_hash": ""
+  },
+  ".github/workflows/ci.yml": {
+    "mtime": 1787609569.6642098,
+    "ast_hash": "d544fc115c3d1735b6bc202300a929d5",
+    "semantic_hash": ""
+  },
+  ".github/workflows/deploy.yml": {
+    "mtime": 1787609569.664381,
+    "ast_hash": "433186f8c7e0e015b5b483203aca9a21",
+    "semantic_hash": ""
+  },
+  ".github/workflows/deploy_to_server.yml": {
+    "mtime": 1790620338.9754539,
+    "ast_hash": "ee8e42506f43b04e0338ab3689c50823",
+    "semantic_hash": ""
+  },
+  ".pre-commit-config.yaml": {
+    "mtime": 1787609569.66495,
+    "ast_hash": "68efdd360ebe796a0740bb9c73f222ef",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1787610317.8665488,
+    "ast_hash": "e0fd8d6973cc171028b61f06048a1290",
+    "semantic_hash": ""
+  },
+  "CHANGELOG.md": {
+    "mtime": 1787609569.6656084,
+    "ast_hash": "01c6b853303a9fdafc0c639e5af4b052",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1790620338.9628057,
+    "ast_hash": "f3e6f5d050edb42c32ef8f13ff5cbf92",
+    "semantic_hash": ""
+  },
+  "agents_docs/techStack.md": {
+    "mtime": 1787609569.6668134,
+    "ast_hash": "a531421ea72d1aca8244e9a8d21d5418",
+    "semantic_hash": ""
+  },
+  "cli/README.md": {
+    "mtime": 1790620338.9694433,
+    "ast_hash": "637c3a9bb3b3d8ea73136daab2a7ed00",
+    "semantic_hash": ""
+  },
+  "cli/coach_config_template.yaml": {
+    "mtime": 1787609569.667524,
+    "ast_hash": "3529bcd76f345bef210d047c8c5e179f",
+    "semantic_hash": ""
+  },
+  "coach_config.yaml": {
+    "mtime": 1787609569.6682632,
+    "ast_hash": "15458ca497ea3b0ba951cc8246f865b0",
+    "semantic_hash": ""
+  },
+  "decisions/2026-08-05_wotd-620am-time-gated-fallback.md": {
+    "mtime": 1787609569.669486,
+    "ast_hash": "f7b14709030437e0fb2574cfaab5003d",
+    "semantic_hash": ""
+  },
+  "decisions/README.md": {
+    "mtime": 1787609569.6696856,
+    "ast_hash": "cd8c36ee1136e563bde284e7882deedc",
+    "semantic_hash": ""
+  },
+  "docker-compose.yml": {
+    "mtime": 1787609569.669901,
+    "ast_hash": "60dc9379af7f4d1b50a6a24b3b1cfe65",
+    "semantic_hash": ""
+  },
+  "docs/wotd_plan.md": {
+    "mtime": 1787609569.6757302,
+    "ast_hash": "52a6f5a5f8330a05ea3021376736e512",
+    "semantic_hash": ""
+  },
+  "docs/wotd_resilience_fix.md": {
+    "mtime": 1787609569.676507,
+    "ast_hash": "9978d78f2e83b3fa58d1805d59cc1f69",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1787610002.8541431,
+    "ast_hash": "2c7f3c92a5c6ae39d7d4a98d46a5db62",
+    "semantic_hash": ""
+  },
+  "requirements-dev.txt": {
+    "mtime": 1787609569.6867316,
+    "ast_hash": "ed6f43b1d48d1d907b6d07be335397a6",
+    "semantic_hash": ""
+  },
+  "requirements.txt": {
+    "mtime": 1787609569.6869266,
+    "ast_hash": "44b734621ca8b2367b3b5b03c5b6a386",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/kpi_dashboard.png": {
+    "mtime": 1787609569.6707475,
+    "ast_hash": "2149a33479db8695aa0e16449a09c808",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/physiology_readiness.png": {
+    "mtime": 1787609569.6712503,
+    "ast_hash": "2aee38abf0b2300aa083e325472c8ec2",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/plan_workout_day.png": {
+    "mtime": 1787609569.6719055,
+    "ast_hash": "35fb13ef80756d60ff7f76ba667c21e9",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/recommendations.png": {
+    "mtime": 1787609569.6729207,
+    "ast_hash": "6c055f240ace75a2f36eb8dcf32d0453",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/running_execution_analysis.png": {
+    "mtime": 1787609569.6740217,
+    "ast_hash": "edbf93d35102b01c594792c5bff85909",
+    "semantic_hash": ""
+  },
+  "docs/screenshots/season_plan_overview.png": {
+    "mtime": 1787609569.675296,
+    "ast_hash": "70f7a07edcc6950a811bb4caeb84085e",
+    "semantic_hash": ""
+  },
+  "tests/test_chat_api_manual_wotd.py": {
+    "mtime": 1787610023.5556653,
+    "ast_hash": "4a821bc8afadf4d49c33f52ede25c68e",
+    "semantic_hash": ""
+  },
+  "decisions/2026-08-24_manual-wotd-dashboard-trigger.md": {
+    "mtime": 1787610032.8986886,
+    "ast_hash": "e19dc6c3702f41a149ef7656843b7509",
+    "semantic_hash": ""
+  },
+  "scripts/render_env.py": {
+    "mtime": 1790620338.9159732,
+    "ast_hash": "d21cf796a26634622c1dcc0113e1ed42",
+    "semantic_hash": ""
+  },
+  "scripts/render_env.sh": {
+    "mtime": 1790620338.9296842,
+    "ast_hash": "38c066101f123c045a602f8576527a61",
+    "semantic_hash": ""
+  },
+  "tests/test_no_secrets_committed.py": {
+    "mtime": 1790620338.9429154,
+    "ast_hash": "84412030b4e23a09a31ea64a60e711e0",
+    "semantic_hash": ""
+  },
+  "tests/test_render_env.py": {
+    "mtime": 1790620338.937605,
+    "ast_hash": "78157346b03d6e7cc232ed6ef42b7b40",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-28_bitwarden-secret-resolution.md": {
+    "mtime": 1790620338.9842808,
+    "ast_hash": "3d0508ee276c95beec28c555b937105e",
+    "semantic_hash": ""
+  }
+}
