@@ -15,7 +15,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from services.garmin.zone_calibrator import maybe_recalibrate, increment_run_counter
+from services.garmin.hr_zones import get_hr_zones
 
 logger = logging.getLogger(__name__)
 
@@ -88,53 +88,18 @@ def generate_workout_of_the_day(
     context_cfg = config.get("context", {})
     age         = int(athlete_cfg.get("age", 53))
 
-    # Zone 2 HR — priority: (1) get_user_profile (primary, same as data_extractor.py),
-    #                        (2) recent training_status scan (secondary),
-    #                        (3) manual coach_config override (always wins if set)
-    # NEVER falls back to age-based formula — LTHR absence is a hard error.
-    lthr = None
-
-    # Primary: get_user_profile → userData.lactateThresholdHeartRate
-    try:
-        profile = client.get_user_profile() or {}
-        user_data = profile.get("userData") or {}
-        raw_lthr = user_data.get("lactateThresholdHeartRate")
-        if raw_lthr:
-            lthr = int(raw_lthr)
-            logger.info("WOTD: LTHR from get_user_profile: %d bpm", lthr)
-    except Exception as exc:
-        logger.warning("WOTD: get_user_profile failed: %s", exc)
-
-    # Secondary: scan last 14 days of training_status
-    if not lthr:
-        logger.info("WOTD: LTHR not in user profile — scanning recent training_status dates...")
-        from datetime import timedelta
-        for days_ago in range(0, 15):
-            d = (date.today() - timedelta(days=days_ago)).isoformat()
-            try:
-                ts = client.get_training_status(d) or {}
-                raw_lthr = ts.get("lactateThresholdHeartRate") or ts.get("latestLactateThresholdHeartRate")
-                if raw_lthr:
-                    lthr = int(raw_lthr)
-                    logger.info("WOTD: LTHR from training_status(%s): %d bpm", d, lthr)
-                    break
-            except Exception:
-                continue
-
-    if not lthr:
-        raise ValueError(
-            "WOTD: LTHR is unavailable from all sources (get_user_profile + last 14 days of "
-            "training_status). Cannot compute Zone 2 without LTHR — WOTD aborted. "
-            "Ensure at least one recent run with a known lactate threshold is synced to Garmin Connect."
-        )
-
-    # ── Auto-recalibrate zone % constants every 10 runs ──────────────────────
-    # maybe_recalibrate() checks run counter in zone_calibration.json.
-    # Returns current calibration dict (updated in-place if recalibration ran).
-    # LTHR is the live anchor; percentages are the stable athlete constants.
-    zone_cal = maybe_recalibrate(client, lthr, user_data_dir)
-
     # ── All 5 HR zones from LTHR ─────────────────────────────────────────────────
+    # Zone resolution lives in services/garmin/hr_zones.py so that WOTD and the
+    # post-run coaching feedback describe IDENTICAL zones. Priority inside:
+    #   (1) get_user_profile (primary, same as data_extractor.py),
+    #   (2) recent training_status scan (secondary),
+    #   (3) manual coach_config override (always wins if set)
+    # NEVER falls back to age-based formula — LTHR absence is a hard error.
+    #
+    # Auto-recalibration of the zone % constants (every 10 runs) fires here, and
+    # ONLY here: recalibrate=True consumes the run counter in
+    # zone_calibration.json. Read-only consumers pass recalibrate=False.
+    #
     # CALIBRATION BASIS (2026-07-13, LTHR=177):
     # Empirically derived from Garmin HR-in-timezones data across 3 recent runs:
     #   - Today (walk-run):  96.8 min in 132–154 bpm; 0 min above 155 → ceiling=154=87%
@@ -162,31 +127,22 @@ def generate_workout_of_the_day(
     # With LTHR=177: walk-break trigger=155, Z2=132–154, walk-recovery<132
     # Load persisted percentages — updated by auto-calibration every 10 runs.
     # Falls back to empirical factory defaults (2026-07-13) if no file exists yet.
-    Z2_FLOOR_PCT   = zone_cal["z2_floor_pct"]
-    Z2_CEILING_PCT = zone_cal["z2_ceiling_pct"]
-    WALK_BREAK_PCT = zone_cal["walk_break_pct"]
-
-    max_hr        = int(lthr / 0.88)
-    z1_high       = int(lthr * Z2_FLOOR_PCT)
-    z2_low        = int(lthr * Z2_FLOOR_PCT)
-    z2_high       = int(lthr * Z2_CEILING_PCT)
-    walk_break_hr = int(lthr * WALK_BREAK_PCT)
-    z3_high       = int(lthr * 0.94)
-    z4_high       = int(lthr * 1.05)
-    # Z5 = above z4_high
-    logger.info(
-        "WOTD: zones from LTHR=%d | Z2=%d\u2013%d (%.1f\u2013%.1f%%) | walk_break\u2265%d | max_hr=%d",
-        lthr, z2_low, z2_high, Z2_FLOOR_PCT * 100, Z2_CEILING_PCT * 100,
-        walk_break_hr, max_hr,
+    zones = get_hr_zones(
+        client,
+        athlete_cfg,
+        user_data_dir,
+        recalibrate=True,
+        log_prefix="WOTD",
     )
 
-    # Manual coach_config override always takes highest priority
-    if athlete_cfg.get("zone2_min"):
-        z2_low = int(athlete_cfg["zone2_min"])
-        logger.info("WOTD: z2_low overridden by config: %d", z2_low)
-    if athlete_cfg.get("zone2_max"):
-        z2_high = int(athlete_cfg["zone2_max"])
-        logger.info("WOTD: z2_high overridden by config: %d", z2_high)
+    lthr          = zones.lthr
+    max_hr        = zones.max_hr
+    z1_high       = zones.z1_high
+    z2_low        = zones.z2_low
+    z2_high       = zones.z2_high
+    walk_break_hr = zones.walk_break_hr
+    z3_high       = zones.z3_high
+    z4_high       = zones.z4_high
 
     # Current weight from body metrics if available
     weight_kg = None
@@ -226,6 +182,7 @@ def generate_workout_of_the_day(
         z3_high=z3_high,
         z4_high=z4_high,
         max_hr=max_hr,
+        walk_break_hr=walk_break_hr,
     )
     if not ai_json:
         logger.error("WOTD: AI returned no workout — aborting.")
@@ -557,6 +514,7 @@ def _call_ai_for_workout(
     z3_high: int = 0,
     z4_high: int = 0,
     max_hr: int = 0,
+    walk_break_hr: int = 0,
 ) -> dict | None:
     """Build prompt and call Gemini to get today's workout JSON."""
     weight_str    = f"{weight_kg:.1f} kg" if weight_kg else "unknown"
@@ -565,9 +523,11 @@ def _call_ai_for_workout(
     sleep_h       = sleep_summary["sleep_hours"]
     sleep_s       = sleep_summary["sleep_score"]
     score_str     = f"{sleep_s}/100" if sleep_s is not None else "not available"
-    # Walk-break trigger: one beat above the Z2 ceiling (entry into Z3).
-    # Athlete must start walking the instant HR hits this value.
-    walk_break_hr = z2_high + 1
+    # Walk-break trigger comes from the calibrated WALK_BREAK_PCT (hr_zones), so
+    # the workout and the post-run feedback quote the SAME number. Only fall back
+    # to "one beat above the Z2 ceiling" if a caller omitted it.
+    if not walk_break_hr:
+        walk_break_hr = z2_high + 1
 
     # ── Format running dynamics section ──────────────────────────────────────
     if dynamics.get("run_count", 0) > 0:

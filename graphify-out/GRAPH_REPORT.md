@@ -1,16 +1,16 @@
 # Graph Report - ai-health-coach  (2026-09-28)
 
 ## Corpus Check
-- 118 files · ~109,856 words
+- 121 files · ~111,462 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1198 nodes · 2883 edges · 49 communities (43 shown, 6 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 160 edges (avg confidence: 0.6)
+- 1230 nodes · 2945 edges · 52 communities (46 shown, 6 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 160 edges (avg confidence: 0.6)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `566fb292`
+- Built from commit: `f442d313`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -19,7 +19,7 @@
 - OutsideApiGraphQlClient
 - main.py
 - run_analysis_from_config
-- generate_workout_of_the_day
+- test_hr_zones.py
 - Technology Stack
 - Changelog
 - TrainingAnalysisState
@@ -32,8 +32,8 @@
 - _make_syncer
 - Garmin AI Coach — Project Context & Memory
 - LangSmithConfig
-- analysis_workflow.py
-- test_langgraph_poc.py
+- combined_analyst_node.py
+- .get_llm
 - logseq_client.py
 - _make_syncer
 - Question
@@ -53,13 +53,16 @@
 - ProxyHTTPRequestHandler
 - _parse_json_safely
 - 2026-08-05 — 6:20 AM Time-Gated WOTD Generation and Fallback Sleep Data
-- TestWorkflowStability
+- Exception
+- calendar_syncer.py
 - startup.sh
 - competition_models.py
 - decisions/README.md
 - chat_api/__init__.py
 - garmin-ai-coach
+- extract_expert_output
 - 2026-08-24 — Manual WOTD Dashboard Trigger
+- 2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`
 
 ## God Nodes (most connected - your core abstractions)
 1. `OutsideApiGraphQlClient` - 75 edges
@@ -76,39 +79,39 @@
 ## Surprising Connections (you probably didn't know these)
 - `ConfigParser` --uses--> `UserProfile`  [INFERRED]
   cli/garmin_ai_coach_cli.py → services/garmin/models.py
+- `AgentRole` --uses--> `AIMode`  [INFERRED]
+  services/ai/ai_settings.py → core/config.py
+- `_StubSettings` --uses--> `AgentRole`  [INFERRED]
+  tests/test_model_config.py → services/ai/ai_settings.py
 - `TestPlottingToolIntegration` --uses--> `AgentRole`  [INFERRED]
   tests/test_plotting_tool_integration.py → services/ai/ai_settings.py
-- `test_all_nodes_importable()` --indirect_call--> `formatter_node()`  [INFERRED]
-  tests/test_langgraph_core_migration.py → services/ai/langgraph/nodes/formatter_node.py
-- `TestLangGraphFoundation` --uses--> `TrainingAnalysisState`  [INFERRED]
-  tests/test_langgraph_foundation.py → services/ai/langgraph/state/training_analysis_state.py
-- `TestWorkflowDataFlow` --uses--> `TrainingAnalysisState`  [INFERRED]
-  tests/test_langgraph_planning_workflow.py → services/ai/langgraph/state/training_analysis_state.py
+- `test_all_nodes_importable()` --indirect_call--> `activity_expert_node()`  [INFERRED]
+  tests/test_langgraph_core_migration.py → services/ai/langgraph/nodes/activity_expert_node.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (49 total, 6 thin omitted)
+## Communities (52 total, 6 thin omitted)
 
 ### Community 0 - "TriathlonCoachDataExtractor"
 Cohesion: 0.06
-Nodes (50): GarminEncoder, main(), Any, AdaptiveRunningCoach, Any, Dynamically adjusts and suggests the next run.          Redistributes missed mil, DataExtractor, _daterange() (+42 more)
+Nodes (56): GarminEncoder, main(), Any, AdaptiveRunningCoach, Any, Dynamically adjusts and suggests the next run.          Redistributes missed mil, DataExtractor, _daterange() (+48 more)
 
 ### Community 1 - "OutsideApiGraphQlClient"
 Cohesion: 0.05
-Nodes (16): Client, dt, OutsideApiGraphQlClient, Any, datetime, CalendarNode, CalendarResult, Event (+8 more)
+Nodes (15): dt, OutsideApiGraphQlClient, Any, datetime, CalendarNode, CalendarResult, Event, EventCategory (+7 more)
 
 ### Community 2 - "main.py"
 Cohesion: 0.08
 Nodes (51): delete, get, post, _apply_suggested_run_override(), _build_planning_context(), _build_run_reply(), _build_week_dates(), _build_wotd_status() (+43 more)
 
 ### Community 3 - "run_analysis_from_config"
-Cohesion: 0.08
-Nodes (28): ABC, ConfigParser, create_config_template(), fetch_outside_competitions_from_config(), get_weight_analysis_context(), main(), parse_height_to_cm(), Any (+20 more)
+Cohesion: 0.10
+Nodes (22): ABC, ConfigParser, create_config_template(), fetch_outside_competitions_from_config(), get_weight_analysis_context(), main(), parse_height_to_cm(), Any (+14 more)
 
-### Community 4 - "generate_workout_of_the_day"
-Cohesion: 0.07
-Nodes (49): _call_ai_for_workout(), _classify_recovery(), _extract_sleep_summary(), _fetch_hrv(), _fetch_run_dynamics(), _fetch_training_readiness(), generate_workout_of_the_day(), _push_wotd() (+41 more)
+### Community 4 - "test_hr_zones.py"
+Cohesion: 0.08
+Nodes (46): compute_zones(), get_hr_zones(), HRZones, Any, Path, Single source of truth for the athlete's heart-rate zones.  Both WOTD generation, Build the full zone set from a live LTHR and calibrated percentages.      A manu, Resolve LTHR and return the athlete's zones.      Args:         recalibrate: whe (+38 more)
 
 ### Community 5 - "Technology Stack"
 Cohesion: 0.04
@@ -119,32 +122,32 @@ Cohesion: 0.04
 Nodes (45): [0.1.0] - Previous, [1.0.0] - 2025-10-14, [1.1.0] - 2025-10-17, [2.0.0] - 2025-11-02, [2.1.0] - 2025-11-22, [2.2.0] - 2026-01-25, 2-Stage Agent Pipeline, ACWR v2 Implementation (+37 more)
 
 ### Community 7 - "TrainingAnalysisState"
-Cohesion: 0.07
-Nodes (68): Command, AIMode, Config, get_config(), Enum, reload_config(), MessagesState, Protocol (+60 more)
+Cohesion: 0.13
+Nodes (22): Command, MessagesState, Protocol, AgentRole, Enum, extract_activity_data(), extract_combined_data(), create_data_summarizer_node() (+14 more)
 
 ### Community 8 - "create_initial_state"
-Cohesion: 0.18
-Nodes (12): create_initial_state(), Any, asyncio, test_metrics_summarizer_node_basic(), test_metrics_summarizer_with_empty_data(), test_physiology_summarizer_node_basic(), test_physiology_summarizer_with_empty_data(), basic_test_state() (+4 more)
+Cohesion: 0.09
+Nodes (33): combined_summarizer_node(), formatter_node(), synthesis_node(), create_initial_state(), Any, create_analysis_workflow(), create_simple_sequential_workflow(), run_training_analysis() (+25 more)
 
 ### Community 9 - "LangSmithCostExtractor"
-Cohesion: 0.17
-Nodes (13): LangSmithCostExtractor, NodeCostSummary, Any, WorkflowCostSummary, ProgressIntegratedCostTracker, Any, WorkflowCostTracker, WorkflowExecution (+5 more)
+Cohesion: 0.15
+Nodes (14): Client, LangSmithCostExtractor, NodeCostSummary, Any, WorkflowCostSummary, ProgressIntegratedCostTracker, Any, WorkflowCostTracker (+6 more)
 
 ### Community 10 - "PlotStorage"
 Cohesion: 0.08
-Nodes (12): create_plotting_tools(), LangGraphPlottingTool, PlotMetadata, PlotStorage, Any, ProductionSecureExecutor, run_plot_code_get_html(), HTMLPlotEmbedder (+4 more)
+Nodes (14): plot_resolution_node(), Any, create_plotting_tools(), LangGraphPlottingTool, PlotMetadata, PlotStorage, Any, ProductionSecureExecutor (+6 more)
 
 ### Community 11 - "PlanParser"
-Cohesion: 0.11
-Nodes (19): Match, clean_corrupted_json(), PlanParser, date, datetime, Plan Parser: converts the AI weekly planner markdown output into structured work, Initialize PlanParser.          Args:             max_hr: Athlete's estimated ma, Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects. (+11 more)
+Cohesion: 0.13
+Nodes (15): Match, PlanParser, date, Initialize PlanParser.          Args:             max_hr: Athlete's estimated ma, Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects., Split plan text into (date_str, block_text) tuples.          Uses a sliding wind, Try to parse a date string like 'Jun 02' or 'Jun 2' relative to start_date's yea, Classify and extract a single day's workout from its text block. (+7 more)
 
 ### Community 12 - "planning_workflow.py"
-Cohesion: 0.24
-Nodes (13): data_integration_node(), Any, master_orchestrator_node(), plan_formatter_node(), create_integrated_analysis_and_planning_workflow(), create_planning_workflow(), Re-run only the planning branch using cached expert outputs.      Used by the, run_complete_analysis_and_planning() (+5 more)
+Cohesion: 0.17
+Nodes (14): data_integration_node(), Any, master_orchestrator_node(), plan_formatter_node(), create_integrated_analysis_and_planning_workflow(), create_planning_workflow(), Re-run only the planning branch using cached expert outputs.      Used by the, run_complete_analysis_and_planning() (+6 more)
 
 ### Community 13 - "GarminCalendarSyncer"
-Cohesion: 0.13
-Nodes (16): GarminCalendarSyncer, _HR_TARGET_TYPE(), Any, GarminCalendarSyncer: creates Garmin Connect workout objects and schedules worko, Upload a workout to Garmin's workout library with NO calendar date.          The, # NOTE: no schedule_workout() call here — caller decides when to schedule, Schedule an already-uploaded workout on today's calendar date.          This is, Delete all workouts from the Garmin library whose name starts with `prefix`. (+8 more)
+Cohesion: 0.14
+Nodes (14): GarminCalendarSyncer, _HR_TARGET_TYPE(), Any, Upload a workout to Garmin's workout library with NO calendar date.          The, Schedule an already-uploaded workout on today's calendar date.          This is, Delete all workouts from the Garmin library whose name starts with `prefix`., Build and schedule a single workout. Returns workout_id string., Warmup → steady HR-zone run → cooldown. (+6 more)
 
 ### Community 14 - "_make_syncer"
 Cohesion: 0.12
@@ -158,17 +161,17 @@ Nodes (35): ⏰ 6:20 AM Time-Gated WOTD Generation & Fallback, 🏃 Athlete Prof
 Cohesion: 0.21
 Nodes (4): dict, configure_langsmith_for_user(), LangSmithConfig, TestLangGraphFoundation
 
-### Community 17 - "analysis_workflow.py"
-Cohesion: 0.27
-Nodes (13): combined_summarizer_node(), extract_combined_data(), formatter_node(), plot_resolution_node(), Any, create_analysis_workflow(), create_simple_sequential_workflow(), run_training_analysis() (+5 more)
+### Community 17 - "combined_analyst_node.py"
+Cohesion: 0.31
+Nodes (22): activity_expert_node(), combined_analyst_node(), metrics_expert_node(), configure_node_tools(), create_cost_entry(), create_plot_entries(), execute_node_with_error_handling(), log_node_completion() (+14 more)
 
-### Community 18 - "test_langgraph_poc.py"
-Cohesion: 0.24
-Nodes (9): asyncio, fixture, patch, Minimal tests for LangGraph proof of concept., sample_garmin_data(), sample_state(), test_metrics_expert_node_basic(), test_state_creation() (+1 more)
+### Community 18 - ".get_llm"
+Cohesion: 0.16
+Nodes (16): AIMode, Config, get_config(), Enum, reload_config(), AISettings, Any, parametrize (+8 more)
 
 ### Community 19 - "logseq_client.py"
 Cohesion: 0.06
-Nodes (64): check_and_run(), _flush_pending_syncs(), _load_pending_syncs(), main(), Path, _queue_pending_sync(), Write sleep + weight to today's Logseq journal page.      WOTD is intentionally, Return the list of pending sync entries, or [] if none. (+56 more)
+Nodes (61): check_and_run(), _flush_pending_syncs(), _load_pending_syncs(), main(), Path, _queue_pending_sync(), Write sleep + weight to today's Logseq journal page.      WOTD is intentionally, Return the list of pending sync entries, or [] if none. (+53 more)
 
 ### Community 20 - "_make_syncer"
 Cohesion: 0.13
@@ -191,8 +194,8 @@ Cohesion: 0.28
 Nodes (7): _parse_env_template(), parametrize, Path, Guard: no real secret may live in a tracked file., test_env_template_secret_is_a_sentinel(), test_no_bws_sentinel_bypassed_in_tracked_templates(), _tracked_text_files()
 
 ### Community 25 - "GarminConnectClient"
-Cohesion: 0.13
-Nodes (11): backfill(), main(), mfa_callback(), Garmin, main(), GarminConnectClient, test_client_property_raises_if_not_connected(), test_connect_failure() (+3 more)
+Cohesion: 0.06
+Nodes (41): backfill(), One-off backfill of Garmin sleep/run metrics into the Logseq journal.  Writes vi, main(), mfa_callback(), Garmin, main(), GarminConnectClient, _call_ai_for_workout() (+33 more)
 
 ### Community 26 - "logseq_writer.py"
 Cohesion: 0.18
@@ -218,10 +221,6 @@ Nodes (4): AgentCostSummary, CostTracker, ModelUsage, Any
 Cohesion: 0.18
 Nodes (10): 1. 6:20 AM Cutoff Time Gate, 1. Premature State Mutation (The Core Issue), 2. Coupled Sleep Sync & WOTD Pushing, 2. Separate WOTD Pushing from Sleep Data Processing, 3. Update Marker Only AFTER Successful Push, 4. Automatic Hourly Retry Loop, Executive Summary, 🛠️ Implemented Architectural Fix (+2 more)
 
-### Community 32 - "extract_text_content"
-Cohesion: 0.18
-Nodes (5): Exception, extract_text_content(), If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted., TestExtractTextContent
-
 ### Community 33 - "analysis_template.py"
 Cohesion: 0.44
 Nodes (9): _e(), Static HTML template for analysis.html (Physiology & Metrics tab).  The LLM supp, Render the full analysis.html from structured data., render_analysis_html(), _render_deep_dive(), _render_kpis(), _render_recommendations(), _render_summary() (+1 more)
@@ -238,28 +237,44 @@ Nodes (4): _parse_json_safely(), Remove ```json ... ``` or ``` ... ``` wrappers 
 Cohesion: 0.29
 Nodes (6): 2026-08-05 — 6:20 AM Time-Gated WOTD Generation and Fallback Sleep Data, 2026-08-08 Resilience Fix & Model Alignment, Consequences, Context, Decision, Status
 
+### Community 38 - "Exception"
+Cohesion: 0.25
+Nodes (5): Exception, APIOverloadError, RetryableError, If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted.
+
+### Community 39 - "calendar_syncer.py"
+Cohesion: 0.25
+Nodes (6): GarminCalendarSyncer: creates Garmin Connect workout objects and schedules worko, # NOTE: no schedule_workout() call here — caller decides when to schedule, clean_corrupted_json(), datetime, Plan Parser: converts the AI weekly planner markdown output into structured work, Remove invalid unicode/token corruptions printed outside JSON strings.      Thes
+
 ### Community 41 - "competition_models.py"
 Cohesion: 0.67
 Nodes (3): Competition, Enum, RacePriority
+
+### Community 49 - "extract_expert_output"
+Cohesion: 0.67
+Nodes (5): extract_agent_content(), extract_expert_output(), _get_field(), Any, _render_receiver_payload()
 
 ### Community 50 - "2026-08-24 — Manual WOTD Dashboard Trigger"
 Cohesion: 0.40
 Nodes (4): 2026-08-24 — Manual WOTD Dashboard Trigger, Consequences, Context, Decision
 
+### Community 51 - "2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`"
+Cohesion: 0.40
+Nodes (4): 2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`, Consequences, Context, Decision
+
 ## Knowledge Gaps
-- **134 isolated node(s):** `garmin-ai-coach`, `Competition`, `startup.sh script`, `Project Overview`, `Tech Stack & Architecture` (+129 more)
+- **137 isolated node(s):** `garmin-ai-coach`, `Competition`, `startup.sh script`, `Project Overview`, `Tech Stack & Architecture` (+132 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GarminCalendarSyncer` connect `GarminCalendarSyncer` to `TriathlonCoachDataExtractor`, `extract_text_content`, `run_analysis_from_config`, `_make_syncer`, `_make_syncer`, `GarminConnectClient`?**
-  _High betweenness centrality (0.155) - this node is a cross-community bridge._
+- **Why does `GarminCalendarSyncer` connect `GarminCalendarSyncer` to `TriathlonCoachDataExtractor`, `run_analysis_from_config`, `Exception`, `calendar_syncer.py`, `_make_syncer`, `_make_syncer`, `GarminConnectClient`?**
+  _High betweenness centrality (0.172) - this node is a cross-community bridge._
 - **Why does `TriathlonCoachDataExtractor` connect `TriathlonCoachDataExtractor` to `GarminConnectClient`, `run_analysis_from_config`?**
-  _High betweenness centrality (0.098) - this node is a cross-community bridge._
-- **Why does `OutsideApiGraphQlClient` connect `OutsideApiGraphQlClient` to `run_analysis_from_config`?**
-  _High betweenness centrality (0.087) - this node is a cross-community bridge._
+  _High betweenness centrality (0.111) - this node is a cross-community bridge._
+- **Why does `GarminConnectClient` connect `GarminConnectClient` to `TriathlonCoachDataExtractor`, `GarminCalendarSyncer`, `calendar_syncer.py`?**
+  _High betweenness centrality (0.088) - this node is a cross-community bridge._
 - **Are the 17 inferred relationships involving `TriathlonCoachDataExtractor` (e.g. with `GarminEncoder` and `GarminConnectClient`) actually correct?**
   _`TriathlonCoachDataExtractor` has 17 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 9 inferred relationships involving `TrainingAnalysisState` (e.g. with `ConsoleInteractionProvider` and `InteractionProvider`) actually correct?**
@@ -267,4 +282,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 4 inferred relationships involving `PlotStorage` (e.g. with `LangGraphPlottingTool` and `HTMLPlotEmbedder`) actually correct?**
   _`PlotStorage` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `garmin-ai-coach`, `Competition`, `startup.sh script` to the rest of the system?**
-  _134 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _137 weakly-connected nodes found - possible documentation gaps or missing edges._

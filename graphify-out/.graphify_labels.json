@@ -3,7 +3,7 @@
   "1": "OutsideApiGraphQlClient",
   "2": "main.py",
   "3": "run_analysis_from_config",
-  "4": "generate_workout_of_the_day",
+  "4": "test_hr_zones.py",
   "5": "Technology Stack",
   "6": "Changelog",
   "7": "TrainingAnalysisState",
@@ -16,8 +16,8 @@
   "14": "_make_syncer",
   "15": "Garmin AI Coach — Project Context & Memory",
   "16": "LangSmithConfig",
-  "17": "analysis_workflow.py",
-  "18": "test_langgraph_poc.py",
+  "17": "combined_analyst_node.py",
+  "18": ".get_llm",
   "19": "logseq_client.py",
   "20": "_make_syncer",
   "21": "Question",
@@ -37,7 +37,8 @@
   "35": "ProxyHTTPRequestHandler",
   "36": "_parse_json_safely",
   "37": "2026-08-05 — 6:20 AM Time-Gated WOTD Generation and Fallback Sleep Data",
-  "38": "TestWorkflowStability",
+  "38": "Exception",
+  "39": "calendar_syncer.py",
   "40": "startup.sh",
   "41": "competition_models.py",
   "42": "decisions/README.md",
@@ -47,5 +48,7 @@
   "46": "ai/utils/__init__.py",
   "47": "services/__init__.py",
   "48": "outside/__init__.py",
-  "50": "2026-08-24 — Manual WOTD Dashboard Trigger"
+  "49": "extract_expert_output",
+  "50": "2026-08-24 — Manual WOTD Dashboard Trigger",
+  "51": "2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`"
 }

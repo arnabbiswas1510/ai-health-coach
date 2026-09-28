@@ -29,12 +29,23 @@
       "label": "backfill()",
       "file_type": "code",
       "source_file": "backfill_logseq.py",
-      "source_location": "L17",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "backfill_logseq_backfill",
       "community": 25,
       "community_name": "GarminConnectClient",
       "norm_label": "backfill()"
+    },
+    {
+      "label": "One-off backfill of Garmin sleep/run metrics into the Logseq journal.  Writes vi",
+      "file_type": "rationale",
+      "source_file": "backfill_logseq.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "backfill_logseq_rationale_1",
+      "community": 25,
+      "community_name": "GarminConnectClient",
+      "norm_label": "one-off backfill of garmin sleep/run metrics into the logseq journal.  writes vi"
     },
     {
       "label": "garmin_ai_coach_cli.py",
@@ -384,8 +395,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "core_init",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "core/__init__.py"
     },
     {
@@ -395,8 +406,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "core_config",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "config.py"
     },
     {
@@ -406,8 +417,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "core_config_aimode",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "aimode"
     },
     {
@@ -417,8 +428,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "core_config_py_enum",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "enum"
     },
     {
@@ -428,8 +439,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "core_config_config",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "config"
     },
     {
@@ -439,8 +450,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "core_config_config_from_env",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": ".from_env()"
     },
     {
@@ -450,8 +461,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "core_config_get_config",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "get_config()"
     },
     {
@@ -461,8 +472,8 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "core_config_reload_config",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "reload_config()"
     },
     {
@@ -997,8 +1008,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "services_ai_ai_settings_aisettings",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "aisettings"
     },
     {
@@ -1008,8 +1019,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "services_ai_ai_settings_aisettings_get_model_for_role",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": ".get_model_for_role()"
     },
     {
@@ -1019,8 +1030,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "services_ai_ai_settings_aisettings_load_settings",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": ".load_settings()"
     },
     {
@@ -1030,8 +1041,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "services_ai_ai_settings_aisettings_reload",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": ".reload()"
     },
     {
@@ -1085,8 +1096,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "services_ai_langgraph_config_langsmith_config_langsmithconfig_setup_langsmith",
-      "community": 16,
-      "community_name": "LangSmithConfig",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".setup_langsmith()"
     },
     {
@@ -1129,8 +1140,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_init",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "nodes/__init__.py"
     },
     {
@@ -1140,8 +1151,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_activity_expert_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "activity_expert_node.py"
     },
     {
@@ -1151,8 +1162,8 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_activity_expert_node_activity_expert_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "activity_expert_node()"
     },
     {
@@ -1294,8 +1305,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_analyst_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "combined_analyst_node.py"
     },
     {
@@ -1305,8 +1316,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_analyst_node_combined_analyst_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "combined_analyst_node()"
     },
     {
@@ -1327,8 +1338,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_summarizer_node_extract_combined_data",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 7,
+      "community_name": "TrainingAnalysisState",
       "norm_label": "extract_combined_data()"
     },
     {
@@ -1338,8 +1349,8 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_summarizer_node_combined_summarizer_node",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "combined_summarizer_node()"
     },
     {
@@ -1349,8 +1360,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_data_integration_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "data_integration_node.py"
     },
     {
@@ -1459,8 +1470,8 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node_formatter_node",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "formatter_node()"
     },
     {
@@ -1481,8 +1492,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_metrics_expert_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "metrics_expert_node.py"
     },
     {
@@ -1492,8 +1503,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_metrics_expert_node_metrics_expert_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "metrics_expert_node()"
     },
     {
@@ -1525,8 +1536,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_node_base",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "node_base.py"
     },
     {
@@ -1536,8 +1547,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_node_base_configure_node_tools",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "configure_node_tools()"
     },
     {
@@ -1547,8 +1558,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_node_base_create_cost_entry",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "create_cost_entry()"
     },
     {
@@ -1558,8 +1569,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_node_base_py_any",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "any"
     },
     {
@@ -1569,8 +1580,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_node_base_create_plot_entries",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "create_plot_entries()"
     },
     {
@@ -1580,8 +1591,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_node_base_execute_node_with_error_handling",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "execute_node_with_error_handling()"
     },
     {
@@ -1591,8 +1602,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_node_base_log_node_completion",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "log_node_completion()"
     },
     {
@@ -1756,8 +1767,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_physiology_expert_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "physiology_expert_node.py"
     },
     {
@@ -1767,8 +1778,8 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_physiology_expert_node_physiology_expert_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "physiology_expert_node()"
     },
     {
@@ -2053,8 +2064,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_plot_resolution_node",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 10,
+      "community_name": "PlotStorage",
       "norm_label": "plot_resolution_node()"
     },
     {
@@ -2064,8 +2075,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_py_any",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 10,
+      "community_name": "PlotStorage",
       "norm_label": "any"
     },
     {
@@ -2075,8 +2086,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_prompt_components",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "prompt_components.py"
     },
     {
@@ -2086,8 +2097,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_prompt_components_get_workflow_context",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "get_workflow_context()"
     },
     {
@@ -2097,8 +2108,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_prompt_components_py_agenttype",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "agenttype"
     },
     {
@@ -2108,8 +2119,8 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_prompt_components_get_plotting_instructions",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "get_plotting_instructions()"
     },
     {
@@ -2119,8 +2130,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_prompt_components_get_hitl_instructions",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "get_hitl_instructions()"
     },
     {
@@ -2130,8 +2141,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_season_planner_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "season_planner_node.py"
     },
     {
@@ -2141,8 +2152,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_season_planner_node_season_planner_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "season_planner_node()"
     },
     {
@@ -2163,8 +2174,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_synthesis_node_synthesis_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "synthesis_node()"
     },
     {
@@ -2174,8 +2185,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_tool_calling_helper",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "tool_calling_helper.py"
     },
     {
@@ -2196,8 +2207,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_tool_calling_helper_handle_tool_calling_in_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "handle_tool_calling_in_node()"
     },
     {
@@ -2207,8 +2218,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_weekly_planner_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "weekly_planner_node.py"
     },
     {
@@ -2218,8 +2229,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_weekly_planner_node_weekly_planner_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "weekly_planner_node()"
     },
     {
@@ -2427,8 +2438,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_init",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "state/__init__.py"
     },
     {
@@ -2548,8 +2559,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_langsmith_cost_extractor_langsmithcostextractor_init",
-      "community": 1,
-      "community_name": "OutsideApiGraphQlClient",
+      "community": 9,
+      "community_name": "LangSmithCostExtractor",
       "norm_label": ".__init__()"
     },
     {
@@ -2625,8 +2636,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_message_helper",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "message_helper.py"
     },
     {
@@ -2636,8 +2647,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_message_helper_normalize_langchain_messages",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "normalize_langchain_messages()"
     },
     {
@@ -2647,8 +2658,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_output_helper",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 49,
+      "community_name": "extract_expert_output",
       "norm_label": "output_helper.py"
     },
     {
@@ -2658,8 +2669,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_output_helper_get_field",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 49,
+      "community_name": "extract_expert_output",
       "norm_label": "_get_field()"
     },
     {
@@ -2669,8 +2680,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_output_helper_py_any",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 49,
+      "community_name": "extract_expert_output",
       "norm_label": "any"
     },
     {
@@ -2680,8 +2691,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_output_helper_render_receiver_payload",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 49,
+      "community_name": "extract_expert_output",
       "norm_label": "_render_receiver_payload()"
     },
     {
@@ -2691,8 +2702,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_output_helper_extract_expert_output",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 49,
+      "community_name": "extract_expert_output",
       "norm_label": "extract_expert_output()"
     },
     {
@@ -2702,8 +2713,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_output_helper_extract_agent_content",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 49,
+      "community_name": "extract_expert_output",
       "norm_label": "extract_agent_content()"
     },
     {
@@ -2823,8 +2834,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "analysis_workflow.py"
     },
     {
@@ -2834,8 +2845,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_analysis_workflow",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "create_analysis_workflow()"
     },
     {
@@ -2845,8 +2856,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_run_training_analysis",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "run_training_analysis()"
     },
     {
@@ -2856,8 +2867,8 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_simple_sequential_workflow",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "create_simple_sequential_workflow()"
     },
     {
@@ -3032,8 +3043,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "services_ai_model_config_modelselector_detect_provider",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "._detect_provider()"
     },
     {
@@ -3043,8 +3054,8 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "services_ai_model_config_modelselector_apply_model_config",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "._apply_model_config()"
     },
     {
@@ -3054,8 +3065,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_model_config_py_any",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "any"
     },
     {
@@ -3065,8 +3076,8 @@
       "source_location": "L275",
       "_origin": "ast",
       "id": "services_ai_model_config_modelselector_get_llm",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": ".get_llm()"
     },
     {
@@ -3824,8 +3835,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "retry_handler.py"
     },
     {
@@ -3835,8 +3846,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryableerror",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 38,
+      "community_name": "Exception",
       "norm_label": "retryableerror"
     },
     {
@@ -3846,8 +3857,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 32,
-      "community_name": "extract_text_content",
+      "community": 38,
+      "community_name": "Exception",
       "norm_label": "exception"
     },
     {
@@ -3857,8 +3868,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_apioverloaderror",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 38,
+      "community_name": "Exception",
       "norm_label": "apioverloaderror"
     },
     {
@@ -3868,8 +3879,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "retryconfig"
     },
     {
@@ -3879,8 +3890,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_init",
-      "community": 32,
-      "community_name": "extract_text_content",
+      "community": 38,
+      "community_name": "Exception",
       "norm_label": ".__init__()"
     },
     {
@@ -3890,8 +3901,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_calculate_delay",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": ".calculate_delay()"
     },
     {
@@ -3901,8 +3912,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retry_with_backoff",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "retry_with_backoff()"
     },
     {
@@ -3912,8 +3923,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_py_any",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "any"
     },
     {
@@ -3923,8 +3934,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_with_retry",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "with_retry()"
     },
     {
@@ -4594,8 +4605,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_calendar_syncer",
-      "community": 13,
-      "community_name": "GarminCalendarSyncer",
+      "community": 39,
+      "community_name": "calendar_syncer.py",
       "norm_label": "calendar_syncer.py"
     },
     {
@@ -4759,8 +4770,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_calendar_syncer_rationale_1",
-      "community": 13,
-      "community_name": "GarminCalendarSyncer",
+      "community": 39,
+      "community_name": "calendar_syncer.py",
       "norm_label": "garmincalendarsyncer: creates garmin connect workout objects and schedules worko"
     },
     {
@@ -4880,8 +4891,8 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "services_garmin_calendar_syncer_rationale_186",
-      "community": 13,
-      "community_name": "GarminCalendarSyncer",
+      "community": 39,
+      "community_name": "calendar_syncer.py",
       "norm_label": "# note: no schedule_workout() call here \u2014 caller decides when to schedule"
     },
     {
@@ -5666,6 +5677,149 @@
       "norm_label": "# note: keeping child activities inside laps to preserve external behavior."
     },
     {
+      "label": "hr_zones.py",
+      "file_type": "code",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "hr_zones.py"
+    },
+    {
+      "label": "HRZones",
+      "file_type": "code",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_hrzones",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "hrzones"
+    },
+    {
+      "label": ".describe()",
+      "file_type": "code",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_hrzones_describe",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": ".describe()"
+    },
+    {
+      "label": "resolve_lthr()",
+      "file_type": "code",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_resolve_lthr",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "resolve_lthr()"
+    },
+    {
+      "label": "Any",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_py_any",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "any"
+    },
+    {
+      "label": "compute_zones()",
+      "file_type": "code",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L130",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_compute_zones",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "compute_zones()"
+    },
+    {
+      "label": "get_hr_zones()",
+      "file_type": "code",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L183",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_get_hr_zones",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "get_hr_zones()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_py_path",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "path"
+    },
+    {
+      "label": "Single source of truth for the athlete's heart-rate zones.  Both WOTD generation",
+      "file_type": "rationale",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_rationale_1",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "single source of truth for the athlete's heart-rate zones.  both wotd generation"
+    },
+    {
+      "label": "Resolved HR zones for the athlete, anchored on a live LTHR.",
+      "file_type": "rationale",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_rationale_53",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "resolved hr zones for the athlete, anchored on a live lthr."
+    },
+    {
+      "label": "Return the athlete's current LTHR from Garmin.      Priority:       1. ``get_use",
+      "file_type": "rationale",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_rationale_76",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "return the athlete's current lthr from garmin.      priority:       1. ``get_use"
+    },
+    {
+      "label": "Build the full zone set from a live LTHR and calibrated percentages.      A manu",
+      "file_type": "rationale",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L137",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_rationale_137",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "build the full zone set from a live lthr and calibrated percentages.      a manu"
+    },
+    {
+      "label": "Resolve LTHR and return the athlete's zones.      Args:         recalibrate: whe",
+      "file_type": "rationale",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L191",
+      "_origin": "ast",
+      "id": "services_garmin_hr_zones_rationale_191",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "resolve lthr and return the athlete's zones.      args:         recalibrate: whe"
+    },
+    {
       "label": "garmin/models.py",
       "file_type": "code",
       "source_file": "services/garmin/models.py",
@@ -5837,8 +5991,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_plan_parser",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 39,
+      "community_name": "calendar_syncer.py",
       "norm_label": "plan_parser.py"
     },
     {
@@ -5848,8 +6002,8 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_clean_corrupted_json",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 39,
+      "community_name": "calendar_syncer.py",
       "norm_label": "clean_corrupted_json()"
     },
     {
@@ -5903,8 +6057,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_py_datetime",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 39,
+      "community_name": "calendar_syncer.py",
       "norm_label": "datetime"
     },
     {
@@ -6035,8 +6189,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_1",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 39,
+      "community_name": "calendar_syncer.py",
       "norm_label": "plan parser: converts the ai weekly planner markdown output into structured work"
     },
     {
@@ -6046,8 +6200,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_25",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 39,
+      "community_name": "calendar_syncer.py",
       "norm_label": "remove invalid unicode/token corruptions printed outside json strings.      thes"
     },
     {
@@ -6189,15 +6343,15 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback",
-      "community": 19,
-      "community_name": "logseq_client.py",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
       "norm_label": "run_coach_feedback.py"
     },
     {
       "label": "generate_run_feedback()",
       "file_type": "code",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L23",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_generate_run_feedback",
       "community": 19,
@@ -6227,48 +6381,26 @@
       "norm_label": "path"
     },
     {
-      "label": "_get_zone2()",
-      "file_type": "code",
-      "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L147",
-      "_origin": "ast",
-      "id": "services_garmin_run_coach_feedback_get_zone2",
-      "community": 19,
-      "community_name": "logseq_client.py",
-      "norm_label": "_get_zone2()"
-    },
-    {
       "label": "Lightweight post-run coaching feedback.  Called from daemon.py when a new comple",
       "file_type": "rationale",
       "source_file": "services/garmin/run_coach_feedback.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_rationale_1",
-      "community": 19,
-      "community_name": "logseq_client.py",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
       "norm_label": "lightweight post-run coaching feedback.  called from daemon.py when a new comple"
     },
     {
       "label": "Generate a short AI coaching note for a completed run.      Returns the feedback",
       "file_type": "rationale",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L29",
+      "source_location": "L36",
       "_origin": "ast",
-      "id": "services_garmin_run_coach_feedback_rationale_29",
+      "id": "services_garmin_run_coach_feedback_rationale_36",
       "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "generate a short ai coaching note for a completed run.      returns the feedback"
-    },
-    {
-      "label": "Derive Zone 2 HR bounds, same logic as wotd_generator.",
-      "file_type": "rationale",
-      "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L148",
-      "_origin": "ast",
-      "id": "services_garmin_run_coach_feedback_rationale_148",
-      "community": 19,
-      "community_name": "logseq_client.py",
-      "norm_label": "derive zone 2 hr bounds, same logic as wotd_generator."
     },
     {
       "label": "training_metrics.py",
@@ -6442,8 +6574,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "wotd_generator.py"
     },
     {
@@ -6453,8 +6585,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_generate_workout_of_the_day",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "generate_workout_of_the_day()"
     },
     {
@@ -6464,8 +6596,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_py_any",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "any"
     },
     {
@@ -6475,107 +6607,107 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_py_path",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "path"
     },
     {
       "label": "_weighted_run_baseline()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L266",
+      "source_location": "L223",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_weighted_run_baseline",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_weighted_run_baseline()"
     },
     {
       "label": "_fetch_run_dynamics()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L335",
+      "source_location": "L292",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_fetch_run_dynamics",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_fetch_run_dynamics()"
     },
     {
       "label": "_fetch_hrv()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L434",
+      "source_location": "L391",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_fetch_hrv",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_fetch_hrv()"
     },
     {
       "label": "_fetch_training_readiness()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L452",
+      "source_location": "L409",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_fetch_training_readiness",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_fetch_training_readiness()"
     },
     {
       "label": "_extract_sleep_summary()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L489",
+      "source_location": "L446",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_extract_sleep_summary",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_extract_sleep_summary()"
     },
     {
       "label": "_classify_recovery()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L522",
+      "source_location": "L479",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_classify_recovery",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_classify_recovery()"
     },
     {
       "label": "_call_ai_for_workout()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L538",
+      "source_location": "L495",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_call_ai_for_workout",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_call_ai_for_workout()"
     },
     {
       "label": "_sweep_stale_wotd_workouts()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L806",
+      "source_location": "L766",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_sweep_stale_wotd_workouts",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_sweep_stale_wotd_workouts()"
     },
     {
       "label": "_push_wotd()",
       "file_type": "code",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L850",
+      "source_location": "L810",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_push_wotd",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "_push_wotd()"
     },
     {
@@ -6585,8 +6717,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_rationale_1",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "workout of the day (wotd) generator.  triggered every morning after garmin conne"
     },
     {
@@ -6596,96 +6728,96 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "services_garmin_wotd_generator_rationale_40",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "main entry point called from daemon.py on the sleep trigger or 6:20 am time gate"
     },
     {
       "label": "Fetch recent running activities and compute an exponentially-weighted baseline.",
       "file_type": "rationale",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L267",
+      "source_location": "L224",
       "_origin": "ast",
-      "id": "services_garmin_wotd_generator_rationale_267",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "id": "services_garmin_wotd_generator_rationale_224",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "fetch recent running activities and compute an exponentially-weighted baseline."
     },
     {
       "label": "Fetch detailed activity summaries for the last N runs and compute     exponentia",
       "file_type": "rationale",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L336",
+      "source_location": "L293",
       "_origin": "ast",
-      "id": "services_garmin_wotd_generator_rationale_336",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "id": "services_garmin_wotd_generator_rationale_293",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "fetch detailed activity summaries for the last n runs and compute     exponentia"
     },
     {
       "label": "Fetch today's overnight HRV summary. Returns {} on failure.",
       "file_type": "rationale",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L435",
+      "source_location": "L392",
       "_origin": "ast",
-      "id": "services_garmin_wotd_generator_rationale_435",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "id": "services_garmin_wotd_generator_rationale_392",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "fetch today's overnight hrv summary. returns {} on failure."
     },
     {
       "label": "Fetch today's Training Readiness score. Returns {} on failure.",
       "file_type": "rationale",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L453",
+      "source_location": "L410",
       "_origin": "ast",
-      "id": "services_garmin_wotd_generator_rationale_453",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "id": "services_garmin_wotd_generator_rationale_410",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "fetch today's training readiness score. returns {} on failure."
     },
     {
       "label": "Extract relevant fields from the raw Garmin sleep API response, falling back if",
       "file_type": "rationale",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L490",
+      "source_location": "L447",
       "_origin": "ast",
-      "id": "services_garmin_wotd_generator_rationale_490",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "id": "services_garmin_wotd_generator_rationale_447",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "extract relevant fields from the raw garmin sleep api response, falling back if"
     },
     {
       "label": "Build prompt and call Gemini to get today's workout JSON.",
       "file_type": "rationale",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L560",
+      "source_location": "L518",
       "_origin": "ast",
-      "id": "services_garmin_wotd_generator_rationale_560",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "id": "services_garmin_wotd_generator_rationale_518",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "build prompt and call gemini to get today's workout json."
     },
     {
       "label": "Delete every WOTD:-prefixed workout from the Garmin workout library.      This i",
       "file_type": "rationale",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L807",
+      "source_location": "L767",
       "_origin": "ast",
-      "id": "services_garmin_wotd_generator_rationale_807",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "id": "services_garmin_wotd_generator_rationale_767",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "delete every wotd:-prefixed workout from the garmin workout library.      this i"
     },
     {
       "label": "Build a Garmin RunningWorkout from the AI JSON and push + schedule it for today.",
       "file_type": "rationale",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L851",
+      "source_location": "L811",
       "_origin": "ast",
-      "id": "services_garmin_wotd_generator_rationale_851",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "id": "services_garmin_wotd_generator_rationale_811",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "build a garmin runningworkout from the ai json and push + schedule it for today."
     },
     {
@@ -6696,7 +6828,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "zone_calibrator.py"
     },
     {
@@ -6707,7 +6839,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_cal_path",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_cal_path()"
     },
     {
@@ -6718,7 +6850,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_py_path",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -6729,7 +6861,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_load_calibration",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "load_calibration()"
     },
     {
@@ -6740,7 +6872,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_default_calibration",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_default_calibration()"
     },
     {
@@ -6751,7 +6883,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_save_calibration",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_save_calibration()"
     },
     {
@@ -6762,7 +6894,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_increment_run_counter",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "increment_run_counter()"
     },
     {
@@ -6773,7 +6905,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_is_calibration_due",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "is_calibration_due()"
     },
     {
@@ -6784,7 +6916,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_extract_zone_boundaries",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_extract_zone_boundaries()"
     },
     {
@@ -6795,7 +6927,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_fetch_recent_run_zones",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_fetch_recent_run_zones()"
     },
     {
@@ -6806,7 +6938,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_py_any",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "any"
     },
     {
@@ -6817,7 +6949,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_compute_new_percentages",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_compute_new_percentages()"
     },
     {
@@ -6828,7 +6960,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_maybe_recalibrate",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "maybe_recalibrate()"
     },
     {
@@ -6839,7 +6971,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_1",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "zone auto-calibrator for wotd.  analyses the last n (default 10) runs from garmi"
     },
     {
@@ -6850,7 +6982,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_71",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "load calibration from disk; return defaults if file missing or corrupt."
     },
     {
@@ -6861,7 +6993,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_115",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "bump the run counter and return the new count.      called by the daemon each ti"
     },
     {
@@ -6872,7 +7004,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_127",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "return true if we have accumulated runs_per_calibration runs since last calibrat"
     },
     {
@@ -6883,7 +7015,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_135",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "extract (zone3_low, zone4_low) boundaries from garmin's hr-timezones response."
     },
     {
@@ -6894,7 +7026,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_165",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "fetch hr-in-timezones data for the last ``n`` running activities.      returns a"
     },
     {
@@ -6905,7 +7037,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_228",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "compute new (floor_pct, ceiling_pct) from run zone data.      algorithm:     1."
     },
     {
@@ -6916,7 +7048,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_300",
       "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community_name": "test_hr_zones.py",
       "norm_label": "check if calibration is due; if so, run it and return updated calibration."
     },
     {
@@ -7366,8 +7498,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "client",
-      "community": 1,
-      "community_name": "OutsideApiGraphQlClient",
+      "community": 9,
+      "community_name": "LangSmithCostExtractor",
       "norm_label": "client"
     },
     {
@@ -7520,8 +7652,8 @@
       "source_location": "L332",
       "_origin": "ast",
       "id": "services_outside_client_outsideapigraphqlclient_to_float",
-      "community": 3,
-      "community_name": "run_analysis_from_config",
+      "community": 1,
+      "community_name": "OutsideApiGraphQlClient",
       "norm_label": "._to_float()"
     },
     {
@@ -8035,8 +8167,8 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_handles_get_workouts_exception_gracefully",
-      "community": 32,
-      "community_name": "extract_text_content",
+      "community": 38,
+      "community_name": "Exception",
       "norm_label": ".test_handles_get_workouts_exception_gracefully()"
     },
     {
@@ -8046,8 +8178,8 @@
       "source_location": "L202",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_continues_deleting_after_single_delete_failure",
-      "community": 32,
-      "community_name": "extract_text_content",
+      "community": 38,
+      "community_name": "Exception",
       "norm_label": ".test_continues_deleting_after_single_delete_failure()"
     },
     {
@@ -8189,8 +8321,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_rationale_190",
-      "community": 32,
-      "community_name": "extract_text_content",
+      "community": 38,
+      "community_name": "Exception",
       "norm_label": "if the library api fails, upload should proceed (not crash)."
     },
     {
@@ -8200,8 +8332,8 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_rationale_203",
-      "community": 32,
-      "community_name": "extract_text_content",
+      "community": 38,
+      "community_name": "Exception",
       "norm_label": "if one delete call fails, the rest should still be attempted."
     },
     {
@@ -8214,6 +8346,171 @@
       "community": 14,
       "community_name": "_make_syncer",
       "norm_label": "guard: old calendar-dated workouts are always cleared."
+    },
+    {
+      "label": "test_hr_zones.py",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_hr_zones.py"
+    },
+    {
+      "label": "_client_with_profile_lthr()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_client_with_profile_lthr",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "_client_with_profile_lthr()"
+    },
+    {
+      "label": "test_resolve_lthr_prefers_user_profile()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_test_resolve_lthr_prefers_user_profile",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_resolve_lthr_prefers_user_profile()"
+    },
+    {
+      "label": "test_resolve_lthr_falls_back_to_training_status_scan()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_test_resolve_lthr_falls_back_to_training_status_scan",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_resolve_lthr_falls_back_to_training_status_scan()"
+    },
+    {
+      "label": "test_resolve_lthr_raises_instead_of_using_age_formula()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_test_resolve_lthr_raises_instead_of_using_age_formula",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_resolve_lthr_raises_instead_of_using_age_formula()"
+    },
+    {
+      "label": "test_zones_match_documented_calibration_at_lthr_177()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_test_zones_match_documented_calibration_at_lthr_177",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_zones_match_documented_calibration_at_lthr_177()"
+    },
+    {
+      "label": "test_zones_never_land_in_age_formula_territory()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_test_zones_never_land_in_age_formula_territory",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_zones_never_land_in_age_formula_territory()"
+    },
+    {
+      "label": "test_config_override_wins()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_test_config_override_wins",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_config_override_wins()"
+    },
+    {
+      "label": "test_wotd_and_feedback_resolve_identical_zones()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_test_wotd_and_feedback_resolve_identical_zones",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_wotd_and_feedback_resolve_identical_zones()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_py_path",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "path"
+    },
+    {
+      "label": "test_feedback_path_does_not_consume_calibration_cycle()",
+      "file_type": "code",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "test_feedback_path_does_not_consume_calibration_cycle()"
+    },
+    {
+      "label": "Zone consistency between WOTD and post-run coaching feedback.  Regression guard",
+      "file_type": "rationale",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_rationale_1",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "zone consistency between wotd and post-run coaching feedback.  regression guard"
+    },
+    {
+      "label": "The old bug produced Z2 = 100-120 bpm; assert we are nowhere near it.",
+      "file_type": "rationale",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_rationale_58",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "the old bug produced z2 = 100-120 bpm; assert we are nowhere near it."
+    },
+    {
+      "label": "The whole point: both consumers must agree, bit for bit.",
+      "file_type": "rationale",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_rationale_71",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "the whole point: both consumers must agree, bit for bit."
+    },
+    {
+      "label": "recalibrate=False must never fire maybe_recalibrate (it resets the counter).",
+      "file_type": "rationale",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "tests_garmin_test_hr_zones_rationale_87",
+      "community": 4,
+      "community_name": "test_hr_zones.py",
+      "norm_label": "recalibrate=false must never fire maybe_recalibrate (it resets the counter)."
     },
     {
       "label": "test_schedule_workout_for_today.py",
@@ -8486,8 +8783,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_garmin_test_wotd_time_gate",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "test_wotd_time_gate.py"
     },
     {
@@ -8497,8 +8794,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "tests_garmin_test_wotd_time_gate_test_extract_sleep_summary_with_live_data",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "test_extract_sleep_summary_with_live_data()"
     },
     {
@@ -8508,8 +8805,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_garmin_test_wotd_time_gate_test_extract_sleep_summary_with_fallback_data",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "test_extract_sleep_summary_with_fallback_data()"
     },
     {
@@ -8519,8 +8816,8 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "tests_garmin_test_wotd_time_gate_test_extract_sleep_summary_total_fallback_default",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "test_extract_sleep_summary_total_fallback_default()"
     },
     {
@@ -8530,8 +8827,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_garmin_test_wotd_time_gate_py_patch",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "patch"
     },
     {
@@ -8541,8 +8838,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "tests_garmin_test_wotd_time_gate_test_generate_wotd_raises_runtime_error_on_ai_failure",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "test_generate_wotd_raises_runtime_error_on_ai_failure()"
     },
     {
@@ -8552,8 +8849,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "tests_garmin_test_wotd_time_gate_test_generate_wotd_raises_runtime_error_on_push_failure",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "test_generate_wotd_raises_runtime_error_on_push_failure()"
     },
     {
@@ -8563,8 +8860,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_garmin_test_wotd_time_gate_rationale_1",
-      "community": 4,
-      "community_name": "generate_workout_of_the_day",
+      "community": 25,
+      "community_name": "GarminConnectClient",
       "norm_label": "unit tests for 6:20 am time-gated wotd generation and fallback sleep handling."
     },
     {
@@ -8783,8 +9080,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_py_asyncio",
-      "community": 3,
-      "community_name": "run_analysis_from_config",
+      "community": 0,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "asyncio"
     },
     {
@@ -8794,8 +9091,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_py_patch",
-      "community": 3,
-      "community_name": "run_analysis_from_config",
+      "community": 0,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "patch"
     },
     {
@@ -8805,8 +9102,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_test_cli_e2e_smoke_with_mocks",
-      "community": 3,
-      "community_name": "run_analysis_from_config",
+      "community": 0,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_cli_e2e_smoke_with_mocks()"
     },
     {
@@ -8816,8 +9113,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_test_cli_e2e_with_hitl_enabled",
-      "community": 3,
-      "community_name": "run_analysis_from_config",
+      "community": 0,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_cli_e2e_with_hitl_enabled()"
     },
     {
@@ -8827,8 +9124,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_rationale_19",
-      "community": 3,
-      "community_name": "run_analysis_from_config",
+      "community": 0,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test cli end-to-end with all external dependencies mocked."
     },
     {
@@ -8838,8 +9135,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_rationale_100",
-      "community": 3,
-      "community_name": "run_analysis_from_config",
+      "community": 0,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test cli with hitl enabled to ensure user interactions work."
     },
     {
@@ -9454,8 +9751,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_langgraph_core_migration.py"
     },
     {
@@ -9487,8 +9784,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_all_nodes_importable",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_all_nodes_importable()"
     },
     {
@@ -9498,8 +9795,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_patch",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "patch"
     },
     {
@@ -9509,8 +9806,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_complete_workflow_creation",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_complete_workflow_creation()"
     },
     {
@@ -9531,8 +9828,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_asyncio",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "asyncio"
     },
     {
@@ -9542,8 +9839,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_node_basic_functionality",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_node_basic_functionality()"
     },
     {
@@ -9553,8 +9850,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_workflow_structure_stability",
-      "community": 17,
-      "community_name": "analysis_workflow.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_workflow_structure_stability()"
     },
     {
@@ -9652,8 +9949,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowstability",
-      "community": 38,
-      "community_name": "TestWorkflowStability",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "testworkflowstability"
     },
     {
@@ -9663,8 +9960,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowstability_test_planning_workflow_creation",
-      "community": 38,
-      "community_name": "TestWorkflowStability",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_planning_workflow_creation()"
     },
     {
@@ -9674,8 +9971,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowstability_test_integrated_workflow_creation",
-      "community": 38,
-      "community_name": "TestWorkflowStability",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_integrated_workflow_creation()"
     },
     {
@@ -9685,8 +9982,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowstability_test_state_schema_compatibility",
-      "community": 38,
-      "community_name": "TestWorkflowStability",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_state_schema_compatibility()"
     },
     {
@@ -9850,8 +10147,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_langgraph_poc.py"
     },
     {
@@ -9861,8 +10158,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_fixture",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "fixture"
     },
     {
@@ -9872,8 +10169,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_sample_garmin_data",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "sample_garmin_data()"
     },
     {
@@ -9883,8 +10180,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_sample_state",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "sample_state()"
     },
     {
@@ -9894,8 +10191,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_state_creation",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_state_creation()"
     },
     {
@@ -9905,8 +10202,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_patch",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "patch"
     },
     {
@@ -9916,8 +10213,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_workflow_creation",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_workflow_creation()"
     },
     {
@@ -9927,8 +10224,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_asyncio",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "asyncio"
     },
     {
@@ -9938,8 +10235,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_metrics_expert_node_basic",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "test_metrics_expert_node_basic()"
     },
     {
@@ -9949,8 +10246,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_rationale_1",
-      "community": 18,
-      "community_name": "test_langgraph_poc.py",
+      "community": 8,
+      "community_name": "create_initial_state",
       "norm_label": "minimal tests for langgraph proof of concept."
     },
     {
@@ -10070,8 +10367,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_model_config",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "test_model_config.py"
     },
     {
@@ -10081,8 +10378,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_test_model_config_stubsettings",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "_stubsettings"
     },
     {
@@ -10092,8 +10389,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "tests_test_model_config_stubsettings_init",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": ".__init__()"
     },
     {
@@ -10103,8 +10400,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_test_model_config_stubsettings_get_model_for_role",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": ".get_model_for_role()"
     },
     {
@@ -10114,8 +10411,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_model_config_py_parametrize",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "parametrize"
     },
     {
@@ -10125,8 +10422,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "tests_test_model_config_test_prefers_direct_api_when_key_available",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "test_prefers_direct_api_when_key_available()"
     },
     {
@@ -10136,8 +10433,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "tests_test_model_config_test_routes_anthropic_through_openrouter_when_missing_key",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "test_routes_anthropic_through_openrouter_when_missing_key()"
     },
     {
@@ -10147,8 +10444,8 @@
       "source_location": "L91",
       "_origin": "ast",
       "id": "tests_test_model_config_test_routes_openai_through_openrouter_when_missing_key",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "test_routes_openai_through_openrouter_when_missing_key()"
     },
     {
@@ -10158,8 +10455,8 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "tests_test_model_config_test_openai_responses_params_stripped_for_openrouter",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "test_openai_responses_params_stripped_for_openrouter()"
     },
     {
@@ -10169,8 +10466,8 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "tests_test_model_config_test_native_openrouter_model_uses_openrouter",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "test_native_openrouter_model_uses_openrouter()"
     },
     {
@@ -10180,8 +10477,8 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "tests_test_model_config_test_native_openrouter_model_requires_openrouter_key",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "test_native_openrouter_model_requires_openrouter_key()"
     },
     {
@@ -10191,8 +10488,8 @@
       "source_location": "L175",
       "_origin": "ast",
       "id": "tests_test_model_config_test_missing_both_direct_and_openrouter_keys_raises",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 18,
+      "community_name": ".get_llm",
       "norm_label": "test_missing_both_direct_and_openrouter_keys_raises()"
     },
     {
@@ -12858,6 +13155,61 @@
       "norm_label": "consequences"
     },
     {
+      "label": "2026-09-28_unified-hr-zones.md",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "decisions_2026_09_28_unified_hr_zones",
+      "community": 51,
+      "community_name": "2026-09-28 \u2014 HR zones unified in `services/garmin/hr_zones.py`",
+      "norm_label": "2026-09-28_unified-hr-zones.md"
+    },
+    {
+      "label": "2026-09-28 \u2014 HR zones unified in `services/garmin/hr_zones.py`",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "decisions_2026_09_28_unified_hr_zones_2026_09_28_hr_zones_unified_in_services_garmin_hr_zones_py",
+      "community": 51,
+      "community_name": "2026-09-28 \u2014 HR zones unified in `services/garmin/hr_zones.py`",
+      "norm_label": "2026-09-28 \u2014 hr zones unified in `services/garmin/hr_zones.py`"
+    },
+    {
+      "label": "Context",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "decisions_2026_09_28_unified_hr_zones_context",
+      "community": 51,
+      "community_name": "2026-09-28 \u2014 HR zones unified in `services/garmin/hr_zones.py`",
+      "norm_label": "context"
+    },
+    {
+      "label": "Decision",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "decisions_2026_09_28_unified_hr_zones_decision",
+      "community": 51,
+      "community_name": "2026-09-28 \u2014 HR zones unified in `services/garmin/hr_zones.py`",
+      "norm_label": "decision"
+    },
+    {
+      "label": "Consequences",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "decisions_2026_09_28_unified_hr_zones_consequences",
+      "community": 51,
+      "community_name": "2026-09-28 \u2014 HR zones unified in `services/garmin/hr_zones.py`",
+      "norm_label": "consequences"
+    },
+    {
       "label": "decisions/README.md",
       "file_type": "document",
       "source_file": "decisions/README.md",
@@ -13226,7 +13578,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backfill_logseq.py",
-      "source_location": "L17",
+      "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backfill_logseq",
@@ -13238,7 +13590,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "backfill_logseq.py",
-      "source_location": "L11",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backfill_logseq",
@@ -13250,7 +13602,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "backfill_logseq.py",
-      "source_location": "L11",
+      "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backfill_logseq",
@@ -13262,7 +13614,7 @@
       "context": "submodule_import",
       "confidence": "EXTRACTED",
       "source_file": "backfill_logseq.py",
-      "source_location": "L9",
+      "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backfill_logseq",
@@ -13270,11 +13622,22 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "backfill_logseq.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "backfill_logseq_rationale_1",
+      "target": "backfill_logseq",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "backfill_logseq.py",
-      "source_location": "L26",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backfill_logseq_backfill",
@@ -13287,7 +13650,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backfill_logseq.py",
-      "source_location": "L74",
+      "source_location": "L92",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backfill_logseq_backfill",
@@ -13299,7 +13662,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "backfill_logseq.py",
-      "source_location": "L86",
+      "source_location": "L104",
       "weight": 1.0,
       "_origin": "ast",
       "source": "backfill_logseq_backfill",
@@ -16744,7 +17107,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L97",
+      "source_location": "L121",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_run_coach_feedback",
@@ -16756,7 +17119,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L744",
+      "source_location": "L704",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -26508,7 +26871,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L96",
+      "source_location": "L120",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_run_coach_feedback",
@@ -26520,7 +26883,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L743",
+      "source_location": "L703",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -26615,7 +26978,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L98",
+      "source_location": "L122",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_run_coach_feedback_generate_run_feedback",
@@ -26627,7 +26990,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L745",
+      "source_location": "L705",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_call_ai_for_workout",
@@ -35109,6 +35472,488 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones",
+      "target": "services_garmin_hr_zones_compute_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L183",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones",
+      "target": "services_garmin_hr_zones_hrzones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones",
+      "target": "services_garmin_hr_zones_resolve_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones",
+      "target": "services_garmin_zone_calibrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones",
+      "target": "services_garmin_zone_calibrator_load_calibration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones",
+      "target": "services_garmin_zone_calibrator_maybe_recalibrate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_rationale_1",
+      "target": "services_garmin_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/run_coach_feedback.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_run_coach_feedback",
+      "target": "services_garmin_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/wotd_generator.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_wotd_generator",
+      "target": "services_garmin_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "services_garmin_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L130",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_compute_zones",
+      "target": "services_garmin_hr_zones_hrzones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L183",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_get_hr_zones",
+      "target": "services_garmin_hr_zones_hrzones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L67",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_hrzones",
+      "target": "services_garmin_hr_zones_hrzones_describe",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L53",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_rationale_53",
+      "target": "services_garmin_hr_zones_hrzones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "services_garmin_hr_zones_hrzones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L199",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_get_hr_zones",
+      "target": "services_garmin_hr_zones_resolve_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_rationale_76",
+      "target": "services_garmin_hr_zones_resolve_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_resolve_lthr",
+      "target": "services_garmin_hr_zones_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "services_garmin_hr_zones_resolve_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_resolve_lthr_falls_back_to_training_status_scan",
+      "target": "services_garmin_hr_zones_resolve_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_resolve_lthr_prefers_user_profile",
+      "target": "services_garmin_hr_zones_resolve_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_resolve_lthr_raises_instead_of_using_age_formula",
+      "target": "services_garmin_hr_zones_resolve_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L183",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_get_hr_zones",
+      "target": "services_garmin_hr_zones_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L206",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_get_hr_zones",
+      "target": "services_garmin_hr_zones_compute_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_rationale_137",
+      "target": "services_garmin_hr_zones_compute_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "services_garmin_hr_zones_compute_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_config_override_wins",
+      "target": "services_garmin_hr_zones_compute_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_zones_match_documented_calibration_at_lthr_177",
+      "target": "services_garmin_hr_zones_compute_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_zones_never_land_in_age_formula_territory",
+      "target": "services_garmin_hr_zones_compute_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L183",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_get_hr_zones",
+      "target": "services_garmin_hr_zones_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L204",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_get_hr_zones",
+      "target": "services_garmin_zone_calibrator_load_calibration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L202",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_get_hr_zones",
+      "target": "services_garmin_zone_calibrator_maybe_recalibrate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/hr_zones.py",
+      "source_location": "L191",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_hr_zones_rationale_191",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/run_coach_feedback.py",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_run_coach_feedback",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/run_coach_feedback.py",
+      "source_location": "L67",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_run_coach_feedback_generate_run_feedback",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/wotd_generator.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_wotd_generator",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/garmin/wotd_generator.py",
+      "source_location": "L129",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_garmin_wotd_generator_generate_workout_of_the_day",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_wotd_and_feedback_resolve_identical_zones",
+      "target": "services_garmin_hr_zones_get_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "services/garmin/models.py",
       "source_location": "L124",
       "weight": 1.0,
@@ -36247,7 +37092,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L23",
+      "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_run_coach_feedback",
@@ -36255,22 +37100,11 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L147",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_garmin_run_coach_feedback",
-      "target": "services_garmin_run_coach_feedback_get_zone2",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L130",
+      "source_location": "L154",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_run_coach_feedback",
@@ -36289,23 +37123,11 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L58",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_garmin_run_coach_feedback_generate_run_feedback",
-      "target": "services_garmin_run_coach_feedback_get_zone2",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L23",
+      "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_run_coach_feedback_generate_run_feedback",
@@ -36317,7 +37139,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L23",
+      "source_location": "L30",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_run_coach_feedback_generate_run_feedback",
@@ -36329,7 +37151,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L132",
+      "source_location": "L156",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_run_coach_feedback_generate_run_feedback",
@@ -36340,34 +37162,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L29",
+      "source_location": "L36",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_run_coach_feedback_rationale_29",
+      "source": "services_garmin_run_coach_feedback_rationale_36",
       "target": "services_garmin_run_coach_feedback_generate_run_feedback",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "context": "parameter_type",
-      "confidence": "EXTRACTED",
-      "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L147",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_garmin_run_coach_feedback_get_zone2",
-      "target": "services_garmin_run_coach_feedback_py_any",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "services/garmin/run_coach_feedback.py",
-      "source_location": "L148",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_garmin_run_coach_feedback_rationale_148",
-      "target": "services_garmin_run_coach_feedback_get_zone2",
       "confidence_score": 1.0
     },
     {
@@ -36745,7 +37544,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L538",
+      "source_location": "L495",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -36756,7 +37555,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L522",
+      "source_location": "L479",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -36767,7 +37566,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L489",
+      "source_location": "L446",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -36778,7 +37577,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L434",
+      "source_location": "L391",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -36789,7 +37588,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L335",
+      "source_location": "L292",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -36800,7 +37599,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L452",
+      "source_location": "L409",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -36822,7 +37621,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L850",
+      "source_location": "L810",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -36833,7 +37632,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L806",
+      "source_location": "L766",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
@@ -36844,47 +37643,11 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L266",
+      "source_location": "L223",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator",
       "target": "services_garmin_wotd_generator_weighted_run_baseline",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L18",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_garmin_wotd_generator",
-      "target": "services_garmin_zone_calibrator",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L18",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_garmin_wotd_generator",
-      "target": "services_garmin_zone_calibrator_increment_run_counter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L18",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_garmin_wotd_generator",
-      "target": "services_garmin_zone_calibrator_maybe_recalibrate",
       "confidence_score": 1.0
     },
     {
@@ -36915,7 +37678,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L208",
+      "source_location": "L164",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_generate_workout_of_the_day",
@@ -36975,7 +37738,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L252",
+      "source_location": "L209",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_generate_workout_of_the_day",
@@ -37011,7 +37774,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L249",
+      "source_location": "L206",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_generate_workout_of_the_day",
@@ -37028,18 +37791,6 @@
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_generate_workout_of_the_day",
       "target": "services_garmin_wotd_generator_weighted_run_baseline",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L134",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_garmin_wotd_generator_generate_workout_of_the_day",
-      "target": "services_garmin_zone_calibrator_maybe_recalibrate",
       "confidence_score": 1.0
     },
     {
@@ -37094,7 +37845,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L434",
+      "source_location": "L391",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_fetch_hrv",
@@ -37106,7 +37857,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L335",
+      "source_location": "L292",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_fetch_run_dynamics",
@@ -37118,7 +37869,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L452",
+      "source_location": "L409",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_fetch_training_readiness",
@@ -37130,7 +37881,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L850",
+      "source_location": "L810",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_push_wotd",
@@ -37142,7 +37893,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L806",
+      "source_location": "L766",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_sweep_stale_wotd_workouts",
@@ -37154,7 +37905,7 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L266",
+      "source_location": "L223",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_weighted_run_baseline",
@@ -37165,10 +37916,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L267",
+      "source_location": "L224",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_wotd_generator_rationale_267",
+      "source": "services_garmin_wotd_generator_rationale_224",
       "target": "services_garmin_wotd_generator_weighted_run_baseline",
       "confidence_score": 1.0
     },
@@ -37176,10 +37927,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L336",
+      "source_location": "L293",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_wotd_generator_rationale_336",
+      "source": "services_garmin_wotd_generator_rationale_293",
       "target": "services_garmin_wotd_generator_fetch_run_dynamics",
       "confidence_score": 1.0
     },
@@ -37187,10 +37938,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L435",
+      "source_location": "L392",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_wotd_generator_rationale_435",
+      "source": "services_garmin_wotd_generator_rationale_392",
       "target": "services_garmin_wotd_generator_fetch_hrv",
       "confidence_score": 1.0
     },
@@ -37198,10 +37949,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L453",
+      "source_location": "L410",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_wotd_generator_rationale_453",
+      "source": "services_garmin_wotd_generator_rationale_410",
       "target": "services_garmin_wotd_generator_fetch_training_readiness",
       "confidence_score": 1.0
     },
@@ -37210,7 +37961,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L510",
+      "source_location": "L467",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_wotd_generator_extract_sleep_summary",
@@ -37221,10 +37972,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L490",
+      "source_location": "L447",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_wotd_generator_rationale_490",
+      "source": "services_garmin_wotd_generator_rationale_447",
       "target": "services_garmin_wotd_generator_extract_sleep_summary",
       "confidence_score": 1.0
     },
@@ -37280,10 +38031,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L560",
+      "source_location": "L518",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_wotd_generator_rationale_560",
+      "source": "services_garmin_wotd_generator_rationale_518",
       "target": "services_garmin_wotd_generator_call_ai_for_workout",
       "confidence_score": 1.0
     },
@@ -37291,10 +38042,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L807",
+      "source_location": "L767",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_wotd_generator_rationale_807",
+      "source": "services_garmin_wotd_generator_rationale_767",
       "target": "services_garmin_wotd_generator_sweep_stale_wotd_workouts",
       "confidence_score": 1.0
     },
@@ -37302,10 +38053,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/garmin/wotd_generator.py",
-      "source_location": "L851",
+      "source_location": "L811",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_garmin_wotd_generator_rationale_851",
+      "source": "services_garmin_wotd_generator_rationale_811",
       "target": "services_garmin_wotd_generator_push_wotd",
       "confidence_score": 1.0
     },
@@ -37427,6 +38178,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_garmin_zone_calibrator_rationale_1",
+      "target": "services_garmin_zone_calibrator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
       "target": "services_garmin_zone_calibrator",
       "confidence_score": 1.0
     },
@@ -37583,6 +38346,66 @@
       "_origin": "ast",
       "source": "services_garmin_zone_calibrator_rationale_71",
       "target": "services_garmin_zone_calibrator_load_calibration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "services_garmin_zone_calibrator_default_calibration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L65",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_config_override_wins",
+      "target": "services_garmin_zone_calibrator_default_calibration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
+      "target": "services_garmin_zone_calibrator_default_calibration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_zones_match_documented_calibration_at_lthr_177",
+      "target": "services_garmin_zone_calibrator_default_calibration",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_zones_never_land_in_age_formula_territory",
+      "target": "services_garmin_zone_calibrator_default_calibration",
       "confidence_score": 1.0
     },
     {
@@ -41303,6 +42126,209 @@
       "_origin": "ast",
       "source": "tests_garmin_test_calendar_syncer_workout_limit_testclearfuturescheduledworkouts",
       "target": "tests_garmin_test_calendar_syncer_workout_limit_testclearfuturescheduledworkouts_test_unschedules_future_workout_entries",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_client_with_profile_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_test_config_override_wins",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_test_resolve_lthr_falls_back_to_training_status_scan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_test_resolve_lthr_prefers_user_profile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_test_resolve_lthr_raises_instead_of_using_age_formula",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_test_wotd_and_feedback_resolve_identical_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_test_zones_match_documented_calibration_at_lthr_177",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones",
+      "target": "tests_garmin_test_hr_zones_test_zones_never_land_in_age_formula_territory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_rationale_1",
+      "target": "tests_garmin_test_hr_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
+      "target": "tests_garmin_test_hr_zones_client_with_profile_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_resolve_lthr_prefers_user_profile",
+      "target": "tests_garmin_test_hr_zones_client_with_profile_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_wotd_and_feedback_resolve_identical_zones",
+      "target": "tests_garmin_test_hr_zones_client_with_profile_lthr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_rationale_58",
+      "target": "tests_garmin_test_hr_zones_test_zones_never_land_in_age_formula_territory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_rationale_71",
+      "target": "tests_garmin_test_hr_zones_test_wotd_and_feedback_resolve_identical_zones",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_wotd_and_feedback_resolve_identical_zones",
+      "target": "tests_garmin_test_hr_zones_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
+      "target": "tests_garmin_test_hr_zones_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/garmin/test_hr_zones.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_garmin_test_hr_zones_rationale_87",
+      "target": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
       "confidence_score": 1.0
     },
     {
@@ -46365,6 +47391,50 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_28_unified_hr_zones",
+      "target": "decisions_2026_09_28_unified_hr_zones_2026_09_28_hr_zones_unified_in_services_garmin_hr_zones_py",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L64",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_28_unified_hr_zones_2026_09_28_hr_zones_unified_in_services_garmin_hr_zones_py",
+      "target": "decisions_2026_09_28_unified_hr_zones_consequences",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_28_unified_hr_zones_2026_09_28_hr_zones_unified_in_services_garmin_hr_zones_py",
+      "target": "decisions_2026_09_28_unified_hr_zones_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-28_unified-hr-zones.md",
+      "source_location": "L38",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_28_unified_hr_zones_2026_09_28_hr_zones_unified_in_services_garmin_hr_zones_py",
+      "target": "decisions_2026_09_28_unified_hr_zones_decision",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "decisions/README.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -46694,5 +47764,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "566fb292c17c3e3d649a5bfef4ec585ecb1c9f80"
+  "built_at_commit": "f442d313d48e871b05a8cec9e89f5a364b11fcf9"
 }

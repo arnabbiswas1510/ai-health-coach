@@ -1,28 +1,46 @@
+"""One-off backfill of Garmin sleep/run metrics into the Logseq journal.
+
+Writes via services.logseq.logseq_client, which talks SFTP-over-SSH directly to
+the journal .md files on the host machine. The old Logseq HTTP API on port 3000
+is gone, so this script no longer sets _LOGSEQ_HOST / LOGSEQ_API_TOKEN (those
+attributes do not exist on the client any more; assigning them silently created
+dead module attributes and made the failure message misleading).
+
+Requires the LOGSEQ_SSH_* / LOGSEQ_GRAPH_PATH vars to be set, so .env is always
+loaded up front rather than only when Garmin credentials happen to be missing.
+"""
+import datetime
 import os
 import sys
-import datetime
 from pathlib import Path
 
 # Add project root to sys.path so we can import services
 sys.path.insert(0, str(Path(__file__).parent.resolve()))
 
-from services.logseq import logseq_client
-from services.logseq import logseq_client
-from services.garmin.client import GarminConnectClient
+from dotenv import load_dotenv
 
-# Override LOGSEQ_HOST to connect locally on Windows
-logseq_client._LOGSEQ_HOST = "http://127.0.0.1:3000"
-logseq_client.LOGSEQ_API_TOKEN = os.environ.get("LOGSEQ_API_TOKEN", "")
+from services.garmin.client import GarminConnectClient
+from services.logseq import logseq_client
+
+# Load .env unconditionally: the Logseq SSH settings live there too, not just
+# the Garmin credentials.
+load_dotenv()
+
 
 def backfill():
     email = os.environ.get("GARMIN_EMAIL")
     password = os.environ.get("GARMIN_PASSWORD")
     if not email or not password:
-        from dotenv import load_dotenv
-        load_dotenv()
-        email = os.environ.get("GARMIN_EMAIL")
-        password = os.environ.get("GARMIN_PASSWORD")
-        
+        print("GARMIN_EMAIL and GARMIN_PASSWORD must be set in the environment or .env")
+        return
+
+    if not os.environ.get("LOGSEQ_SSH_HOST") or not os.environ.get("LOGSEQ_GRAPH_PATH"):
+        print(
+            "LOGSEQ_SSH_HOST and LOGSEQ_GRAPH_PATH must be set — the backfill writes "
+            "to the journal over SSH/SFTP, not via the old HTTP API."
+        )
+        return
+
     client = GarminConnectClient(token_dir="tokens")
     try:
         client.connect(email, password)
@@ -87,7 +105,10 @@ def backfill():
             if success:
                 print(f"Successfully wrote to {target_date}")
             else:
-                print(f"Failed to write to {target_date}. Is Logseq running on port 3000?")
+                print(
+                    f"Failed to write to {target_date}. Check LOGSEQ_SSH_HOST / "
+                    f"LOGSEQ_SSH_USER / LOGSEQ_GRAPH_PATH and that the SSH key is authorised."
+                )
         else:
             print(f"No properties to write for {target_date}")
 

@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "backfill_logseq.py": {
-    "mtime": 1787609569.6669888,
-    "ast_hash": "e46e6625a6cad5faf3dc873c4feece96",
+    "mtime": 1790623386.8144376,
+    "ast_hash": "fb2f2bdb7caed7bf1c811776cac80d86",
     "semantic_hash": ""
   },
   "cli/garmin_ai_coach_cli.py": {
@@ -360,8 +360,8 @@
     "semantic_hash": ""
   },
   "services/garmin/run_coach_feedback.py": {
-    "mtime": 1787609569.7015777,
-    "ast_hash": "9cff24a37549001228b84fa49cacaad7",
+    "mtime": 1790623370.4420438,
+    "ast_hash": "ea43b302b6ab0aac988fbbeca46dc57a",
     "semantic_hash": ""
   },
   "services/garmin/utils/training_metrics.py": {
@@ -370,8 +370,8 @@
     "semantic_hash": ""
   },
   "services/garmin/wotd_generator.py": {
-    "mtime": 1787609569.7021325,
-    "ast_hash": "daeae1419b7853d4b9d154b86ce42bde",
+    "mtime": 1790623340.1778557,
+    "ast_hash": "09592d725dd1e1464df6a4382d224c31",
     "semantic_hash": ""
   },
   "services/garmin/zone_calibrator.py": {
@@ -667,6 +667,21 @@
   "decisions/2026-09-28_bitwarden-secret-resolution.md": {
     "mtime": 1790620338.9842808,
     "ast_hash": "3d0508ee276c95beec28c555b937105e",
+    "semantic_hash": ""
+  },
+  "services/garmin/hr_zones.py": {
+    "mtime": 1790623294.7168586,
+    "ast_hash": "63e6f0a4304c930ecaf0f4fe5b488bc2",
+    "semantic_hash": ""
+  },
+  "tests/garmin/test_hr_zones.py": {
+    "mtime": 1790623402.148408,
+    "ast_hash": "0e24ddce71ae233842e66bd6f98f8bb3",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-28_unified-hr-zones.md": {
+    "mtime": 1790623630.16834,
+    "ast_hash": "5b4a404dc09cc88e65a9457dfeb01430",
     "semantic_hash": ""
   }
 }
