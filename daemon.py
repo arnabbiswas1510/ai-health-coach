@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import json
 import logging
 import os
 import time
@@ -307,6 +308,27 @@ def check_and_run():  # noqa: C901
                         "New run detected (id=%s) — generating post-run coaching feedback.",
                         activity_id,
                     )
+                    # Marker consumed by services.feedback.detect_timing() so a
+                    # note written later today is tagged as a post-run report
+                    # rather than a pre-workout heads-up.
+                    try:
+                        start_local = str(latest_activity.get("startTimeLocal") or "")
+                        run_date = start_local[:10] or date.today().isoformat()
+                        (user_data_dir / "last_run.json").write_text(
+                            json.dumps(
+                                {
+                                    "activity_id": activity_id,
+                                    "date": run_date,
+                                    "start_time_local": start_local,
+                                    "activity_type": activity_type,
+                                },
+                                indent=2,
+                            ),
+                            encoding="utf-8",
+                        )
+                    except Exception as marker_exc:
+                        logger.warning("Could not write last_run.json marker: %s", marker_exc)
+
                     try:
                         from services.garmin.run_coach_feedback import generate_run_feedback
                         generate_run_feedback(

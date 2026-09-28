@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -161,6 +161,26 @@ def generate_workout_of_the_day(
     )
     planning_context = context_cfg.get("planning", "")
 
+    # ── Step 3b: athlete feedback (recency-weighted ADRs) ────────────────────
+    # The athlete's own words about recent days — injuries, fatigue, missed
+    # sessions. Newest entries carry the most weight. Advisory only: the prompt
+    # forbids feedback from relaxing the safety rules (see Rule 12).
+    feedback_block = ""
+    try:
+        from services.feedback import load_weighted_feedback, render_feedback_prompt_block
+
+        feedback_entries = load_weighted_feedback(user_data_dir)
+        feedback_block = render_feedback_prompt_block(feedback_entries)
+        if feedback_entries:
+            logger.info(
+                "WOTD: injecting %d athlete feedback entries (newest: %s).",
+                len(feedback_entries),
+                feedback_entries[0].title,
+            )
+    except Exception as exc:
+        # Feedback is an enhancement — never block the workout over it.
+        logger.warning("WOTD: could not load athlete feedback: %s", exc)
+
     # ── Step 4: call AI ───────────────────────────────────────────────────────
     ai_json = _call_ai_for_workout(
         age=age,
@@ -183,6 +203,7 @@ def generate_workout_of_the_day(
         z4_high=z4_high,
         max_hr=max_hr,
         walk_break_hr=walk_break_hr,
+        feedback_block=feedback_block,
     )
     if not ai_json:
         logger.error("WOTD: AI returned no workout — aborting.")
@@ -212,9 +233,38 @@ def generate_workout_of_the_day(
         id_file = user_data_dir / "wotd_last_id.txt"
         id_file.write_text(new_id, encoding="utf-8")
         logger.info("WOTD: successfully pushed. id=%s, saved to %s", new_id, id_file)
+        # ORDERING GUARANTEE: the dashboard snapshot is written only *after*
+        # Garmin has accepted the workout and returned an id. The athlete trains
+        # from Garmin Connect, so the UI must never advertise a workout that is
+        # not already on the watch.
+        _save_wotd_snapshot(user_data_dir, ai_json, new_id)
     else:
         logger.error("WOTD: push failed — id_file NOT updated.")
         raise RuntimeError("WOTD push failed: Garmin API rejected workout upload.")
+
+
+def _save_wotd_snapshot(user_data_dir: Path, ai_json: dict, garmin_workout_id: str) -> None:
+    """Persist the pushed workout for the dashboard to render.
+
+    Called ONLY after a successful Garmin upload — see the ordering guarantee in
+    :func:`generate_workout_of_the_day`. Never called in dry-run mode.
+    """
+    snapshot = dict(ai_json)
+    snapshot.update(
+        {
+            "date": date.today().isoformat(),
+            "garmin_workout_id": str(garmin_workout_id),
+            "pushed_at": datetime.now().isoformat(timespec="seconds"),
+            "synced_to_garmin": True,
+        }
+    )
+    try:
+        path = user_data_dir / "wotd_today.json"
+        path.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
+        logger.info("WOTD: dashboard snapshot written to %s", path)
+    except Exception as exc:
+        # A snapshot failure must never fail an already-successful push.
+        logger.warning("WOTD: could not write dashboard snapshot: %s", exc)
 
 
 # ---------------------------------------------------------------------------
@@ -515,6 +565,7 @@ def _call_ai_for_workout(
     z4_high: int = 0,
     max_hr: int = 0,
     walk_break_hr: int = 0,
+    feedback_block: str = "",
 ) -> dict | None:
     """Build prompt and call Gemini to get today's workout JSON."""
     weight_str    = f"{weight_kg:.1f} kg" if weight_kg else "unknown"
@@ -631,6 +682,7 @@ ATHLETE PROFILE:
 
 TRAINING CONTEXT:
 {planning_context.strip()}
+{feedback_block}
 
 LAST NIGHT'S SLEEP:
   Duration:        {sleep_h} hours
@@ -675,6 +727,23 @@ DESIGN exactly ONE workout for today. Rules:
     - This is non-negotiable: crossing {walk_break_hr} bpm risks knee fatigue and Z3 drift
     - The walk-run method is the PREFERRED format for this athlete (knees, injury prevention)
 11. WARMUP CAP: "warmup_min" MUST BE EXACTLY 5 minutes (never greater than 5 minutes).
+12. ATHLETE FEEDBACK IS ADVISORY BUT BOUNDED:
+    - Read the ATHLETE FEEDBACK section above before deciding anything. Weight the
+      newest notes highest; where notes conflict, the newer one wins.
+    - Feedback MAY make today easier: reduce duration, reduce intensity, switch to
+      walk-run or a pure recovery session, or shorten run segments.
+    - Feedback MAY explain a pattern of missed sessions — if sessions are being
+      missed for time reasons, prefer a shorter workout the athlete will actually do.
+    - Feedback reporting pain, injury or illness (severity "high") OVERRIDES a high
+      readiness score: assign an easy walk-run or recovery session regardless.
+    - Feedback MUST NEVER be used to relax a safety rule. Regardless of what the
+      athlete wrote, you may NOT raise the HR targets above the Z2 band, may NOT
+      raise or remove the {walk_break_hr} bpm walk-break trigger, may NOT set
+      "warmup_min" above 5, and may NOT exceed {max_duration_min} minutes total.
+      If the feedback asks for any of those, honour the spirit of the request
+      within these limits and explain the limit in "coach_note".
+    - Reference the feedback explicitly in "coach_note" so the athlete can see
+      their input was read.
 
 Return ONLY valid JSON (no markdown, no explanation):
 {{

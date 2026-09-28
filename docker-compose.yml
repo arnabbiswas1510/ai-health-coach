@@ -73,5 +73,6 @@ services:
       - ./daemon.py:/app/daemon.py                  # Hot-reload: local overrides image
       - ./force_wotd.py:/app/force_wotd.py          # Hot-reload: local overrides image
       - ./services/garmin:/app/services/garmin      # Hot-reload: local overrides image
+      - ./services/feedback:/app/services/feedback  # Hot-reload: local overrides image
       - ./services/logseq:/app/services/logseq      # Hot-reload: local overrides image
       - ./id_ed25519:/root/.ssh/id_ed25519:ro                    # SSH key for Logseq direct-write

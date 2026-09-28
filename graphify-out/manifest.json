@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   "daemon.py": {
-    "mtime": 1787609569.669029,
-    "ast_hash": "2c4edf7835bc4c837ae9b0d78f1c4b64",
+    "mtime": 1790633030.562715,
+    "ast_hash": "518456f2b8a84d1868b5e117b33b6c44",
     "semantic_hash": ""
   },
   "examples/garmin/test_extractor.py": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "services/chat_api/main.py": {
-    "mtime": 1787610080.7154517,
-    "ast_hash": "4fd4e4a2243ec34a758f7c89f288eceb",
+    "mtime": 1790633030.5701685,
+    "ast_hash": "c4f477137fe54c1668fcd2c56ff24a39",
     "semantic_hash": ""
   },
   "services/garmin/__init__.py": {
@@ -370,8 +370,8 @@
     "semantic_hash": ""
   },
   "services/garmin/wotd_generator.py": {
-    "mtime": 1790623340.1778557,
-    "ast_hash": "09592d725dd1e1464df6a4382d224c31",
+    "mtime": 1790633030.572429,
+    "ast_hash": "8320c3b7d3e1c05a2f4dc43e2e00b82f",
     "semantic_hash": ""
   },
   "services/garmin/zone_calibrator.py": {
@@ -530,7 +530,7 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1787610317.8665488,
+    "mtime": 1790633030.56024,
     "ast_hash": "e0fd8d6973cc171028b61f06048a1290",
     "semantic_hash": ""
   },
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "docker-compose.yml": {
-    "mtime": 1787609569.669901,
-    "ast_hash": "60dc9379af7f4d1b50a6a24b3b1cfe65",
+    "mtime": 1790633330.359859,
+    "ast_hash": "55c817d227014ad1de2afe189b217ec4",
     "semantic_hash": ""
   },
   "docs/wotd_plan.md": {
@@ -590,8 +590,8 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1787610002.8541431,
-    "ast_hash": "2c7f3c92a5c6ae39d7d4a98d46a5db62",
+    "mtime": 1790633369.6679494,
+    "ast_hash": "66d6b5a225bd12b9f6a295a16ffe234e",
     "semantic_hash": ""
   },
   "requirements-dev.txt": {
@@ -682,6 +682,36 @@
   "decisions/2026-09-28_unified-hr-zones.md": {
     "mtime": 1790625015.0179312,
     "ast_hash": "3731f5e600b646fca6e3561d4d4ee8e0",
+    "semantic_hash": ""
+  },
+  "services/feedback/__init__.py": {
+    "mtime": 1790632726.3613963,
+    "ast_hash": "3247ff8a2ef3a6e11806107f32809678",
+    "semantic_hash": ""
+  },
+  "services/feedback/feedback_adr.py": {
+    "mtime": 1790633068.4071834,
+    "ast_hash": "851d5631941199a5c5ca89a26b63e8a6",
+    "semantic_hash": ""
+  },
+  "tests/garmin/test_wotd_snapshot_and_feedback.py": {
+    "mtime": 1790632951.752602,
+    "ast_hash": "115a21aad1c96520f29eb186ac7dd156",
+    "semantic_hash": ""
+  },
+  "tests/test_chat_api_feedback.py": {
+    "mtime": 1790633001.2485552,
+    "ast_hash": "e6eff64e135c07189a20c5c1d7e66157",
+    "semantic_hash": ""
+  },
+  "tests/test_feedback_adr.py": {
+    "mtime": 1790633051.802726,
+    "ast_hash": "a7a8e538aa7419cd8ce5bb25ac4af50e",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-28_daily-athlete-feedback-adrs.md": {
+    "mtime": 1790633410.5368586,
+    "ast_hash": "1d35db7889265e1aa9e784e11a544920",
     "semantic_hash": ""
   }
 }

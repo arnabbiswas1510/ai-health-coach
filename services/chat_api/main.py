@@ -92,6 +92,28 @@ class WotdTriggerResponse(BaseModel):
     finished_at: str | None = None
 
 
+class FeedbackRequest(BaseModel):
+    user_id: str = "Arnabbiswas"
+    text: str
+
+
+class FeedbackResponse(BaseModel):
+    status: str
+    reply: str
+    entry: dict[str, Any] | None = None
+    recent: list[dict[str, Any]] = []
+
+
+class FeedbackListResponse(BaseModel):
+    entries: list[dict[str, Any]] = []
+
+
+class WotdTodayResponse(BaseModel):
+    available: bool
+    workout: dict[str, Any] | None = None
+    message: str = ""
+
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -613,3 +635,136 @@ async def clear_history(user_id: str) -> dict[str, str]:
         except Exception as exc:
             logger.warning("Could not delete feedback history at %s: %s", path, exc)
     return {"status": "cleared", "user_id": user_id}
+
+
+# ---------------------------------------------------------------------------
+# Daily feedback — athlete's own words, stored as recency-weighted ADRs
+# ---------------------------------------------------------------------------
+
+def _recent_feedback_payload(user_id: str, limit: int = 8) -> list[dict[str, Any]]:
+    """Active feedback ADRs with their current recency weights, newest first."""
+    from services.feedback import load_weighted_feedback
+
+    entries = load_weighted_feedback(DATA_DIR / user_id, max_entries=limit)
+    return [e.to_api_dict() for e in entries]
+
+
+@app.post("/feedback", response_model=FeedbackResponse)
+async def submit_feedback(req: FeedbackRequest) -> FeedbackResponse:
+    """Record a daily feedback note.
+
+    Deliberately lightweight: one fast classification call, no weekly re-plan.
+    The note influences the NEXT scheduled WOTD generation, not today's already
+    published workout.
+    """
+    user_id = req.user_id.strip() or "Arnabbiswas"
+    text = (req.text or "").strip()
+
+    if not text:
+        return FeedbackResponse(
+            status="error",
+            reply="Please write something before submitting.",
+            recent=_recent_feedback_payload(user_id),
+        )
+
+    user_data_dir = DATA_DIR / user_id
+
+    try:
+        from services.feedback import TIMING_PRE_WOTD, record_feedback
+
+        adr = await asyncio.wait_for(
+            asyncio.to_thread(record_feedback, user_data_dir, text),
+            timeout=60,
+        )
+    except TimeoutError:
+        logger.error("Feedback classification timed out for user=%s", user_id)
+        return FeedbackResponse(
+            status="error",
+            reply="⏱ That took too long to process. Please try again.",
+            recent=_recent_feedback_payload(user_id),
+        )
+    except Exception as exc:
+        logger.exception("Feedback submission failed for user=%s: %s", user_id, exc)
+        return FeedbackResponse(
+            status="error",
+            reply=f"❌ Could not save your feedback: {exc!s}",
+            recent=_recent_feedback_payload(user_id),
+        )
+
+    if adr.timing == TIMING_PRE_WOTD:
+        when = "Today's workout hasn't been generated yet, so this will shape it."
+    else:
+        when = "Today's workout is already on Garmin, so this will shape your next one."
+
+    reply = f"✅ Logged as **{adr.title}** ({adr.category}, {adr.severity} severity). {when}"
+    if adr.coaching_directive:
+        reply += f"\n\n**What I'll do:** {adr.coaching_directive}"
+    if adr.supersedes:
+        reply += f"\n\n_Superseded {len(adr.supersedes)} earlier note(s) on this topic._"
+
+    return FeedbackResponse(
+        status="ok",
+        reply=reply,
+        entry=adr.to_api_dict(),
+        recent=_recent_feedback_payload(user_id),
+    )
+
+
+@app.get("/feedback/recent", response_model=FeedbackListResponse)
+async def recent_feedback(user_id: str = "Arnabbiswas", limit: int = 8) -> FeedbackListResponse:
+    try:
+        return FeedbackListResponse(entries=_recent_feedback_payload(user_id, limit=limit))
+    except Exception as exc:
+        logger.warning("Could not load recent feedback for %s: %s", user_id, exc)
+        return FeedbackListResponse(entries=[])
+
+
+@app.delete("/feedback/{entry_id}")
+async def remove_feedback(entry_id: str, user_id: str = "Arnabbiswas") -> dict[str, Any]:
+    from services.feedback import delete_feedback
+
+    deleted = delete_feedback(DATA_DIR / user_id, entry_id)
+    return {
+        "status": "deleted" if deleted else "not_found",
+        "id": entry_id,
+        "entries": _recent_feedback_payload(user_id),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Today's workout — mirrors what is already on Garmin Connect
+# ---------------------------------------------------------------------------
+
+@app.get("/wotd/today", response_model=WotdTodayResponse)
+async def wotd_today(user_id: str = "Arnabbiswas") -> WotdTodayResponse:
+    """Return today's workout, but ONLY if it was accepted by Garmin.
+
+    wotd_today.json is written by the generator exclusively after a successful
+    push, so its presence means the workout is already on the watch. The date
+    guard stops a stale snapshot from yesterday being shown as today's session.
+    """
+    snapshot = _load_json(DATA_DIR / user_id / "wotd_today.json")
+
+    if not snapshot:
+        return WotdTodayResponse(
+            available=False,
+            message="No workout has been pushed to Garmin yet today.",
+        )
+
+    today = date.today().isoformat()
+    if snapshot.get("date") != today:
+        return WotdTodayResponse(
+            available=False,
+            message=(
+                f"The most recent workout on Garmin is from {snapshot.get('date', 'an earlier day')}. "
+                "Today's has not been generated yet."
+            ),
+        )
+
+    if not snapshot.get("garmin_workout_id"):
+        return WotdTodayResponse(
+            available=False,
+            message="Today's workout has not been confirmed on Garmin Connect yet.",
+        )
+
+    return WotdTodayResponse(available=True, workout=snapshot, message="")

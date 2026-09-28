@@ -397,6 +397,177 @@
             margin-top: 1.25rem;
         }
 
+        /* ── Today's Workout card ───────────────────────────────────────── */
+        .wotd-stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.85rem;
+            margin-top: 1.25rem;
+        }
+
+        .wotd-stat {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+        }
+
+        .wotd-stat-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .wotd-stat-value {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .wotd-coach-note {
+            margin-top: 1.25rem;
+            padding: 1rem 1.15rem;
+            border-left: 3px solid var(--accent-primary);
+            border-radius: 0 14px 14px 0;
+            background: rgba(88, 166, 255, 0.07);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .wotd-intervals {
+            margin-top: 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .wotd-interval-chip {
+            display: inline-block;
+            background: rgba(188, 140, 255, 0.12);
+            border: 1px solid rgba(188, 140, 255, 0.25);
+            color: #d2b3ff;
+            border-radius: 999px;
+            padding: 0.3rem 0.75rem;
+            margin: 0.2rem 0.3rem 0.2rem 0;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        /* ── Daily Feedback card ────────────────────────────────────────── */
+        .feedback-textarea {
+            width: 100%;
+            margin-top: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.9rem 1rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: border-color 0.2s ease;
+        }
+
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        .feedback-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .feedback-recent {
+            margin-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.15rem;
+        }
+
+        .feedback-recent-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 0.85rem;
+        }
+
+        .feedback-entry {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .feedback-entry-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .feedback-entry-title {
+            font-weight: 700;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .feedback-entry-text {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .feedback-badge {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 0.18rem 0.6rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-right: 0.35rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .feedback-badge.sev-high {
+            color: #f85149;
+            background: rgba(248, 81, 73, 0.12);
+            border-color: rgba(248, 81, 73, 0.25);
+        }
+
+        .feedback-badge.sev-medium {
+            color: #d29922;
+            background: rgba(210, 153, 34, 0.12);
+            border-color: rgba(210, 153, 34, 0.25);
+        }
+
+        .feedback-badge.sev-low {
+            color: #3fb950;
+            background: rgba(63, 185, 80, 0.12);
+            border-color: rgba(63, 185, 80, 0.25);
+        }
+
+        .feedback-delete {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 0.25rem;
+            opacity: 0.6;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        .feedback-delete:hover {
+            opacity: 1;
+            color: #f85149;
+        }
+
         .btn-primary {
             background: linear-gradient(135deg, var(--accent-primary), #3b82f6);
             color: var(--bg-color);
@@ -837,6 +1008,63 @@
             </p>
         </section>
 
+        <!-- Today's Workout — mirrors Garmin Connect; only shown once pushed -->
+        <section class="control-panel wotd-today-panel" aria-labelledby="wotd-today-title" id="wotd-today-panel">
+            <div class="control-panel-header">
+                <div>
+                    <h3 class="control-panel-title" id="wotd-today-title">🏃 Today's Workout</h3>
+                    <p class="control-panel-desc" id="wotd-today-desc">
+                        Loading today's workout…
+                    </p>
+                </div>
+                <div class="status-pill status-idle" id="wotd-today-pill">Checking…</div>
+            </div>
+            <div id="wotd-today-body" style="display: none;">
+                <div class="wotd-stat-grid" id="wotd-today-stats"></div>
+                <div class="wotd-coach-note" id="wotd-today-note"></div>
+                <div class="wotd-intervals" id="wotd-today-intervals"></div>
+            </div>
+            <p class="control-panel-note" id="wotd-today-empty">
+                Your workout appears here only after it has been successfully pushed to
+                Garmin Connect, so what you see here always matches your watch.
+            </p>
+        </section>
+
+        <!-- Daily Feedback — athlete's own words, stored as recency-weighted ADRs -->
+        <section class="control-panel" aria-labelledby="daily-feedback-title">
+            <div class="control-panel-header">
+                <div>
+                    <h3 class="control-panel-title" id="daily-feedback-title">📝 Daily Feedback</h3>
+                    <p class="control-panel-desc">
+                        How did it go? Tell the coach about your run, how your knees feel, or why
+                        you had to miss a session. Your notes are saved as decision records and
+                        weighted by recency — the newest always counts most.
+                    </p>
+                </div>
+                <div class="status-pill status-idle" id="feedback-pill">Ready</div>
+            </div>
+
+            <textarea id="feedback-input" class="feedback-textarea" rows="4"
+                placeholder="e.g. Knee twinged around km 4 so I walked it in — felt fine after. Or: skipped today, work ran late."
+                oninput="updateFeedbackCounter()"></textarea>
+
+            <div class="control-panel-actions">
+                <button class="btn btn-primary" id="feedback-submit-btn" type="button" onclick="submitFeedback()">
+                    Save Feedback
+                </button>
+                <span class="control-panel-note" id="feedback-counter" style="margin: 0;">0 characters</span>
+            </div>
+
+            <p class="control-panel-note" id="feedback-status-message">
+                Applies to your next workout.
+            </p>
+
+            <div class="feedback-recent" id="feedback-recent">
+                <h4 class="feedback-recent-title">Recent notes</h4>
+                <div id="feedback-recent-list"></div>
+            </div>
+        </section>
+
         <!-- Quick Links for raw files -->
         <div class="quick-links">
             <h3 class="quick-links-title">📄 Raw Reports & Data</h3>
@@ -1193,6 +1421,7 @@
             const TRIGGER_API = '/api/wotd/trigger';
             const POLL_MS = 5000;
             let pollTimer = null;
+            let wasBusy = false;
 
             function setWotdUi(status, message, isBusy) {
                 const pill = document.getElementById('wotd-status-pill');
@@ -1238,9 +1467,18 @@
                     const busy = data.status === 'running' || data.status === 'started';
                     setWotdUi(data.status, data.message, busy);
                     if (busy) {
+                        wasBusy = true;
                         ensurePolling();
                     } else {
                         stopPolling();
+                        // A run that just finished may have pushed a new workout
+                        // to Garmin — refresh the Today's Workout mirror.
+                        if (wasBusy) {
+                            wasBusy = false;
+                            if (typeof window.loadWotdToday === 'function') {
+                                window.loadWotdToday();
+                            }
+                        }
                     }
                 } catch (error) {
                     stopPolling();
@@ -1270,6 +1508,220 @@
 
             window.triggerWotd = triggerWotd;
             window.addEventListener('load', loadWotdStatus);
+        })();
+    </script>
+
+    <!-- Scripts for Today's Workout card + Daily Feedback card -->
+    <script>
+        (function() {
+            const USER_ID = 'Arnabbiswas';
+            const WOTD_TODAY_API = '/api/wotd/today?user_id=' + encodeURIComponent(USER_ID);
+            const FEEDBACK_API = '/api/feedback';
+
+            function esc(value) {
+                return String(value === null || value === undefined ? '' : value)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            }
+
+            // ── Today's Workout ──────────────────────────────────────────
+            function renderStat(label, value) {
+                if (value === null || value === undefined || value === '') return '';
+                return '<div class="wotd-stat">'
+                    + '<div class="wotd-stat-label">' + esc(label) + '</div>'
+                    + '<div class="wotd-stat-value">' + esc(value) + '</div>'
+                    + '</div>';
+            }
+
+            function renderWotd(data) {
+                const pill = document.getElementById('wotd-today-pill');
+                const desc = document.getElementById('wotd-today-desc');
+                const body = document.getElementById('wotd-today-body');
+                const empty = document.getElementById('wotd-today-empty');
+                if (!pill || !desc || !body || !empty) return;
+
+                if (!data.available) {
+                    pill.className = 'status-pill status-idle';
+                    pill.textContent = 'Not yet';
+                    desc.textContent = data.message || 'No workout on Garmin yet today.';
+                    body.style.display = 'none';
+                    empty.style.display = '';
+                    return;
+                }
+
+                const w = data.workout || {};
+                pill.className = 'status-pill status-finished';
+                pill.textContent = '✓ On Garmin';
+                desc.textContent = w.description || w.workout_name || '';
+
+                const hrRange = (w.target_hr_low && w.target_hr_high)
+                    ? w.target_hr_low + '–' + w.target_hr_high + ' bpm' : null;
+
+                document.getElementById('wotd-today-stats').innerHTML = [
+                    renderStat('Workout', w.workout_name),
+                    renderStat('Type', w.workout_type),
+                    renderStat('Duration', w.duration_min ? w.duration_min + ' min' : null),
+                    renderStat('Distance', w.distance_km ? w.distance_km + ' km' : null),
+                    renderStat('Target HR', hrRange),
+                    renderStat('Cadence', w.cadence_target_spm ? w.cadence_target_spm + ' spm' : null),
+                    renderStat('Warmup', w.warmup_min ? w.warmup_min + ' min' : null),
+                    renderStat('Cooldown', w.cooldown_min ? w.cooldown_min + ' min' : null)
+                ].join('');
+
+                const note = document.getElementById('wotd-today-note');
+                note.innerHTML = w.coach_note
+                    ? '<strong>Coach note:</strong> ' + esc(w.coach_note) : '';
+                note.style.display = w.coach_note ? '' : 'none';
+
+                const intervals = Array.isArray(w.intervals) ? w.intervals : [];
+                document.getElementById('wotd-today-intervals').innerHTML = intervals.length
+                    ? '<strong>Intervals:</strong><br>' + intervals.map(function(iv) {
+                        return '<span class="wotd-interval-chip">'
+                            + esc(iv.iterations) + ' × ' + esc(iv.work_min) + ' min run'
+                            + (iv.recovery_min ? ' / ' + esc(iv.recovery_min) + ' min walk' : '')
+                            + (iv.hr_low && iv.hr_high ? ' @ ' + esc(iv.hr_low) + '–' + esc(iv.hr_high) + ' bpm' : '')
+                            + '</span>';
+                    }).join('') : '';
+
+                body.style.display = '';
+                empty.style.display = 'none';
+            }
+
+            async function loadWotdToday() {
+                try {
+                    const resp = await fetch(WOTD_TODAY_API);
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    renderWotd(await resp.json());
+                } catch (error) {
+                    renderWotd({available: false, message: 'Could not load today\'s workout: ' + error.message});
+                }
+            }
+
+            // ── Daily Feedback ───────────────────────────────────────────
+            function setFeedbackUi(state, message, busy) {
+                const pill = document.getElementById('feedback-pill');
+                const msg = document.getElementById('feedback-status-message');
+                const btn = document.getElementById('feedback-submit-btn');
+                if (!pill || !msg || !btn) return;
+
+                const labels = {idle: 'Ready', running: 'Saving…', finished: 'Saved', failed: 'Failed'};
+                pill.className = 'status-pill status-' + state;
+                pill.textContent = labels[state] || 'Ready';
+                msg.innerHTML = message || 'Applies to your next workout.';
+                btn.disabled = !!busy;
+                btn.textContent = busy ? 'Saving…' : 'Save Feedback';
+            }
+
+            function renderFeedbackList(entries) {
+                const list = document.getElementById('feedback-recent-list');
+                if (!list) return;
+
+                if (!entries || !entries.length) {
+                    list.innerHTML = '<p class="control-panel-note" style="margin:0;">'
+                        + 'No feedback recorded in the last 21 days.</p>';
+                    return;
+                }
+
+                list.innerHTML = entries.map(function(e) {
+                    const sev = ['low', 'medium', 'high'].indexOf(e.severity) >= 0 ? e.severity : 'low';
+                    return '<div class="feedback-entry">'
+                        + '<div class="feedback-entry-head">'
+                        + '<span class="feedback-entry-title">' + esc(e.title) + '</span>'
+                        + '<button class="feedback-delete" title="Delete this note" '
+                        + 'onclick="deleteFeedback(\'' + esc(e.id) + '\')">✕</button>'
+                        + '</div>'
+                        + '<div style="margin-bottom:0.45rem;">'
+                        + '<span class="feedback-badge">' + esc(e.date) + '</span>'
+                        + '<span class="feedback-badge">' + esc(e.category) + '</span>'
+                        + '<span class="feedback-badge sev-' + sev + '">' + esc(sev) + '</span>'
+                        + '<span class="feedback-badge">weight ' + esc(Number(e.weight).toFixed(2)) + '</span>'
+                        + '</div>'
+                        + (e.raw_text && e.raw_text !== e.title
+                            ? '<div class="feedback-entry-text">' + esc(e.raw_text) + '</div>'
+                            : '')
+                        + (e.coaching_directive
+                            ? '<div class="feedback-entry-text" style="margin-top:0.4rem;">'
+                              + '<strong>→</strong> ' + esc(e.coaching_directive) + '</div>'
+                            : '')
+                        + '</div>';
+                }).join('');
+            }
+
+            async function loadFeedback() {
+                try {
+                    const resp = await fetch(FEEDBACK_API + '/recent?user_id=' + encodeURIComponent(USER_ID));
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    const data = await resp.json();
+                    renderFeedbackList(data.entries);
+                } catch (error) {
+                    renderFeedbackList([]);
+                }
+            }
+
+            async function submitFeedback() {
+                const input = document.getElementById('feedback-input');
+                if (!input) return;
+                const text = input.value.trim();
+                if (!text) {
+                    setFeedbackUi('failed', 'Please write something before saving.', false);
+                    return;
+                }
+
+                setFeedbackUi('running', 'Processing your feedback…', true);
+                try {
+                    const resp = await fetch(FEEDBACK_API, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({user_id: USER_ID, text: text})
+                    });
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    const data = await resp.json();
+
+                    if (data.status === 'ok') {
+                        input.value = '';
+                        updateFeedbackCounter();
+                        setFeedbackUi('finished', esc(data.reply).replace(/\n/g, '<br>'), false);
+                        renderFeedbackList(data.recent);
+                    } else {
+                        setFeedbackUi('failed', esc(data.reply), false);
+                    }
+                } catch (error) {
+                    setFeedbackUi('failed', 'Could not save feedback: ' + esc(error.message), false);
+                }
+            }
+
+            async function deleteFeedback(entryId) {
+                try {
+                    const resp = await fetch(
+                        FEEDBACK_API + '/' + encodeURIComponent(entryId)
+                        + '?user_id=' + encodeURIComponent(USER_ID),
+                        {method: 'DELETE'}
+                    );
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    const data = await resp.json();
+                    renderFeedbackList(data.entries);
+                } catch (error) {
+                    setFeedbackUi('failed', 'Could not delete note: ' + esc(error.message), false);
+                }
+            }
+
+            function updateFeedbackCounter() {
+                const input = document.getElementById('feedback-input');
+                const counter = document.getElementById('feedback-counter');
+                if (input && counter) {
+                    const n = input.value.trim().length;
+                    counter.textContent = n + (n === 1 ? ' character' : ' characters');
+                }
+            }
+
+            window.submitFeedback = submitFeedback;
+            window.deleteFeedback = deleteFeedback;
+            window.updateFeedbackCounter = updateFeedbackCounter;
+            window.loadWotdToday = loadWotdToday;
+            window.addEventListener('load', function() {
+                loadWotdToday();
+                loadFeedback();
+            });
         })();
     </script>
 
