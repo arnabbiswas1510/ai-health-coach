@@ -12,7 +12,8 @@ import logging
 import os
 import re
 import subprocess
-from datetime import date, datetime, timedelta
+import sys
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -62,6 +63,10 @@ def _save_feedback_history(user_id: str, history: list[dict[str, str]]) -> None:
 # Data directory (shared volume with the coach container)
 # ---------------------------------------------------------------------------
 DATA_DIR = Path(os.getenv("OUTPUT_DIR", "/app/data"))
+APP_ROOT = Path(__file__).resolve().parents[2]
+WOTD_TRIGGER_PID_PATH = DATA_DIR / ".wotd_trigger.pid"
+WOTD_TRIGGER_STATE_PATH = DATA_DIR / ".wotd_trigger_state.json"
+WOTD_TRIGGER_LOG_PATH = DATA_DIR / "wotd_trigger.log"
 
 
 # ---------------------------------------------------------------------------
@@ -77,6 +82,14 @@ class ChatResponse(BaseModel):
     reply: str
     plan_updated: bool
     history: list[dict[str, str]]
+
+
+class WotdTriggerResponse(BaseModel):
+    status: str
+    message: str
+    pid: int | None = None
+    started_at: str | None = None
+    finished_at: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -100,6 +113,105 @@ def _read_text(path: Path) -> str:
     except Exception as exc:
         logger.warning("Could not read %s: %s", path, exc)
     return ""
+
+
+def _write_json(path: Path, payload: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
+def _read_pid(path: Path) -> int | None:
+    if not path.exists():
+        return None
+    try:
+        return int(path.read_text(encoding="utf-8").strip())
+    except ValueError:
+        logger.warning("Invalid PID in %s", path)
+        return None
+
+
+def _is_process_running(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError:
+        return False
+    return True
+
+
+def _build_wotd_status(
+    status: str,
+    message: str,
+    *,
+    pid: int | None = None,
+    started_at: str | None = None,
+    finished_at: str | None = None,
+) -> dict[str, Any]:
+    return {
+        "status": status,
+        "message": message,
+        "pid": pid,
+        "started_at": started_at,
+        "finished_at": finished_at,
+    }
+
+
+def _utcnow_iso() -> str:
+    return datetime.now(UTC).isoformat()
+
+
+def _get_wotd_trigger_status() -> dict[str, Any]:
+    state = _load_json(WOTD_TRIGGER_STATE_PATH)
+    pid = _read_pid(WOTD_TRIGGER_PID_PATH)
+    started_at = state.get("started_at")
+    finished_at = state.get("finished_at")
+
+    if pid and _is_process_running(pid):
+        return _build_wotd_status(
+            "running",
+            "Manual WOTD generation is in progress. This usually takes a few minutes.",
+            pid=pid,
+            started_at=started_at,
+            finished_at=finished_at,
+        )
+
+    if pid and not _is_process_running(pid):
+        try:
+            WOTD_TRIGGER_PID_PATH.unlink()
+        except OSError as exc:
+            logger.warning("Could not remove stale WOTD PID file %s: %s", WOTD_TRIGGER_PID_PATH, exc)
+        if state.get("status") in {"running", "started"}:
+            state = _build_wotd_status(
+                "finished",
+                "The last manual WOTD trigger has finished. Check the log for full details.",
+                started_at=started_at,
+                finished_at=_utcnow_iso(),
+            )
+            _write_json(WOTD_TRIGGER_STATE_PATH, state)
+            return state
+
+    if state.get("status") == "finished":
+        return _build_wotd_status(
+            "finished",
+            state.get("message", "The last manual WOTD run has finished."),
+            pid=None,
+            started_at=started_at,
+            finished_at=finished_at,
+        )
+
+    if state.get("status") == "failed":
+        return _build_wotd_status(
+            "failed",
+            state.get("message", "The last manual WOTD trigger could not be started."),
+            pid=None,
+            started_at=started_at,
+            finished_at=finished_at,
+        )
+
+    return _build_wotd_status("idle", "Trigger today's WOTD immediately.", pid=None)
 
 
 def _build_week_dates(start: date, n_weeks: int = 4) -> list[dict[str, Any]]:
@@ -311,11 +423,11 @@ def _trigger_pipeline_background(config_path: str = "/app/coach_config.yaml") ->
     try:
         log_f = open("/tmp/coach_run.log", "w")
         proc = subprocess.Popen(
-            ["python", "cli/garmin_ai_coach_cli.py", "--config", config_path],
+            [sys.executable, "cli/garmin_ai_coach_cli.py", "--config", config_path],
             stdout=log_f,
             stderr=subprocess.STDOUT,
             start_new_session=True,  # detach so it survives the HTTP request
-            cwd="/app",
+            cwd=str(APP_ROOT),
         )
         logger.info("Pipeline triggered in background: PID=%s", proc.pid)
         return f"pid={proc.pid}"
@@ -324,13 +436,65 @@ def _trigger_pipeline_background(config_path: str = "/app/coach_config.yaml") ->
         return f"error: {exc}"
 
 
+def _trigger_wotd_background(script_path: Path | None = None) -> dict[str, Any]:
+    current_status = _get_wotd_trigger_status()
+    if current_status["status"] == "running":
+        return current_status
+
+    script = script_path or (APP_ROOT / "force_wotd.py")
+    started_at = _utcnow_iso()
+    if not script.exists():
+        message = f"Manual WOTD trigger script not found at {script}"
+        logger.error(message)
+        state = _build_wotd_status("failed", message, started_at=started_at, finished_at=_utcnow_iso())
+        _write_json(WOTD_TRIGGER_STATE_PATH, state)
+        return state
+
+    WOTD_TRIGGER_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with open(WOTD_TRIGGER_LOG_PATH, "w", encoding="utf-8") as log_f:
+        log_f.write(f"[{started_at}] Starting manual WOTD trigger via {script}\n")
+
+    with open(WOTD_TRIGGER_LOG_PATH, "a", encoding="utf-8") as log_f:
+        try:
+            proc = subprocess.Popen(
+                [sys.executable, str(script)],
+                stdout=log_f,
+                stderr=subprocess.STDOUT,
+                start_new_session=True,
+                cwd=str(APP_ROOT),
+                env=os.environ.copy(),
+            )
+        except OSError as exc:
+            message = f"Could not start manual WOTD trigger: {exc}"
+            logger.exception(message)
+            state = _build_wotd_status("failed", message, started_at=started_at, finished_at=_utcnow_iso())
+            _write_json(WOTD_TRIGGER_STATE_PATH, state)
+            return state
+
+    WOTD_TRIGGER_PID_PATH.write_text(str(proc.pid), encoding="utf-8")
+    state = _build_wotd_status(
+        "running",
+        "Manual WOTD generation started. Refresh status in a few minutes.",
+        pid=proc.pid,
+        started_at=started_at,
+    )
+    _write_json(WOTD_TRIGGER_STATE_PATH, state)
+    logger.info("Manual WOTD trigger started in background: PID=%s", proc.pid)
+    return _build_wotd_status(
+        "started",
+        "Manual WOTD generation started. Refresh status in a few minutes.",
+        pid=proc.pid,
+        started_at=started_at,
+    )
+
+
 # ---------------------------------------------------------------------------
 # API endpoints
 # ---------------------------------------------------------------------------
 
 @app.get("/health")
 async def health() -> dict[str, str]:
-    return {"status": "ok", "timestamp": datetime.utcnow().isoformat()}
+    return {"status": "ok", "timestamp": _utcnow_iso()}
 
 
 @app.post("/chat", response_model=ChatResponse)
@@ -428,6 +592,16 @@ async def chat(req: ChatRequest) -> ChatResponse:
     _save_feedback_history(user_id, history)
 
     return ChatResponse(reply=reply, plan_updated=plan_updated, history=history)
+
+
+@app.get("/wotd/trigger/status", response_model=WotdTriggerResponse)
+async def wotd_trigger_status() -> WotdTriggerResponse:
+    return WotdTriggerResponse(**_get_wotd_trigger_status())
+
+
+@app.post("/wotd/trigger", response_model=WotdTriggerResponse)
+async def trigger_wotd() -> WotdTriggerResponse:
+    return WotdTriggerResponse(**_trigger_wotd_background())
 
 
 @app.delete("/chat/{user_id}/history")

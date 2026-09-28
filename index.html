@@ -328,6 +328,104 @@
             margin-top: 1rem;
         }
 
+        .control-panel {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            backdrop-filter: blur(12px);
+        }
+
+        .control-panel-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .control-panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 0.4rem;
+        }
+
+        .control-panel-desc {
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 720px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            border-radius: 999px;
+            padding: 0.45rem 0.85rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .status-pill.status-idle,
+        .status-pill.status-finished {
+            color: #3fb950;
+            background: rgba(63, 185, 80, 0.12);
+            border-color: rgba(63, 185, 80, 0.25);
+        }
+
+        .status-pill.status-running,
+        .status-pill.status-started {
+            color: #58a6ff;
+            background: rgba(88, 166, 255, 0.12);
+            border-color: rgba(88, 166, 255, 0.25);
+        }
+
+        .status-pill.status-failed {
+            color: #f85149;
+            background: rgba(248, 81, 73, 0.12);
+            border-color: rgba(248, 81, 73, 0.25);
+        }
+
+        .control-panel-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+            align-items: center;
+            margin-top: 1.25rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), #3b82f6);
+            color: var(--bg-color);
+            box-shadow: 0 4px 15px rgba(88, 166, 255, 0.2);
+            border: none;
+        }
+
+        .btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .control-panel-note {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-top: 1rem;
+        }
+
+        .control-panel-note a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .control-panel-note a:hover {
+            text-decoration: underline;
+        }
+
         .quick-links-title {
             font-size: 1.25rem;
             font-weight: 700;
@@ -716,6 +814,29 @@
             <iframe id="iframe-retro" src="planning.html?tab=retro" class="tab-iframe" onload="styleIframe(this, 'retro')"></iframe>
         </div>
 
+        <section class="control-panel" aria-labelledby="manual-wotd-title">
+            <div class="control-panel-header">
+                <div>
+                    <h3 class="control-panel-title" id="manual-wotd-title">⚡ Manual Workout of the Day</h3>
+                    <p class="control-panel-desc">
+                        Trigger today's WOTD immediately if you want to bypass the next daemon poll and push a fresh workout to Garmin Connect right now.
+                    </p>
+                </div>
+                <div class="status-pill status-idle" id="wotd-status-pill">Ready</div>
+            </div>
+            <div class="control-panel-actions">
+                <button class="btn btn-primary" id="wotd-trigger-btn" type="button" onclick="triggerWotd()">
+                    Trigger WOTD Now
+                </button>
+            </div>
+            <p class="control-panel-note" id="wotd-status-message">
+                Trigger today's WOTD immediately.
+            </p>
+            <p class="control-panel-note">
+                Progress is written to <a href="wotd_trigger.log" target="_blank" rel="noreferrer">wotd_trigger.log</a>.
+            </p>
+        </section>
+
         <!-- Quick Links for raw files -->
         <div class="quick-links">
             <h3 class="quick-links-title">📄 Raw Reports & Data</h3>
@@ -1064,6 +1185,92 @@
                 }
             }
         });
+    </script>
+
+    <script>
+        (function() {
+            const STATUS_API = '/api/wotd/trigger/status';
+            const TRIGGER_API = '/api/wotd/trigger';
+            const POLL_MS = 5000;
+            let pollTimer = null;
+
+            function setWotdUi(status, message, isBusy) {
+                const pill = document.getElementById('wotd-status-pill');
+                const msg = document.getElementById('wotd-status-message');
+                const btn = document.getElementById('wotd-trigger-btn');
+                if (!pill || !msg || !btn) return;
+
+                const labelMap = {
+                    idle: 'Ready',
+                    started: 'Starting',
+                    running: 'Running',
+                    finished: 'Finished',
+                    failed: 'Error'
+                };
+
+                pill.className = 'status-pill status-' + status;
+                pill.textContent = labelMap[status] || 'Ready';
+                msg.textContent = message || 'Trigger today\'s WOTD immediately.';
+                btn.disabled = Boolean(isBusy);
+                btn.textContent = isBusy ? 'Trigger Running...' : 'Trigger WOTD Now';
+            }
+
+            function stopPolling() {
+                if (pollTimer) {
+                    clearInterval(pollTimer);
+                    pollTimer = null;
+                }
+            }
+
+            function ensurePolling() {
+                if (pollTimer) return;
+                pollTimer = setInterval(loadWotdStatus, POLL_MS);
+            }
+
+            async function loadWotdStatus() {
+                try {
+                    const resp = await fetch(STATUS_API);
+                    if (!resp.ok) {
+                        throw new Error('Status request failed with ' + resp.status);
+                    }
+
+                    const data = await resp.json();
+                    const busy = data.status === 'running' || data.status === 'started';
+                    setWotdUi(data.status, data.message, busy);
+                    if (busy) {
+                        ensurePolling();
+                    } else {
+                        stopPolling();
+                    }
+                } catch (error) {
+                    stopPolling();
+                    setWotdUi('failed', 'Could not load WOTD trigger status: ' + error.message, false);
+                }
+            }
+
+            async function triggerWotd() {
+                setWotdUi('started', 'Starting manual WOTD generation...', true);
+
+                try {
+                    const resp = await fetch(TRIGGER_API, { method: 'POST' });
+                    if (!resp.ok) {
+                        throw new Error('Trigger request failed with ' + resp.status);
+                    }
+
+                    const data = await resp.json();
+                    const busy = data.status === 'running' || data.status === 'started';
+                    setWotdUi(data.status, data.message, busy);
+                    if (busy) {
+                        ensurePolling();
+                    }
+                } catch (error) {
+                    setWotdUi('failed', 'Could not trigger WOTD: ' + error.message, false);
+                }
+            }
+
+            window.triggerWotd = triggerWotd;
+            window.addEventListener('load', loadWotdStatus);
+        })();
     </script>
 
     <!-- Scripts for Global Floating Chat Panel -->
