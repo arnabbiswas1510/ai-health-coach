@@ -3,7 +3,11 @@ from datetime import datetime, timedelta
 import pytest
 
 from services.garmin.adaptive_coach import AdaptiveRunningCoach
-from services.garmin.models import Activity, ActivitySummary, GarminData
+from services.garmin.models import Activity, ActivitySummary, GarminData, UserProfile
+
+# The athlete's real LTHR (see AGENTS.md). Zones are derived from this, never
+# from age — at LTHR=177 the calibrated Z2 is 132-153 bpm.
+TEST_LTHR = 177
 
 
 def create_mock_run(distance_km: float, duration_min: float, avg_hr: int, start_time: str) -> Activity:
@@ -35,7 +39,7 @@ def sample_garmin_data():
             start_time=run_time
         ))
     return GarminData(
-        user_profile=None,
+        user_profile=UserProfile(lactate_threshold_heart_rate=TEST_LTHR),
         daily_stats=None,
         recent_activities=activities,
         all_activities=None,
@@ -61,12 +65,14 @@ def test_baselines_calculation(sample_garmin_data):
 def test_heart_rate_zones(sample_garmin_data):
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53)
 
-    # Max HR = 220 - 53 = 167
-    assert coach.max_hr == 167
-    # Zone 2 Low = 167 * 0.60 = 100
-    assert coach.zone2_low == 100
-    # Zone 2 High = 167 * 0.72 = 120
-    assert coach.zone2_high == 120
+    # Zones come from the live LTHR and the calibrated percentages — never from
+    # `220 - age`, which used to yield a badly wrong Z2 of 100-120 bpm.
+    # max_hr = int(177 / 0.88) = 201
+    assert coach.max_hr == 201
+    # Z2 low  = int(177 * 0.746) = 132
+    assert coach.zone2_low == 132
+    # Z2 high = int(177 * 0.870) = 153
+    assert coach.zone2_high == 153
 
 def test_suggest_next_run_no_missed_runs(sample_garmin_data):
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53)
@@ -77,7 +83,7 @@ def test_suggest_next_run_no_missed_runs(sample_garmin_data):
     assert suggestion["distance_km"] == 10.5
     assert suggestion["duration_min"] == 63.0
     assert suggestion["target_pace_str"] == "6:00 /km"
-    assert suggestion["target_hr_range"] == "100-120 bpm"
+    assert suggestion["target_hr_range"] == "132-153 bpm"
     assert "Base Building Progression" in suggestion["focus"]
     assert suggestion["new_accumulated_debt_km"] == 0.0
 
@@ -120,10 +126,10 @@ def test_suggest_next_run_missed_week_reset(sample_garmin_data):
 
 
 def test_adaptive_coach_weight_management(sample_garmin_data):
-    from services.garmin.models import UserProfile
-
     # Test case 1: Above target weight
-    sample_garmin_data.user_profile = UserProfile(weight=80.0, height=175.26)
+    sample_garmin_data.user_profile = UserProfile(
+        weight=80.0, height=175.26, lactate_threshold_heart_rate=TEST_LTHR
+    )
     coach = AdaptiveRunningCoach(sample_garmin_data, goal="base_building", age=53, height=175.26)
     suggestion = coach.suggest_next_run()
     notes = suggestion["notes"]
@@ -151,30 +157,43 @@ def test_adaptive_coach_weight_management(sample_garmin_data):
 
 
 def test_dynamic_heart_rate_zones(sample_garmin_data):
-    from services.garmin.models import UserProfile
-
-    # Scenario 1: Dynamic LTHR is available (174 bpm)
+    # Scenario 1: LTHR available (174 bpm) → calibrated percentages apply
     sample_garmin_data.user_profile = UserProfile(lactate_threshold_heart_rate=174)
     coach = AdaptiveRunningCoach(sample_garmin_data, age=53)
 
-    # max_hr should be calculated from LTHR: int(174 / 0.88) = 197
+    # max_hr = int(174 / 0.88) = 197
     assert coach.max_hr == 197
-    # zone2_low should be LTHR * 0.80 = 174 * 0.80 = 139.2 -> 139
-    assert coach.zone2_low == 139
-    # zone2_high should be LTHR * 0.89 = 174 * 0.89 = 154.86 -> 154
-    assert coach.zone2_high == 154
+    # Z2 low  = int(174 * 0.746) = 129
+    assert coach.zone2_low == 129
+    # Z2 high = int(174 * 0.870) = 151
+    assert coach.zone2_high == 151
 
-    # Scenario 2: Manual config overrides are specified, they should take precedence
+    # Scenario 2: manual config overrides always take precedence
     coach_override = AdaptiveRunningCoach(
         sample_garmin_data, age=53, zone2_min=118, zone2_max=135
     )
     assert coach_override.zone2_low == 118
     assert coach_override.zone2_high == 135
 
-    # Scenario 3: LTHR is not available, should fall back to 220 - age
+    # Scenario 3: no LTHR and no override → hard error, never an age-based guess
     sample_garmin_data.user_profile = UserProfile(lactate_threshold_heart_rate=None)
-    coach_fallback = AdaptiveRunningCoach(sample_garmin_data, age=53)
-    assert coach_fallback.max_hr == 167
-    assert coach_fallback.zone2_low == 100
-    assert coach_fallback.zone2_high == 120
+    with pytest.raises(ValueError, match="lactate threshold heart rate is unavailable"):
+        AdaptiveRunningCoach(sample_garmin_data, age=53)
+
+    # Scenario 4: no LTHR but explicit bounds supplied → that is the escape hatch
+    coach_manual = AdaptiveRunningCoach(
+        sample_garmin_data, age=53, zone2_min=132, zone2_max=153
+    )
+    assert (coach_manual.zone2_low, coach_manual.zone2_high) == (132, 153)
+
+
+def test_zones_agree_with_wotd_and_feedback(sample_garmin_data):
+    """The analysis report must quote the same Z2 as WOTD and post-run feedback."""
+    from services.garmin.hr_zones import calibration_for, compute_zones
+
+    coach = AdaptiveRunningCoach(sample_garmin_data, age=53)
+    shared = compute_zones(TEST_LTHR, calibration_for(None))
+
+    assert (coach.zone2_low, coach.zone2_high) == (shared.z2_low, shared.z2_high)
+    assert coach.max_hr == shared.max_hr
 

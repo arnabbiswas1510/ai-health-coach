@@ -72,6 +72,9 @@ rather than a failure.
   behaviour.
 - WOTD prompts shift the walk-break trigger by one beat (154 → 155 at LTHR=177),
   bringing them in line with AGENTS.md Rule #10.
-- `adaptive_coach.py` still carries its own 0.80/0.89 + age-fallback zone logic
-  (covered by `tests/test_adaptive_coach.py`). It was left untouched here and is
-  a candidate for the same consolidation.
+- `adaptive_coach.py` was folded into the same module in a follow-up commit: it
+  receives an already-extracted `UserProfile` rather than a live client, so it
+  calls `compute_zones()` directly with `calibration_for(user_data_dir)`. Its
+  `220 - age` fallback is gone; when LTHR is missing it raises unless explicit
+  `zone2_min`/`zone2_max` are configured, which is the documented escape hatch.
+  This makes the analysis report quote the same Z2 as WOTD and feedback.

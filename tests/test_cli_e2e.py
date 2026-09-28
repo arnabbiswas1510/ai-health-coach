@@ -3,7 +3,11 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from services.garmin.models import GarminData
+from services.garmin.models import GarminData, UserProfile
+
+# Zones are derived from the live Garmin LTHR (never from age), so the mocked
+# profile must carry one or AdaptiveRunningCoach correctly refuses to guess.
+TEST_LTHR = 177
 
 
 @pytest.mark.asyncio
@@ -33,7 +37,9 @@ async def test_cli_e2e_smoke_with_mocks(
 
     # Configure extractor mock
     mock_instance = mock_extractor_class.return_value
-    mock_instance.extract_data.return_value = GarminData()
+    mock_instance.extract_data.return_value = GarminData(
+        user_profile=UserProfile(lactate_threshold_heart_rate=TEST_LTHR)
+    )
 
     # Configure outside client mock
     mock_outside_instance = mock_outside_client.return_value
@@ -114,7 +120,9 @@ async def test_cli_e2e_with_hitl_enabled(
 
     # Configure extractor mock
     mock_instance = mock_extractor_class.return_value
-    mock_instance.extract_data.return_value = GarminData()
+    mock_instance.extract_data.return_value = GarminData(
+        user_profile=UserProfile(lactate_threshold_heart_rate=TEST_LTHR)
+    )
 
     # Configure outside client mock
     mock_outside_instance = mock_outside_client.return_value

@@ -34,7 +34,11 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
-from services.garmin.zone_calibrator import load_calibration, maybe_recalibrate
+from services.garmin.zone_calibrator import (
+    _default_calibration,
+    load_calibration,
+    maybe_recalibrate,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -178,6 +182,17 @@ def compute_zones(
         z2_ceiling_pct=ceiling_pct,
         walk_break_pct=walk_break_pct,
     )
+
+
+def calibration_for(user_data_dir: Path | None) -> dict:
+    """Return the persisted zone calibration, or factory defaults.
+
+    Consumers that have no data directory (e.g. the CLI analysis path) still get
+    the same empirically calibrated percentages rather than inventing their own.
+    """
+    if user_data_dir is None:
+        return _default_calibration()
+    return load_calibration(user_data_dir)
 
 
 def get_hr_zones(

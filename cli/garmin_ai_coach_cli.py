@@ -683,7 +683,7 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
         sync_calendar = config_parser.get_sync_calendar()
 
         zone2_min, zone2_max = config_parser.get_zone2_bounds()
-        coach = AdaptiveRunningCoach(garmin_data, goal=goal, age=age, weight_goal=weight_goal, height=resolved_height, zone2_min=zone2_min, zone2_max=zone2_max)
+        coach = AdaptiveRunningCoach(garmin_data, goal=goal, age=age, weight_goal=weight_goal, height=resolved_height, zone2_min=zone2_min, zone2_max=zone2_max, user_data_dir=output_dir)
 
         # Generate the scientific weight & heart rate analysis context
         weight_context = get_weight_analysis_context(

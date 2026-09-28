@@ -1,16 +1,16 @@
 # Graph Report - ai-health-coach  (2026-09-28)
 
 ## Corpus Check
-- 121 files · ~111,462 words
+- 121 files · ~111,803 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1230 nodes · 2945 edges · 52 communities (46 shown, 6 thin omitted)
+- 1235 nodes · 2968 edges · 51 communities (45 shown, 6 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 160 edges (avg confidence: 0.6)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f442d313`
+- Built from commit: `32e09f56`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -54,7 +54,6 @@
 - _parse_json_safely
 - 2026-08-05 — 6:20 AM Time-Gated WOTD Generation and Fallback Sleep Data
 - Exception
-- calendar_syncer.py
 - startup.sh
 - competition_models.py
 - decisions/README.md
@@ -91,11 +90,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (52 total, 6 thin omitted)
+## Communities (51 total, 6 thin omitted)
 
 ### Community 0 - "TriathlonCoachDataExtractor"
 Cohesion: 0.06
-Nodes (56): GarminEncoder, main(), Any, AdaptiveRunningCoach, Any, Dynamically adjusts and suggests the next run.          Redistributes missed mil, DataExtractor, _daterange() (+48 more)
+Nodes (59): GarminEncoder, main(), Any, AdaptiveRunningCoach, Any, Path, Dynamically adjusts and suggests the next run.          Redistributes missed mil, DataExtractor (+51 more)
 
 ### Community 1 - "OutsideApiGraphQlClient"
 Cohesion: 0.05
@@ -111,7 +110,7 @@ Nodes (22): ABC, ConfigParser, create_config_template(), fetch_outside_competiti
 
 ### Community 4 - "test_hr_zones.py"
 Cohesion: 0.08
-Nodes (46): compute_zones(), get_hr_zones(), HRZones, Any, Path, Single source of truth for the athlete's heart-rate zones.  Both WOTD generation, Build the full zone set from a live LTHR and calibrated percentages.      A manu, Resolve LTHR and return the athlete's zones.      Args:         recalibrate: whe (+38 more)
+Nodes (48): calibration_for(), compute_zones(), get_hr_zones(), HRZones, Any, Path, Single source of truth for the athlete's heart-rate zones.  Both WOTD generation, Build the full zone set from a live LTHR and calibrated percentages.      A manu (+40 more)
 
 ### Community 5 - "Technology Stack"
 Cohesion: 0.04
@@ -138,16 +137,16 @@ Cohesion: 0.08
 Nodes (14): plot_resolution_node(), Any, create_plotting_tools(), LangGraphPlottingTool, PlotMetadata, PlotStorage, Any, ProductionSecureExecutor (+6 more)
 
 ### Community 11 - "PlanParser"
-Cohesion: 0.13
-Nodes (15): Match, PlanParser, date, Initialize PlanParser.          Args:             max_hr: Athlete's estimated ma, Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects., Split plan text into (date_str, block_text) tuples.          Uses a sliding wind, Try to parse a date string like 'Jun 02' or 'Jun 2' relative to start_date's yea, Classify and extract a single day's workout from its text block. (+7 more)
+Cohesion: 0.11
+Nodes (19): Match, clean_corrupted_json(), PlanParser, date, datetime, Plan Parser: converts the AI weekly planner markdown output into structured work, Initialize PlanParser.          Args:             max_hr: Athlete's estimated ma, Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects. (+11 more)
 
 ### Community 12 - "planning_workflow.py"
 Cohesion: 0.17
 Nodes (14): data_integration_node(), Any, master_orchestrator_node(), plan_formatter_node(), create_integrated_analysis_and_planning_workflow(), create_planning_workflow(), Re-run only the planning branch using cached expert outputs.      Used by the, run_complete_analysis_and_planning() (+6 more)
 
 ### Community 13 - "GarminCalendarSyncer"
-Cohesion: 0.14
-Nodes (14): GarminCalendarSyncer, _HR_TARGET_TYPE(), Any, Upload a workout to Garmin's workout library with NO calendar date.          The, Schedule an already-uploaded workout on today's calendar date.          This is, Delete all workouts from the Garmin library whose name starts with `prefix`., Build and schedule a single workout. Returns workout_id string., Warmup → steady HR-zone run → cooldown. (+6 more)
+Cohesion: 0.13
+Nodes (16): GarminCalendarSyncer, _HR_TARGET_TYPE(), Any, GarminCalendarSyncer: creates Garmin Connect workout objects and schedules worko, Upload a workout to Garmin's workout library with NO calendar date.          The, # NOTE: no schedule_workout() call here — caller decides when to schedule, Schedule an already-uploaded workout on today's calendar date.          This is, Delete all workouts from the Garmin library whose name starts with `prefix`. (+8 more)
 
 ### Community 14 - "_make_syncer"
 Cohesion: 0.12
@@ -241,10 +240,6 @@ Nodes (6): 2026-08-05 — 6:20 AM Time-Gated WOTD Generation and Fallback Sleep 
 Cohesion: 0.25
 Nodes (5): Exception, APIOverloadError, RetryableError, If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted.
 
-### Community 39 - "calendar_syncer.py"
-Cohesion: 0.25
-Nodes (6): GarminCalendarSyncer: creates Garmin Connect workout objects and schedules worko, # NOTE: no schedule_workout() call here — caller decides when to schedule, clean_corrupted_json(), datetime, Plan Parser: converts the AI weekly planner markdown output into structured work, Remove invalid unicode/token corruptions printed outside JSON strings.      Thes
-
 ### Community 41 - "competition_models.py"
 Cohesion: 0.67
 Nodes (3): Competition, Enum, RacePriority
@@ -269,12 +264,12 @@ Nodes (4): 2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`, Con
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GarminCalendarSyncer` connect `GarminCalendarSyncer` to `TriathlonCoachDataExtractor`, `run_analysis_from_config`, `Exception`, `calendar_syncer.py`, `_make_syncer`, `_make_syncer`, `GarminConnectClient`?**
-  _High betweenness centrality (0.172) - this node is a cross-community bridge._
+- **Why does `GarminCalendarSyncer` connect `GarminCalendarSyncer` to `TriathlonCoachDataExtractor`, `run_analysis_from_config`, `Exception`, `_make_syncer`, `_make_syncer`, `GarminConnectClient`?**
+  _High betweenness centrality (0.156) - this node is a cross-community bridge._
 - **Why does `TriathlonCoachDataExtractor` connect `TriathlonCoachDataExtractor` to `GarminConnectClient`, `run_analysis_from_config`?**
-  _High betweenness centrality (0.111) - this node is a cross-community bridge._
-- **Why does `GarminConnectClient` connect `GarminConnectClient` to `TriathlonCoachDataExtractor`, `GarminCalendarSyncer`, `calendar_syncer.py`?**
-  _High betweenness centrality (0.088) - this node is a cross-community bridge._
+  _High betweenness centrality (0.113) - this node is a cross-community bridge._
+- **Why does `OutsideApiGraphQlClient` connect `OutsideApiGraphQlClient` to `run_analysis_from_config`?**
+  _High betweenness centrality (0.078) - this node is a cross-community bridge._
 - **Are the 17 inferred relationships involving `TriathlonCoachDataExtractor` (e.g. with `GarminEncoder` and `GarminConnectClient`) actually correct?**
   _`TriathlonCoachDataExtractor` has 17 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 9 inferred relationships involving `TrainingAnalysisState` (e.g. with `ConsoleInteractionProvider` and `InteractionProvider`) actually correct?**

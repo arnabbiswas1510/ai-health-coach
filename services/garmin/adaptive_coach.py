@@ -1,41 +1,60 @@
 import logging
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import Any
 
+from .hr_zones import calibration_for, compute_zones
 from .models import Activity, GarminData
 
 logger = logging.getLogger(__name__)
 
 class AdaptiveRunningCoach:
-    def __init__(self, garmin_data: GarminData, goal: str = "base_building", age: int = 53, weight_goal: str | None = None, height: float | None = None, zone2_min: int | None = None, zone2_max: int | None = None):
+    def __init__(self, garmin_data: GarminData, goal: str = "base_building", age: int = 53, weight_goal: str | None = None, height: float | None = None, zone2_min: int | None = None, zone2_max: int | None = None, user_data_dir: Path | None = None):
         self.garmin_data = garmin_data
         self.goal = goal
         self.age = age
 
         profile = garmin_data.user_profile if garmin_data else None
-        if profile and profile.lactate_threshold_heart_rate:
-            self.max_hr = int(profile.lactate_threshold_heart_rate / 0.88)
-        else:
-            self.max_hr = 220 - age  # Estimate max HR: 167 for age 53
 
         self.weight_goal = weight_goal or (profile.weight_goal if profile else None) or "maintain_lower_healthy_range"
         self.height = height or (profile.height if profile else None)
 
-        # Zone 2 resolution:
-        # Priority: (1) manual config override, (2) Garmin dynamic LTHR (80-89%), (3) age-based fallback (60-72%)
-        if zone2_min is not None:
-            self.zone2_low = zone2_min
-        elif profile and profile.lactate_threshold_heart_rate is not None:
-            self.zone2_low = int(profile.lactate_threshold_heart_rate * 0.80)
-        else:
-            self.zone2_low = int(self.max_hr * 0.60)
+        # Zone 2 resolution — delegated to services/garmin/hr_zones.py so the
+        # analysis report, the WOTD and the post-run feedback all describe the
+        # SAME zones. Priority: (1) manual config override, (2) Garmin LTHR with
+        # the empirically calibrated percentages.
+        #
+        # There is deliberately NO age-based fallback (the old `220 - age` path
+        # produced Z2 = 100-120 bpm at age 53, ~30 bpm below what the athlete is
+        # actually prescribed). If LTHR is unavailable, the operator must supply
+        # explicit zone2_min/zone2_max in coach_config.yaml.
+        lthr = profile.lactate_threshold_heart_rate if profile else None
 
-        if zone2_max is not None:
+        if lthr:
+            zones = compute_zones(
+                int(lthr),
+                calibration_for(user_data_dir),
+                {"zone2_min": zone2_min, "zone2_max": zone2_max},
+                log_prefix="AdaptiveCoach",
+            )
+            self.max_hr = zones.max_hr
+            self.zone2_low = zones.z2_low
+            self.zone2_high = zones.z2_high
+        elif zone2_min is not None and zone2_max is not None:
+            logger.warning(
+                "AdaptiveCoach: no LTHR in the Garmin profile — using the explicit "
+                "zone2_min/zone2_max from config (%d-%d bpm).", zone2_min, zone2_max,
+            )
+            self.max_hr = None
+            self.zone2_low = zone2_min
             self.zone2_high = zone2_max
-        elif profile and profile.lactate_threshold_heart_rate is not None:
-            self.zone2_high = int(profile.lactate_threshold_heart_rate * 0.89)
         else:
-            self.zone2_high = int(self.max_hr * 0.72)
+            raise ValueError(
+                "AdaptiveCoach: lactate threshold heart rate is unavailable from Garmin and "
+                "no manual zone2_min/zone2_max override was supplied. Zone 2 cannot be "
+                "derived from age — set athlete.zone2_min and athlete.zone2_max in "
+                "coach_config.yaml, or sync a recent run with a known lactate threshold."
+            )
 
         if profile:
             profile.zone2_low = self.zone2_low
