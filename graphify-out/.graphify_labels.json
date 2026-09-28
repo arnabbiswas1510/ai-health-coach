@@ -9,7 +9,7 @@
   "7": "TrainingAnalysisState",
   "8": "create_initial_state",
   "9": "LangSmithCostExtractor",
-  "10": "PlotStorage",
+  "10": "PlotReferenceResolver",
   "11": "PlanParser",
   "12": "planning_workflow.py",
   "13": "GarminCalendarSyncer",
@@ -38,6 +38,7 @@
   "36": "_parse_json_safely",
   "37": "2026-08-05 — 6:20 AM Time-Gated WOTD Generation and Fallback Sleep Data",
   "38": "Exception",
+  "39": "PlotStorage",
   "40": "startup.sh",
   "41": "competition_models.py",
   "42": "decisions/README.md",
@@ -49,5 +50,9 @@
   "48": "outside/__init__.py",
   "49": "extract_expert_output",
   "50": "2026-08-24 — Manual WOTD Dashboard Trigger",
-  "51": "2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`"
+  "51": "2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`",
+  "52": "zone_calibrator.py",
+  "53": "HRZones",
+  "54": "calibration_for",
+  "55": "RetryConfig"
 }

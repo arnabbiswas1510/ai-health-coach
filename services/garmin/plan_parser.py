@@ -16,7 +16,10 @@ import logging
 import re
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
+from pathlib import Path
 from typing import Any
+
+from .hr_zones import HRZones, calibration_for, compute_zones
 
 logger = logging.getLogger(__name__)
 
@@ -54,17 +57,6 @@ def clean_corrupted_json(text: str) -> str:
             i += 1
 
     return "".join(result)
-
-# ---------------------------------------------------------------------------
-# Zone HR defaults (overridden per athlete at construction time)
-# ---------------------------------------------------------------------------
-_DEFAULT_ZONES: dict[str, tuple[float, float]] = {
-    "Z1": (0.50, 0.60),
-    "Z2": (0.60, 0.72),
-    "Z3": (0.72, 0.82),
-    "Z4": (0.82, 0.90),
-    "Z5": (0.90, 1.00),
-}
 
 
 @dataclass
@@ -121,17 +113,35 @@ class PlanParser:
     # Long run indicators
     _LONG_RE = re.compile(r"\b(long run|LR|long easy)\b", re.IGNORECASE)
 
-    def __init__(self, max_hr: int = 167):
+    def __init__(self, zones: HRZones):
         """Initialize PlanParser.
 
         Args:
-            max_hr: Athlete's estimated max heart rate (default 220-53=167).
+            zones: The athlete's resolved HR zones, anchored on the live Garmin
+                LTHR. There is deliberately no age-derived default; use
+                :meth:`from_lthr` if you only have an LTHR value.
         """
-        self.max_hr = max_hr
-        self._zones = {
-            zone: (int(lo * max_hr), int(hi * max_hr))
-            for zone, (lo, hi) in _DEFAULT_ZONES.items()
-        }
+        self.zones = zones
+        self.max_hr = zones.max_hr
+        self._zones = zones.zone_table()
+
+    @classmethod
+    def from_lthr(
+        cls,
+        lthr: int,
+        *,
+        user_data_dir: Path | None = None,
+        athlete_cfg: dict | None = None,
+    ) -> "PlanParser":
+        """Build a parser from a live LTHR using the persisted calibration."""
+        return cls(
+            compute_zones(
+                lthr,
+                calibration_for(user_data_dir),
+                athlete_cfg,
+                log_prefix="PlanParser",
+            )
+        )
 
     def parse_weekly_plan(  # noqa: C901
         self,

@@ -45,6 +45,7 @@ logger = logging.getLogger(__name__)
 # Non-calibrated anchors. These describe the shape of the zone model above Z2
 # and are deliberately NOT athlete-calibrated.
 LTHR_TO_MAX_HR_RATIO = 0.88
+Z1_FLOOR_PCT = 0.55
 Z3_CEILING_PCT = 0.94
 Z4_CEILING_PCT = 1.05
 
@@ -74,6 +75,21 @@ class HRZones:
             f"({self.z2_floor_pct * 100:.1f}-{self.z2_ceiling_pct * 100:.1f}% LTHR), "
             f"walk break >={self.walk_break_hr} bpm, LTHR={self.lthr} bpm"
         )
+
+    def zone_table(self) -> dict[str, tuple[int, int]]:
+        """Return Z1-Z5 as absolute bpm ranges.
+
+        Every boundary is anchored on LTHR, so a consumer that renders zone
+        targets (e.g. PlanParser) cannot drift away from the Z2 the athlete is
+        actually prescribed by WOTD.
+        """
+        return {
+            "Z1": (int(self.lthr * Z1_FLOOR_PCT), self.z2_low),
+            "Z2": (self.z2_low, self.z2_high),
+            "Z3": (self.z2_high, self.z3_high),
+            "Z4": (self.z3_high, self.z4_high),
+            "Z5": (self.z4_high, self.max_hr),
+        }
 
 
 def resolve_lthr(client: Any, *, log_prefix: str = "HRZones") -> int:

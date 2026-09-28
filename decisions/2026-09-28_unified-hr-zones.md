@@ -78,3 +78,18 @@ rather than a failure.
   `220 - age` fallback is gone; when LTHR is missing it raises unless explicit
   `zone2_min`/`zone2_max` are configured, which is the documented escape hatch.
   This makes the analysis report quote the same Z2 as WOTD and feedback.
+- `plan_parser.py` carried the last age-derived default, `max_hr: int = 167`
+  (`220 - 53`), and scaled a local `_DEFAULT_ZONES` table off it — putting Z2 at
+  100-120 bpm, the same wrong band. It now takes an `HRZones` and renders
+  `HRZones.zone_table()`, a new contiguous LTHR-anchored Z1-Z5 map, with a
+  `PlanParser.from_lthr()` convenience constructor. `_DEFAULT_ZONES` is deleted.
+  It has no production caller today, but it is exported from
+  `services.garmin.__init__`, so leaving an age-derived default in place was a
+  trap for the next caller that writes HR targets onto synced Garmin workouts.
+- The CLI's athlete-context prompt block claimed Zone 2 was "80-89% of LTHR" and
+  had a dead `else` branch advertising "estimated Max HR of {220 - age}". Both
+  were stale: the percentages are now calibrated per athlete, and the fallback
+  branch is unreachable because `AdaptiveRunningCoach` raises. The percentages
+  are now computed from the resolved zones so the text cannot drift again.
+- With this, `220 - age` appears nowhere in the codebase except comments that
+  document its removal.

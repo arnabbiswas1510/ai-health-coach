@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "cli/garmin_ai_coach_cli.py": {
-    "mtime": 1790624053.3297114,
-    "ast_hash": "02a64ae18af2eaec0cbc41d91f136059",
+    "mtime": 1790624854.1490588,
+    "ast_hash": "16f76b320bd123117b8c1ab047494923",
     "semantic_hash": ""
   },
   "core/__init__.py": {
@@ -355,8 +355,8 @@
     "semantic_hash": ""
   },
   "services/garmin/plan_parser.py": {
-    "mtime": 1787609569.7014077,
-    "ast_hash": "8baa13d3b688930cc6ad1d62f7976626",
+    "mtime": 1790624841.7204342,
+    "ast_hash": "6184db490e2eabc99673fd714f390a11",
     "semantic_hash": ""
   },
   "services/garmin/run_coach_feedback.py": {
@@ -430,8 +430,8 @@
     "semantic_hash": ""
   },
   "tests/test_cli_e2e.py": {
-    "mtime": 1790624237.0172153,
-    "ast_hash": "83971c6bf76ee76437d9f933da4c9b03",
+    "mtime": 1790624293.9318507,
+    "ast_hash": "2d59e02e188b142c1e533b07a218010a",
     "semantic_hash": ""
   },
   "tests/test_cost_tracking_integration.py": {
@@ -670,18 +670,18 @@
     "semantic_hash": ""
   },
   "services/garmin/hr_zones.py": {
-    "mtime": 1790624012.430612,
-    "ast_hash": "791893666fa4bcf9d30312ff85acd4b0",
+    "mtime": 1790624823.747278,
+    "ast_hash": "bc4ff606bfd8709a003a18c1ace952f4",
     "semantic_hash": ""
   },
   "tests/garmin/test_hr_zones.py": {
-    "mtime": 1790623402.148408,
-    "ast_hash": "0e24ddce71ae233842e66bd6f98f8bb3",
+    "mtime": 1790624961.0279539,
+    "ast_hash": "8406ffe636d9f2691f8a27424b66c9e8",
     "semantic_hash": ""
   },
   "decisions/2026-09-28_unified-hr-zones.md": {
-    "mtime": 1790624257.4298306,
-    "ast_hash": "2b74d5fb01eef876e23381af3d192bdb",
+    "mtime": 1790625015.0179312,
+    "ast_hash": "3731f5e600b646fca6e3561d4d4ee8e0",
     "semantic_hash": ""
   }
 }
