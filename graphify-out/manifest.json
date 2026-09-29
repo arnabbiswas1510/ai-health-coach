@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   "daemon.py": {
-    "mtime": 1790633030.562715,
-    "ast_hash": "518456f2b8a84d1868b5e117b33b6c44",
+    "mtime": 1790716763.9742975,
+    "ast_hash": "793440fdcada11e1a67d2ff9d6cbb92b",
     "semantic_hash": ""
   },
   "examples/garmin/test_extractor.py": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "services/chat_api/main.py": {
-    "mtime": 1790633638.4780712,
-    "ast_hash": "c4f477137fe54c1668fcd2c56ff24a39",
+    "mtime": 1790716772.9958193,
+    "ast_hash": "9ba6f5df5de292b0ea0bbf0b1d7b2fac",
     "semantic_hash": ""
   },
   "services/garmin/__init__.py": {
@@ -515,13 +515,13 @@
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
-    "mtime": 1787609569.664381,
-    "ast_hash": "433186f8c7e0e015b5b483203aca9a21",
+    "mtime": 1790716772.9903383,
+    "ast_hash": "ac9570d6ca9006766b4593dcf85dbc6c",
     "semantic_hash": ""
   },
   ".github/workflows/deploy_to_server.yml": {
-    "mtime": 1790698210.1880376,
-    "ast_hash": "f3266ba4c52eafeda76ac7312424fb85",
+    "mtime": 1790716800.3887794,
+    "ast_hash": "daf7a5c9ab839b1cda8d3aacb9518339",
     "semantic_hash": ""
   },
   ".pre-commit-config.yaml": {
@@ -715,8 +715,8 @@
     "semantic_hash": ""
   },
   "tests/test_deploy_image_pipeline.py": {
-    "mtime": 1790698234.7260382,
-    "ast_hash": "06ec4372043d455878241a490a197376",
+    "mtime": 1790716792.4946973,
+    "ast_hash": "852d4c3bd0ff3475f36ce6a8cfa7e721",
     "semantic_hash": ""
   },
   "decisions/2026-09-29_production-consumes-published-image.md": {
@@ -745,8 +745,18 @@
     "semantic_hash": ""
   },
   "tests/test_shell_scripts_parse.py": {
-    "mtime": 1790716379.9114826,
-    "ast_hash": "e54fbb8fcfbc38aead39b55b8d4ae668",
+    "mtime": 1790716839.1112685,
+    "ast_hash": "e05242805d0a0fb2571ca001b9dfd5dd",
+    "semantic_hash": ""
+  },
+  "tests/test_withings_token_guard.py": {
+    "mtime": 1790716750.2152822,
+    "ast_hash": "279fe36a3a7eaf6bc44151694cdae712",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-29_deploy-verifies-running-commit.md": {
+    "mtime": 1790716868.2168994,
+    "ast_hash": "166dfc58887b5f2d2c095c4e2bf51653",
     "semantic_hash": ""
   }
 }

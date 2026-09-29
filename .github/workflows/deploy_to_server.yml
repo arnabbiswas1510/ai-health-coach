@@ -71,6 +71,54 @@ jobs:
             echo "=== Restarting compose stack ==="
             docker compose up -d --remove-orphans
 
+            echo "=== Verifying the container stays up (not crash-looping) ==="
+            # `docker compose up -d` returns as soon as the container is created,
+            # so a container whose entrypoint aborts immediately still looks like
+            # a successful deploy. Poll until it is running, and treat the
+            # restarting state as fatal.
+            STATE=""
+            for i in $(seq 1 12); do
+              STATE=$(docker inspect ai-health-coach --format '{{.State.Status}}' 2>/dev/null || echo "missing")
+              if [ "$STATE" = "running" ]; then
+                sleep 5
+                STATE=$(docker inspect ai-health-coach --format '{{.State.Status}}' 2>/dev/null || echo "missing")
+                [ "$STATE" = "running" ] && break
+              fi
+              if [ "$STATE" = "restarting" ] || [ "$STATE" = "exited" ]; then
+                echo "::error::container is $STATE — the entrypoint is failing. Last 40 log lines:"
+                docker compose logs --tail=40 ai-health-coach || true
+                exit 1
+              fi
+              sleep 5
+            done
+
+            if [ "$STATE" != "running" ]; then
+              echo "::error::container never reached a stable running state (last state: $STATE). Last 40 log lines:"
+              docker compose logs --tail=40 ai-health-coach || true
+              exit 1
+            fi
+
+            echo "=== Verifying the running container serves the deployed commit ==="
+            EXPECTED="${{ github.event.workflow_run.head_sha || github.sha }}"
+            SERVED=""
+            for i in $(seq 1 12); do
+              SERVED=$(curl -fsS -m 5 http://localhost:8001/version 2>/dev/null \
+                       | sed -n 's/.*"git_commit"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')
+              [ -n "$SERVED" ] && break
+              sleep 5
+            done
+
+            if [ -z "$SERVED" ]; then
+              echo "::warning::/version did not respond; could not confirm which build is serving."
+            elif [ "$SERVED" = "unknown" ]; then
+              echo "::warning::/version reports 'unknown' — image predates the GIT_COMMIT build arg."
+            elif [ "$SERVED" != "$EXPECTED" ]; then
+              echo "::error::production is serving $SERVED but expected $EXPECTED. The stack is running a stale image."
+              exit 1
+            else
+              echo "OK: production is serving $SERVED"
+            fi
+
             echo "=== Deployment complete ==="
             docker inspect ai-health-coach --format 'ai-health-coach: {{.State.Status}} (restarts: {{.RestartCount}}) image={{.Image}}'
             exit 0

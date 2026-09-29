@@ -105,3 +105,82 @@ def test_deploy_workflow_aborts_when_the_image_pull_fails():
     up_index = deploy.index("docker compose up -d")
     abort_index = deploy.index("Aborting rather than restarting on a stale image")
     assert pull_index < abort_index < up_index, "The pull failure check must sit between the pull and the `up`."
+
+
+# ---------------------------------------------------------------------------
+# Deploy verification
+#
+# `docker compose up -d` returns once the container is *created*, so a
+# container whose entrypoint aborts immediately still exits 0 and the deploy
+# reports success. That is precisely how a syntax error in startup.sh reached
+# production and crash-looped while the workflow stayed green. These tests pin
+# the verification that turns a broken deploy into a failed one.
+# ---------------------------------------------------------------------------
+
+
+def _deploy_script() -> str:
+    workflow = yaml.safe_load(DEPLOY_WORKFLOW.read_text())
+    steps = workflow["jobs"]["deploy"]["steps"]
+    scripts = [s["with"]["script"] for s in steps if "script" in s.get("with", {})]
+    assert scripts, "no ssh-action script step found in the deploy workflow"
+    return "\n".join(scripts)
+
+
+def test_deploy_fails_when_container_crash_loops():
+    """A restarting container must abort the deploy, not pass silently."""
+    script = _deploy_script()
+    # Match the executable comparison, not prose that happens to use the word.
+    assert '"$STATE" = "restarting"' in script, (
+        "the deploy never tests the container state against 'restarting', so a "
+        "crash-looping container is still reported as a successful deploy"
+    )
+    assert "{{.State.Status}}" in script, (
+        "the deploy must inspect container state before declaring success"
+    )
+    # The state check is worthless unless it actually fails the workflow.
+    tail = script.split('"$STATE" = "restarting"', 1)[1]
+    assert "exit 1" in tail, (
+        "the deploy detects a crash-looping container but never exits non-zero, "
+        "so the workflow still reports success"
+    )
+
+
+def test_deploy_verifies_the_served_commit():
+    """The running container must prove it is the commit just published."""
+    script = _deploy_script()
+    assert "/version" in script, (
+        "the deploy must query /version to confirm which build is serving; "
+        "without it a stale image still yields a green deploy"
+    )
+    assert "head_sha" in script or "github.sha" in script, (
+        "the deploy must compare the served commit against the deployed SHA"
+    )
+
+
+def test_publish_workflow_stamps_the_commit_into_the_image():
+    """/version can only be meaningful if CI bakes the SHA in at build time."""
+    workflow = yaml.safe_load(PUBLISH_WORKFLOW.read_text())
+    steps = workflow["jobs"]["build-and-push"]["steps"]
+    build = [s for s in steps if "build-push-action" in str(s.get("uses", ""))]
+    assert build, "no docker build-push-action step found"
+    build_args = str(build[0].get("with", {}).get("build-args", ""))
+    assert "GIT_COMMIT" in build_args, (
+        "the build must pass --build-arg GIT_COMMIT=<sha> so the image can "
+        f"report which commit it was built from; found build-args={build_args!r}"
+    )
+
+
+def test_dockerfile_accepts_and_exports_the_commit():
+    dockerfile = (REPO / "Dockerfile").read_text()
+    assert "ARG GIT_COMMIT" in dockerfile, "Dockerfile must accept the GIT_COMMIT build arg"
+    assert "ENV GIT_COMMIT" in dockerfile, (
+        "Dockerfile must export GIT_COMMIT so the running process can report it"
+    )
+
+
+def test_chat_api_exposes_the_version_endpoint():
+    main = (REPO / "services/chat_api/main.py").read_text()
+    assert '@app.get("/version")' in main, "chat API must expose GET /version"
+    assert 'os.getenv("GIT_COMMIT"' in main, (
+        "/version must report the GIT_COMMIT baked into the image"
+    )

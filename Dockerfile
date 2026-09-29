@@ -57,6 +57,13 @@ RUN sha256sum \
 ENV PYTHONUNBUFFERED=1
 ENV GARMINCONNECT_TOKENS=/app/tokens
 
+# Commit this image was built from. CI passes --build-arg GIT_COMMIT=<sha>; the
+# deploy then asserts the running container reports this exact value, which is
+# what proves production actually consumed the freshly published image instead
+# of silently restarting a stale one.
+ARG GIT_COMMIT=unknown
+ENV GIT_COMMIT=${GIT_COMMIT}
+
 # Default entrypoint for classic mode (coach one-shot run).
 # docker-compose.nas.yml overrides this via its `command` / entrypoint.
 # startup.sh is the entrypoint for NAS single-container mode.

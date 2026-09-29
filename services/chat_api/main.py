@@ -519,6 +519,21 @@ async def health() -> dict[str, str]:
     return {"status": "ok", "timestamp": _utcnow_iso()}
 
 
+@app.get("/version")
+async def version() -> dict[str, str]:
+    """Report the commit this image was built from.
+
+    The deploy asserts this matches the SHA it just published. Without it a
+    deploy can restart the stack on a stale image and still report success,
+    which is exactly how production ran months-old code while every deploy
+    went green.
+    """
+    return {
+        "git_commit": os.getenv("GIT_COMMIT", "unknown"),
+        "timestamp": _utcnow_iso(),
+    }
+
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest) -> ChatResponse:
     user_id = req.user_id.strip() or "Arnabbiswas"

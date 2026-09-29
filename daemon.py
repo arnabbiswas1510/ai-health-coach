@@ -542,6 +542,22 @@ def run_withings_sync():
             logger.warning("GARMIN_EMAIL not set — skipping Withings-Garmin sync.")
             return
 
+        # withings-sync keeps its OAuth credential at <config>/.withings_user.json.
+        # When that file is absent it falls back to prompting for the token on
+        # stdin, which in a detached container raises EOFError and dumps a full
+        # traceback on every poll. Check first so the operator gets one
+        # actionable line instead, and so we skip the Garmin login we cannot use.
+        withings_token = os.path.join(tokens_dir, ".withings_user.json")
+        if not os.path.exists(withings_token):
+            logger.warning(
+                "Withings OAuth token not found at %s — skipping Withings-Garmin sync. "
+                "Authorize once (interactively, on the host) to create it: "
+                "docker compose run --rm "
+                "--entrypoint 'withings-sync -c /app/tokens' ai-health-coach",
+                withings_token,
+            )
+            return
+
         # ── Step 1: authenticate to Garmin via the existing tokenstore ────────
         sanitized = garmin_email.replace("@", "_").replace(".", "_")
         user_tokens_dir = os.path.join(tokens_dir, sanitized)
