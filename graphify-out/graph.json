@@ -21,8 +21,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "backfill_logseq",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "backfill_logseq.py"
     },
     {
@@ -32,8 +32,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "backfill_logseq_backfill",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "backfill()"
     },
     {
@@ -43,8 +43,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "backfill_logseq_rationale_1",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "one-off backfill of garmin sleep/run metrics into the logseq journal.  writes vi"
     },
     {
@@ -484,7 +484,7 @@
       "_origin": "ast",
       "id": "daemon",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "daemon.py"
     },
     {
@@ -495,7 +495,7 @@
       "_origin": "ast",
       "id": "daemon_load_pending_syncs",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "_load_pending_syncs()"
     },
     {
@@ -506,7 +506,7 @@
       "_origin": "ast",
       "id": "daemon_py_path",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "path"
     },
     {
@@ -517,7 +517,7 @@
       "_origin": "ast",
       "id": "daemon_save_pending_syncs",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "_save_pending_syncs()"
     },
     {
@@ -528,7 +528,7 @@
       "_origin": "ast",
       "id": "daemon_queue_pending_sync",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "_queue_pending_sync()"
     },
     {
@@ -539,7 +539,7 @@
       "_origin": "ast",
       "id": "daemon_flush_pending_syncs",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "_flush_pending_syncs()"
     },
     {
@@ -550,7 +550,7 @@
       "_origin": "ast",
       "id": "daemon_sync_sleep_to_logseq",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "_sync_sleep_to_logseq()"
     },
     {
@@ -561,7 +561,7 @@
       "_origin": "ast",
       "id": "daemon_check_and_run",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "check_and_run()"
     },
     {
@@ -572,7 +572,7 @@
       "_origin": "ast",
       "id": "daemon_withings_sync_due",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "_withings_sync_due()"
     },
     {
@@ -583,7 +583,7 @@
       "_origin": "ast",
       "id": "daemon_py_date",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "date"
     },
     {
@@ -594,18 +594,18 @@
       "_origin": "ast",
       "id": "daemon_run_withings_sync",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "run_withings_sync()"
     },
     {
       "label": "main()",
       "file_type": "code",
       "source_file": "daemon.py",
-      "source_location": "L673",
+      "source_location": "L681",
       "_origin": "ast",
       "id": "daemon_main",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "main()"
     },
     {
@@ -616,7 +616,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_28",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "return the list of pending sync entries, or [] if none."
     },
     {
@@ -627,7 +627,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_52",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "add or update a pending sync entry for date_iso (deduplicates by date)."
     },
     {
@@ -638,7 +638,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_69",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "try to write all pending syncs to their correct journal pages.      processes en"
     },
     {
@@ -649,7 +649,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_115",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "write sleep + weight to today's logseq journal page.      wotd is intentionally"
     },
     {
@@ -660,7 +660,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_520",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "return true when the withings sync should run, and record the attempt.      with"
     },
     {
@@ -671,7 +671,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_554",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "push withings scale measurements to garmin connect.      calls withings-sync pro"
     },
     {
@@ -857,8 +857,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "poll_garmin",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 71,
+      "community_name": "Garmin",
       "norm_label": "poll_garmin.py"
     },
     {
@@ -868,8 +868,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "poll_garmin_main",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 71,
+      "community_name": "Garmin",
       "norm_label": "main()"
     },
     {
@@ -1064,7 +1064,7 @@
       "_origin": "ast",
       "id": "services_ai_ai_settings",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "ai_settings.py"
     },
     {
@@ -1075,7 +1075,7 @@
       "_origin": "ast",
       "id": "services_ai_ai_settings_agentrole",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "agentrole"
     },
     {
@@ -1086,7 +1086,7 @@
       "_origin": "ast",
       "id": "services_ai_ai_settings_py_enum",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "enum"
     },
     {
@@ -1185,7 +1185,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_config_langsmith_config_langsmithconfig_setup_langsmith",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".setup_langsmith()"
     },
     {
@@ -1262,7 +1262,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_activity_summarizer_node",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "activity_summarizer_node.py"
     },
     {
@@ -1272,7 +1272,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_activity_summarizer_node_extract_activity_data",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "extract_activity_data()"
     },
@@ -1416,7 +1416,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_summarizer_node",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "combined_summarizer_node.py"
     },
     {
@@ -1427,7 +1427,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_summarizer_node_extract_combined_data",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "extract_combined_data()"
     },
     {
@@ -1438,7 +1438,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_summarizer_node_combined_summarizer_node",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "combined_summarizer_node()"
     },
     {
@@ -1449,7 +1449,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_data_integration_node",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "data_integration_node.py"
     },
     {
@@ -1460,7 +1460,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_data_integration_node_data_integration_node",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "data_integration_node()"
     },
     {
@@ -1471,7 +1471,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_data_integration_node_py_any",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "any"
     },
     {
@@ -1482,7 +1482,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_data_summarizer_node",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "data_summarizer_node.py"
     },
     {
@@ -1493,7 +1493,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_data_summarizer_node_create_data_summarizer_node",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "create_data_summarizer_node()"
     },
     {
@@ -1504,7 +1504,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_data_summarizer_node_py_any",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "any"
     },
     {
@@ -1515,7 +1515,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_data_summarizer_node_py_agenttype",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "agenttype"
     },
     {
@@ -1525,8 +1525,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 8,
+      "community_name": "formatter_node.py",
       "norm_label": "formatter_node.py"
     },
     {
@@ -1536,8 +1536,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node_strip_fences",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 8,
+      "community_name": "formatter_node.py",
       "norm_label": "_strip_fences()"
     },
     {
@@ -1547,8 +1547,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node_parse_json_safely",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 8,
+      "community_name": "formatter_node.py",
       "norm_label": "_parse_json_safely()"
     },
     {
@@ -1559,7 +1559,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node_formatter_node",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "formatter_node()"
     },
     {
@@ -1569,8 +1569,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node_rationale_1",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 8,
+      "community_name": "formatter_node.py",
       "norm_label": "formatter node (analysis.html / physiology & metrics tab).  asks the llm for a s"
     },
     {
@@ -1603,7 +1603,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_metrics_summarizer_node",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "metrics_summarizer_node.py"
     },
     {
@@ -1613,7 +1613,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_metrics_summarizer_node_extract_metrics_data",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "extract_metrics_data()"
     },
@@ -1701,7 +1701,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "orchestrator_node.py"
     },
@@ -1712,7 +1712,7 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_interactionprovider",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "interactionprovider"
     },
@@ -1723,7 +1723,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "protocol",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "protocol"
     },
@@ -1734,7 +1734,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_interactionprovider_collect_answers",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": ".collect_answers()"
     },
@@ -1745,7 +1745,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_consoleinteractionprovider",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "consoleinteractionprovider"
     },
@@ -1756,7 +1756,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_consoleinteractionprovider_collect_answers",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": ".collect_answers()"
     },
@@ -1767,7 +1767,7 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_masterorchestrator",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "masterorchestrator"
     },
@@ -1778,7 +1778,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_masterorchestrator_init",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": ".__init__()"
     },
@@ -1789,7 +1789,7 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_masterorchestrator_call",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": ".__call__()"
     },
@@ -1800,7 +1800,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "command",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "command"
     },
@@ -1811,7 +1811,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_masterorchestrator_detect_stage",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "._detect_stage()"
     },
@@ -1822,7 +1822,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_masterorchestrator_collect_questions",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "._collect_questions()"
     },
@@ -1833,7 +1833,7 @@
       "source_location": "L173",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_masterorchestrator_create_agent_specific_qa_messages",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "._create_agent_specific_qa_messages()"
     },
@@ -1845,7 +1845,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_orchestrator_node_master_orchestrator_node",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "master_orchestrator_node()"
     },
     {
@@ -1878,7 +1878,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_physiology_summarizer_node",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "physiology_summarizer_node.py"
     },
     {
@@ -1889,7 +1889,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_physiology_summarizer_node_extract_physiology_data",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "extract_physiology_data()"
     },
     {
@@ -1900,7 +1900,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "plan_formatter_node.py"
     },
     {
@@ -1911,7 +1911,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node_strip_fences",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "_strip_fences()"
     },
     {
@@ -1922,7 +1922,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node_parse_json_safely",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "_parse_json_safely()"
     },
     {
@@ -1933,7 +1933,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node_plan_formatter_node",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "plan_formatter_node()"
     },
     {
@@ -1944,7 +1944,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node_rationale_1",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "plan formatter node.  asks the llm for a structured json data object describing"
     },
     {
@@ -1955,7 +1955,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node_rationale_79",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "remove ```json ... ``` or ``` ... ``` wrappers if present."
     },
     {
@@ -1966,7 +1966,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node_rationale_93",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "try to parse llm output as json; return none on failure."
     },
     {
@@ -2152,8 +2152,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_plot_resolution_node",
-      "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community": 10,
+      "community_name": "PlotStorage",
       "norm_label": "plot_resolution_node()"
     },
     {
@@ -2163,8 +2163,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_py_any",
-      "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community": 10,
+      "community_name": "PlotStorage",
       "norm_label": "any"
     },
     {
@@ -2252,7 +2252,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_synthesis_node",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "synthesis_node.py"
     },
     {
@@ -2263,7 +2263,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_synthesis_node_synthesis_node",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "synthesis_node()"
     },
     {
@@ -2538,7 +2538,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_state_training_analysis_state",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "training_analysis_state.py"
     },
     {
@@ -2548,7 +2548,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_training_analysis_state_traininganalysisstate",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "traininganalysisstate"
     },
@@ -2559,7 +2559,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "messagesstate",
-      "community": 12,
+      "community": 7,
       "community_name": "TrainingAnalysisState",
       "norm_label": "messagesstate"
     },
@@ -2647,8 +2647,8 @@
       "source_location": "L41",
       "_origin": "ast",
       "id": "services_ai_langgraph_utils_langsmith_cost_extractor_langsmithcostextractor_init",
-      "community": 1,
-      "community_name": "OutsideApiGraphQlClient",
+      "community": 9,
+      "community_name": "LangSmithCostExtractor",
       "norm_label": ".__init__()"
     },
     {
@@ -2923,7 +2923,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "analysis_workflow.py"
     },
     {
@@ -2934,7 +2934,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_analysis_workflow",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "create_analysis_workflow()"
     },
     {
@@ -2945,7 +2945,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_run_training_analysis",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "run_training_analysis()"
     },
     {
@@ -2956,7 +2956,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_simple_sequential_workflow",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "create_simple_sequential_workflow()"
     },
     {
@@ -2967,7 +2967,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "planning_workflow.py"
     },
     {
@@ -2978,7 +2978,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow_create_planning_workflow",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "create_planning_workflow()"
     },
     {
@@ -2989,7 +2989,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow_run_weekly_planning",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "run_weekly_planning()"
     },
     {
@@ -3000,7 +3000,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow_create_integrated_analysis_and_planning_workflow",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "create_integrated_analysis_and_planning_workflow()"
     },
     {
@@ -3011,7 +3011,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow_run_complete_analysis_and_planning",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "run_complete_analysis_and_planning()"
     },
     {
@@ -3022,7 +3022,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow_run_weekly_planning_with_context",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "run_weekly_planning_with_context()"
     },
     {
@@ -3066,7 +3066,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow_rationale_233",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "re-run only the planning branch using cached expert outputs.      used by the"
     },
     {
@@ -3099,7 +3099,7 @@
       "_origin": "ast",
       "id": "services_ai_model_config",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "model_config.py"
     },
     {
@@ -3110,7 +3110,7 @@
       "_origin": "ast",
       "id": "services_ai_model_config_modelconfiguration",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "modelconfiguration"
     },
     {
@@ -3121,7 +3121,7 @@
       "_origin": "ast",
       "id": "services_ai_model_config_modelselector",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "modelselector"
     },
     {
@@ -3142,8 +3142,8 @@
       "source_location": "L264",
       "_origin": "ast",
       "id": "services_ai_model_config_modelselector_apply_model_config",
-      "community": 18,
-      "community_name": ".get_llm",
+      "community": 7,
+      "community_name": "TrainingAnalysisState",
       "norm_label": "._apply_model_config()"
     },
     {
@@ -3153,8 +3153,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_model_config_py_any",
-      "community": 18,
-      "community_name": ".get_llm",
+      "community": 7,
+      "community_name": "TrainingAnalysisState",
       "norm_label": "any"
     },
     {
@@ -3923,8 +3923,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 72,
+      "community_name": "retry_with_backoff",
       "norm_label": "retry_handler.py"
     },
     {
@@ -3935,7 +3935,7 @@
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryableerror",
       "community": 72,
-      "community_name": "Exception",
+      "community_name": "retry_with_backoff",
       "norm_label": "retryableerror"
     },
     {
@@ -3945,8 +3945,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 72,
-      "community_name": "Exception",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": "exception"
     },
     {
@@ -3957,7 +3957,7 @@
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_apioverloaderror",
       "community": 72,
-      "community_name": "Exception",
+      "community_name": "retry_with_backoff",
       "norm_label": "apioverloaderror"
     },
     {
@@ -3967,8 +3967,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 72,
+      "community_name": "retry_with_backoff",
       "norm_label": "retryconfig"
     },
     {
@@ -3978,8 +3978,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_init",
-      "community": 72,
-      "community_name": "Exception",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": ".__init__()"
     },
     {
@@ -3989,8 +3989,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_calculate_delay",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 72,
+      "community_name": "retry_with_backoff",
       "norm_label": ".calculate_delay()"
     },
     {
@@ -4000,8 +4000,8 @@
       "source_location": "L59",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retry_with_backoff",
-      "community": 17,
-      "community_name": "combined_analyst_node.py",
+      "community": 72,
+      "community_name": "retry_with_backoff",
       "norm_label": "retry_with_backoff()"
     },
     {
@@ -4011,8 +4011,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_py_any",
-      "community": 17,
-      "community_name": "combined_analyst_node.py",
+      "community": 72,
+      "community_name": "retry_with_backoff",
       "norm_label": "any"
     },
     {
@@ -4022,8 +4022,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_with_retry",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 72,
+      "community_name": "retry_with_backoff",
       "norm_label": "with_retry()"
     },
     {
@@ -5221,8 +5221,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "adaptive_coach.py"
     },
     {
@@ -5232,8 +5232,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach_adaptiverunningcoach",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "adaptiverunningcoach"
     },
     {
@@ -5243,8 +5243,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach_adaptiverunningcoach_init",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": ".__init__()"
     },
     {
@@ -5254,8 +5254,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach_py_path",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "path"
     },
     {
@@ -5265,8 +5265,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach_adaptiverunningcoach_extract_running_activities",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "._extract_running_activities()"
     },
     {
@@ -5276,8 +5276,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach_adaptiverunningcoach_calculate_baselines",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "._calculate_baselines()"
     },
     {
@@ -5287,8 +5287,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach_py_any",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "any"
     },
     {
@@ -5298,8 +5298,8 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach_adaptiverunningcoach_suggest_next_run",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": ".suggest_next_run()"
     },
     {
@@ -5309,8 +5309,8 @@
       "source_location": "L152",
       "_origin": "ast",
       "id": "services_garmin_adaptive_coach_rationale_152",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "dynamically adjusts and suggests the next run.          redistributes missed mil"
     },
     {
@@ -5617,8 +5617,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_client",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "garmin/client.py"
     },
     {
@@ -5650,8 +5650,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "services_garmin_client_garminconnectclient_connect",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 71,
+      "community_name": "Garmin",
       "norm_label": ".connect()"
     },
     {
@@ -5661,8 +5661,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "services_garmin_client_garminconnectclient_client",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 71,
+      "community_name": "Garmin",
       "norm_label": ".client()"
     },
     {
@@ -5672,8 +5672,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "garmin",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 71,
+      "community_name": "Garmin",
       "norm_label": "garmin"
     },
     {
@@ -6398,8 +6398,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_hr_zones",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "hr_zones.py"
     },
     {
@@ -6409,8 +6409,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "hrzones"
     },
     {
@@ -6420,8 +6420,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones_describe",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".describe()"
     },
     {
@@ -6431,8 +6431,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones_zone_table",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".zone_table()"
     },
     {
@@ -6442,7 +6442,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_resolve_lthr",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "resolve_lthr()"
     },
@@ -6453,7 +6453,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_py_any",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "any"
     },
@@ -6464,8 +6464,8 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_compute_zones",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "compute_zones()"
     },
     {
@@ -6475,8 +6475,8 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_calibration_for",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "calibration_for()"
     },
     {
@@ -6486,8 +6486,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_py_path",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -6497,7 +6497,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_get_hr_zones",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "get_hr_zones()"
     },
@@ -6508,8 +6508,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_1",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "single source of truth for the athlete's heart-rate zones.  both wotd generation"
     },
     {
@@ -6519,8 +6519,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_58",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "resolved hr zones for the athlete, anchored on a live lthr."
     },
     {
@@ -6530,8 +6530,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_80",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "return z1-z5 as absolute bpm ranges.          every boundary is anchored on lthr"
     },
     {
@@ -6541,7 +6541,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_96",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "return the athlete's current lthr from garmin.      priority:       1. ``get_use"
     },
@@ -6552,8 +6552,8 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_157",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "build the full zone set from a live lthr and calibrated percentages.      a manu"
     },
     {
@@ -6563,8 +6563,8 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_204",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "return the persisted zone calibration, or factory defaults.      consumers that"
     },
     {
@@ -6574,7 +6574,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_222",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "resolve lthr and return the athlete's zones.      args:         recalibrate: whe"
     },
@@ -6629,8 +6629,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "services_garmin_models_userprofile",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "userprofile"
     },
     {
@@ -6684,8 +6684,8 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "services_garmin_models_activity",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "activity"
     },
     {
@@ -6750,8 +6750,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_plan_parser",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": "plan_parser.py"
     },
     {
@@ -6794,8 +6794,8 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_planparser_init",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".__init__()"
     },
     {
@@ -6805,8 +6805,8 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_planparser_from_lthr",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".from_lthr()"
     },
     {
@@ -6816,8 +6816,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_py_path",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -6970,8 +6970,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_1",
-      "community": 73,
-      "community_name": "hr_zones.py",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": "plan parser: converts the ai weekly planner markdown output into structured work"
     },
     {
@@ -7003,8 +7003,8 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_117",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "initialize planparser.          args:             zones: the athlete's resolved"
     },
     {
@@ -7014,8 +7014,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_136",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "build a parser from a live lthr using the persisted calibration."
     },
     {
@@ -7136,7 +7136,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "run_coach_feedback.py"
     },
     {
@@ -7147,7 +7147,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_generate_run_feedback",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "generate_run_feedback()"
     },
     {
@@ -7158,7 +7158,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_py_any",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "any"
     },
     {
@@ -7169,7 +7169,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_py_path",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "path"
     },
     {
@@ -7180,7 +7180,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_rationale_1",
       "community": 7,
-      "community_name": "AgentRole",
+      "community_name": "TrainingAnalysisState",
       "norm_label": "lightweight post-run coaching feedback.  called from daemon.py when a new comple"
     },
     {
@@ -7191,7 +7191,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_rationale_36",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "generate a short ai coaching note for a completed run.      returns the feedback"
     },
     {
@@ -7642,7 +7642,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "zone_calibrator.py"
     },
     {
@@ -7653,7 +7653,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_cal_path",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_cal_path()"
     },
     {
@@ -7664,7 +7664,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_py_path",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -7675,7 +7675,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_load_calibration",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "load_calibration()"
     },
     {
@@ -7685,8 +7685,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_default_calibration",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "_default_calibration()"
     },
     {
@@ -7697,7 +7697,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_save_calibration",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_save_calibration()"
     },
     {
@@ -7708,7 +7708,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_increment_run_counter",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "increment_run_counter()"
     },
     {
@@ -7719,7 +7719,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_is_calibration_due",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "is_calibration_due()"
     },
     {
@@ -7730,7 +7730,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_extract_zone_boundaries",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_extract_zone_boundaries()"
     },
     {
@@ -7741,7 +7741,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_fetch_recent_run_zones",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_fetch_recent_run_zones()"
     },
     {
@@ -7752,7 +7752,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_py_any",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "any"
     },
     {
@@ -7763,7 +7763,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_compute_new_percentages",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_compute_new_percentages()"
     },
     {
@@ -7774,7 +7774,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_maybe_recalibrate",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "maybe_recalibrate()"
     },
     {
@@ -7785,7 +7785,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_1",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "zone auto-calibrator for wotd.  analyses the last n (default 10) runs from garmi"
     },
     {
@@ -7796,7 +7796,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_71",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "load calibration from disk; return defaults if file missing or corrupt."
     },
     {
@@ -7807,7 +7807,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_115",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "bump the run counter and return the new count.      called by the daemon each ti"
     },
     {
@@ -7818,7 +7818,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_127",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "return true if we have accumulated runs_per_calibration runs since last calibrat"
     },
     {
@@ -7829,7 +7829,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_135",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "extract (zone3_low, zone4_low) boundaries from garmin's hr-timezones response."
     },
     {
@@ -7840,7 +7840,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_165",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "fetch hr-in-timezones data for the last ``n`` running activities.      returns a"
     },
     {
@@ -7851,7 +7851,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_228",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "compute new (floor_pct, ceiling_pct) from run zone data.      algorithm:     1."
     },
     {
@@ -7862,7 +7862,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_300",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "check if calibration is due; if so, run it and return updated calibration."
     },
     {
@@ -7872,8 +7872,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_logseq_init",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "logseq/__init__.py"
     },
     {
@@ -7883,7 +7883,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_logseq_logseq_client",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "logseq_client.py"
     },
@@ -7894,7 +7894,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_ssh_host",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_get_ssh_host()"
     },
@@ -7905,7 +7905,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_ssh_user",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_get_ssh_user()"
     },
@@ -7916,7 +7916,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_ssh_port",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_get_ssh_port()"
     },
@@ -7927,7 +7927,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_ssh_key_path",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_get_ssh_key_path()"
     },
@@ -7938,7 +7938,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_graph_path",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_get_graph_path()"
     },
@@ -7949,7 +7949,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_journal_sftp_path",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_journal_sftp_path()"
     },
@@ -7960,7 +7960,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_py_date",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "date"
     },
@@ -7971,7 +7971,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_is_property_line",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_is_property_line()"
     },
@@ -7982,8 +7982,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_flatten_props",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "_flatten_props()"
     },
     {
@@ -7993,8 +7993,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_py_any",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "any"
     },
     {
@@ -8004,8 +8004,8 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_build_garmin_block",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "_build_garmin_block()"
     },
     {
@@ -8015,8 +8015,8 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_parse_existing_garmin_block",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "_parse_existing_garmin_block()"
     },
     {
@@ -8026,8 +8026,8 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_upsert_properties",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "_upsert_properties()"
     },
     {
@@ -8037,7 +8037,7 @@
       "source_location": "L254",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_ssh_connect",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_ssh_connect()"
     },
@@ -8048,7 +8048,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "sshclient",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "sshclient"
     },
@@ -8059,7 +8059,7 @@
       "source_location": "L273",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_write_via_sftp",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_write_via_sftp()"
     },
@@ -8070,7 +8070,7 @@
       "source_location": "L366",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_format_time",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "_format_time()"
     },
@@ -8081,8 +8081,8 @@
       "source_location": "L398",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_format_pace",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "_format_pace()"
     },
     {
@@ -8092,8 +8092,8 @@
       "source_location": "L408",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_build_props",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "build_props()"
     },
     {
@@ -8104,7 +8104,7 @@
       "_origin": "ast",
       "id": "services_logseq_logseq_client_write_props_dict",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "write_props_dict()"
     },
     {
@@ -8114,8 +8114,8 @@
       "source_location": "L524",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_write_daily_properties",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "write_daily_properties()"
     },
     {
@@ -8125,7 +8125,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_1",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "services/logseq/logseq_client.py  writes garmin health metrics directly into log"
     },
@@ -8136,7 +8136,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_90",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "return the sftp path for the target journal file on the host machine.          h"
     },
@@ -8147,7 +8147,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_107",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "true if the line is a logseq page-level property (key:: value)."
     },
@@ -8158,8 +8158,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_112",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "flatten nested {'sleep': {'duration': 7.5}} \u2192 {'sleep/duration': '7.5'}.      al"
     },
     {
@@ -8169,8 +8169,8 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_127",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "build the logseq block format:     - garmin health sync       - sleep:         d"
     },
     {
@@ -8180,8 +8180,8 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_155",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "extract the existing garmin health sync block from journal content.      parses"
     },
     {
@@ -8191,8 +8191,8 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_200",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "write/update garmin health sync block in a logseq journal .md string.      the i"
     },
     {
@@ -8202,7 +8202,7 @@
       "source_location": "L274",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_274",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "ssh into the host machine and write/update the journal .md file directly.      r"
     },
@@ -8213,7 +8213,7 @@
       "source_location": "L367",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_367",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "convert garmin time value to display 'hh:mm', or none if invalid.      handles t"
     },
@@ -8224,8 +8224,8 @@
       "source_location": "L399",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_399",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "convert m/s to decimal min/km pace (e.g. 2.78 m/s \u2192 5.99 min/km)."
     },
     {
@@ -8235,8 +8235,8 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_424",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "convert raw garmin values into a formatted logseq properties dict.      only non"
     },
     {
@@ -8247,7 +8247,7 @@
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_482",
       "community": 64,
-      "community_name": "logseq_client.py",
+      "community_name": "write_props_dict",
       "norm_label": "write a pre-built props dict to the logseq journal for a specific date.      arg"
     },
     {
@@ -8257,8 +8257,8 @@
       "source_location": "L536",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_536",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "build and write health properties to today's (or a specific) logseq journal."
     },
     {
@@ -8312,8 +8312,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "client",
-      "community": 1,
-      "community_name": "OutsideApiGraphQlClient",
+      "community": 9,
+      "community_name": "LangSmithCostExtractor",
       "norm_label": "client"
     },
     {
@@ -8466,8 +8466,8 @@
       "source_location": "L332",
       "_origin": "ast",
       "id": "services_outside_client_outsideapigraphqlclient_to_float",
-      "community": 1,
-      "community_name": "OutsideApiGraphQlClient",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "._to_float()"
     },
     {
@@ -8812,10 +8812,43 @@
       "norm_label": "path"
     },
     {
-      "label": "_digest_path()",
+      "label": "_userid_of()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
       "source_location": "L59",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_userid_of",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "_userid_of()"
+    },
+    {
+      "label": "expected_userid()",
+      "file_type": "code",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_expected_userid",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "expected_userid()"
+    },
+    {
+      "label": "userid_mismatch()",
+      "file_type": "code",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_userid_mismatch",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "userid_mismatch()"
+    },
+    {
+      "label": "_digest_path()",
+      "file_type": "code",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L138",
       "_origin": "ast",
       "id": "services_withings_credential_store_digest_path",
       "community": 19,
@@ -8826,7 +8859,7 @@
       "label": "_digest()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L63",
+      "source_location": "L142",
       "_origin": "ast",
       "id": "services_withings_credential_store_digest",
       "community": 19,
@@ -8837,7 +8870,7 @@
       "label": "_bws_binary()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L67",
+      "source_location": "L146",
       "_origin": "ast",
       "id": "services_withings_credential_store_bws_binary",
       "community": 19,
@@ -8848,7 +8881,7 @@
       "label": "vault_unavailable_reason()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L79",
+      "source_location": "L158",
       "_origin": "ast",
       "id": "services_withings_credential_store_vault_unavailable_reason",
       "community": 19,
@@ -8859,7 +8892,7 @@
       "label": "_run_bws()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L88",
+      "source_location": "L167",
       "_origin": "ast",
       "id": "services_withings_credential_store_run_bws",
       "community": 19,
@@ -8870,7 +8903,7 @@
       "label": "resolve_project_id()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L119",
+      "source_location": "L198",
       "_origin": "ast",
       "id": "services_withings_credential_store_resolve_project_id",
       "community": 19,
@@ -8881,7 +8914,7 @@
       "label": "_find_secret()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L149",
+      "source_location": "L228",
       "_origin": "ast",
       "id": "services_withings_credential_store_find_secret",
       "community": 19,
@@ -8892,7 +8925,7 @@
       "label": "seed_from_vault()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L166",
+      "source_location": "L245",
       "_origin": "ast",
       "id": "services_withings_credential_store_seed_from_vault",
       "community": 19,
@@ -8900,10 +8933,32 @@
       "norm_label": "seed_from_vault()"
     },
     {
+      "label": "_already_pushed()",
+      "file_type": "code",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L293",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_already_pushed",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "_already_pushed()"
+    },
+    {
+      "label": "_read_credential_for_push()",
+      "file_type": "code",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L302",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_read_credential_for_push",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "_read_credential_for_push()"
+    },
+    {
       "label": "push_to_vault()",
       "file_type": "code",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L214",
+      "source_location": "L333",
       "_origin": "ast",
       "id": "services_withings_credential_store_push_to_vault",
       "community": 19,
@@ -8933,12 +8988,45 @@
       "norm_label": "where withings-sync expects to find its credential."
     },
     {
+      "label": "Extract the Withings profile id a credential is bound to.",
+      "file_type": "rationale",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_rationale_60",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "extract the withings profile id a credential is bound to."
+    },
+    {
+      "label": "The Withings profile this deployment is pinned to, if known.      Resolution ord",
+      "file_type": "rationale",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L69",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_rationale_69",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "the withings profile this deployment is pinned to, if known.      resolution ord"
+    },
+    {
+      "label": "Return a human-readable reason if the local credential is the wrong profile.",
+      "file_type": "rationale",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_rationale_97",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "return a human-readable reason if the local credential is the wrong profile."
+    },
+    {
       "label": "Locate the bws CLI, mirroring scripts/render_env.sh's discovery order.",
       "file_type": "rationale",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L68",
+      "source_location": "L147",
       "_origin": "ast",
-      "id": "services_withings_credential_store_rationale_68",
+      "id": "services_withings_credential_store_rationale_147",
       "community": 19,
       "community_name": "test_withings_credential_store.py",
       "norm_label": "locate the bws cli, mirroring scripts/render_env.sh's discovery order."
@@ -8947,9 +9035,9 @@
       "label": "Return why Bitwarden cannot be used, or None if it can.",
       "file_type": "rationale",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L80",
+      "source_location": "L159",
       "_origin": "ast",
-      "id": "services_withings_credential_store_rationale_80",
+      "id": "services_withings_credential_store_rationale_159",
       "community": 19,
       "community_name": "test_withings_credential_store.py",
       "norm_label": "return why bitwarden cannot be used, or none if it can."
@@ -8958,9 +9046,9 @@
       "label": "Run bws and return stdout, or None if it failed.      Never raises: Bitwarden is",
       "file_type": "rationale",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L89",
+      "source_location": "L168",
       "_origin": "ast",
-      "id": "services_withings_credential_store_rationale_89",
+      "id": "services_withings_credential_store_rationale_168",
       "community": 19,
       "community_name": "test_withings_credential_store.py",
       "norm_label": "run bws and return stdout, or none if it failed.      never raises: bitwarden is"
@@ -8969,9 +9057,9 @@
       "label": "Resolve the Bitwarden project by NAME.      An explicit BWS_PROJECT_ID is delibe",
       "file_type": "rationale",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L120",
+      "source_location": "L199",
       "_origin": "ast",
-      "id": "services_withings_credential_store_rationale_120",
+      "id": "services_withings_credential_store_rationale_199",
       "community": 19,
       "community_name": "test_withings_credential_store.py",
       "norm_label": "resolve the bitwarden project by name.      an explicit bws_project_id is delibe"
@@ -8980,9 +9068,9 @@
       "label": "Return the stored credential secret for this project, if present.",
       "file_type": "rationale",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L150",
+      "source_location": "L229",
       "_origin": "ast",
-      "id": "services_withings_credential_store_rationale_150",
+      "id": "services_withings_credential_store_rationale_229",
       "community": 19,
       "community_name": "test_withings_credential_store.py",
       "norm_label": "return the stored credential secret for this project, if present."
@@ -8991,20 +9079,42 @@
       "label": "Restore the credential from Bitwarden when it is missing locally.      Returns T",
       "file_type": "rationale",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L167",
+      "source_location": "L246",
       "_origin": "ast",
-      "id": "services_withings_credential_store_rationale_167",
+      "id": "services_withings_credential_store_rationale_246",
       "community": 19,
       "community_name": "test_withings_credential_store.py",
       "norm_label": "restore the credential from bitwarden when it is missing locally.      returns t"
     },
     {
+      "label": "True if this exact credential was already mirrored successfully.",
+      "file_type": "rationale",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L294",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_rationale_294",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "true if this exact credential was already mirrored successfully."
+    },
+    {
+      "label": "Return the credential to mirror, or None if there is nothing to send.      Cover",
+      "file_type": "rationale",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L303",
+      "_origin": "ast",
+      "id": "services_withings_credential_store_rationale_303",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "return the credential to mirror, or none if there is nothing to send.      cover"
+    },
+    {
       "label": "Mirror the local credential into Bitwarden if it changed.      Returns True only",
       "file_type": "rationale",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L215",
+      "source_location": "L334",
       "_origin": "ast",
-      "id": "services_withings_credential_store_rationale_215",
+      "id": "services_withings_credential_store_rationale_334",
       "community": 19,
       "community_name": "test_withings_credential_store.py",
       "norm_label": "mirror the local credential into bitwarden if it changed.      returns true only"
@@ -9260,8 +9370,8 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_handles_get_workouts_exception_gracefully",
-      "community": 72,
-      "community_name": "Exception",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": ".test_handles_get_workouts_exception_gracefully()"
     },
     {
@@ -9271,8 +9381,8 @@
       "source_location": "L202",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_continues_deleting_after_single_delete_failure",
-      "community": 72,
-      "community_name": "Exception",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": ".test_continues_deleting_after_single_delete_failure()"
     },
     {
@@ -9414,8 +9524,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_rationale_190",
-      "community": 72,
-      "community_name": "Exception",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": "if the library api fails, upload should proceed (not crash)."
     },
     {
@@ -9425,8 +9535,8 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_rationale_203",
-      "community": 72,
-      "community_name": "Exception",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": "if one delete call fails, the rest should still be attempted."
     },
     {
@@ -9447,7 +9557,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_hr_zones.py"
     },
@@ -9458,7 +9568,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_client_with_profile_lthr",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "_client_with_profile_lthr()"
     },
@@ -9469,7 +9579,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_resolve_lthr_prefers_user_profile",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_resolve_lthr_prefers_user_profile()"
     },
@@ -9480,7 +9590,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_resolve_lthr_falls_back_to_training_status_scan",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_resolve_lthr_falls_back_to_training_status_scan()"
     },
@@ -9491,7 +9601,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_resolve_lthr_raises_instead_of_using_age_formula",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_resolve_lthr_raises_instead_of_using_age_formula()"
     },
@@ -9502,8 +9612,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_zones_match_documented_calibration_at_lthr_177",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_zones_match_documented_calibration_at_lthr_177()"
     },
     {
@@ -9513,8 +9623,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_zones_never_land_in_age_formula_territory",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_zones_never_land_in_age_formula_territory()"
     },
     {
@@ -9524,8 +9634,8 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_config_override_wins",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_config_override_wins()"
     },
     {
@@ -9535,7 +9645,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_wotd_and_feedback_resolve_identical_zones",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_wotd_and_feedback_resolve_identical_zones()"
     },
@@ -9546,7 +9656,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_py_path",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
@@ -9557,7 +9667,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_feedback_path_does_not_consume_calibration_cycle()"
     },
@@ -9568,8 +9678,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_zone_table_is_contiguous_and_lthr_anchored",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_zone_table_is_contiguous_and_lthr_anchored()"
     },
     {
@@ -9579,8 +9689,8 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_plan_parser_zones_match_the_shared_model",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_plan_parser_zones_match_the_shared_model()"
     },
     {
@@ -9590,8 +9700,8 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_plan_parser_honours_manual_zone_override",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_plan_parser_honours_manual_zone_override()"
     },
     {
@@ -9601,7 +9711,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_1",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "zone consistency between wotd and post-run coaching feedback.  regression guard"
     },
@@ -9612,8 +9722,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_58",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "the old bug produced z2 = 100-120 bpm; assert we are nowhere near it."
     },
     {
@@ -9623,7 +9733,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_71",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "the whole point: both consumers must agree, bit for bit."
     },
@@ -9634,7 +9744,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_87",
-      "community": 70,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "recalibrate=false must never fire maybe_recalibrate (it resets the counter)."
     },
@@ -9645,8 +9755,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_106",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "z1-z5 must tile without gaps and every edge must derive from lthr."
     },
     {
@@ -9656,8 +9766,8 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_121",
-      "community": 67,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "planparser must not reintroduce its own age-derived max-hr zone table."
     },
     {
@@ -10151,8 +10261,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_adaptive_coach.py"
     },
     {
@@ -10162,8 +10272,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_create_mock_run",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "create_mock_run()"
     },
     {
@@ -10195,8 +10305,8 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_baselines_calculation",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_baselines_calculation()"
     },
     {
@@ -10206,8 +10316,8 @@
       "source_location": "L65",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_heart_rate_zones",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_heart_rate_zones()"
     },
     {
@@ -10217,8 +10327,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_suggest_next_run_no_missed_runs",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_suggest_next_run_no_missed_runs()"
     },
     {
@@ -10228,8 +10338,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_suggest_next_run_missed_one_run",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_suggest_next_run_missed_one_run()"
     },
     {
@@ -10239,8 +10349,8 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_suggest_next_run_missed_multiple_runs_debt_cap",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_suggest_next_run_missed_multiple_runs_debt_cap()"
     },
     {
@@ -10250,8 +10360,8 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_suggest_next_run_missed_week_reset",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_suggest_next_run_missed_week_reset()"
     },
     {
@@ -10261,8 +10371,8 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_adaptive_coach_weight_management",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_adaptive_coach_weight_management()"
     },
     {
@@ -10272,8 +10382,8 @@
       "source_location": "L159",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_dynamic_heart_rate_zones",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_dynamic_heart_rate_zones()"
     },
     {
@@ -10283,8 +10393,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_test_zones_agree_with_wotd_and_feedback",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "test_zones_agree_with_wotd_and_feedback()"
     },
     {
@@ -10294,8 +10404,8 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "tests_test_adaptive_coach_rationale_191",
-      "community": 53,
-      "community_name": "AdaptiveRunningCoach",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "the analysis report must quote the same z2 as wotd and post-run feedback."
     },
     {
@@ -10558,8 +10668,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_cli_e2e",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "test_cli_e2e.py"
     },
     {
@@ -10569,8 +10679,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_py_asyncio",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "asyncio"
     },
     {
@@ -10580,8 +10690,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_py_patch",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "patch"
     },
     {
@@ -10591,8 +10701,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_test_cli_e2e_smoke_with_mocks",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "test_cli_e2e_smoke_with_mocks()"
     },
     {
@@ -10602,8 +10712,8 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_test_cli_e2e_with_hitl_enabled",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "test_cli_e2e_with_hitl_enabled()"
     },
     {
@@ -10613,8 +10723,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_rationale_23",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "test cli end-to-end with all external dependencies mocked."
     },
     {
@@ -10624,8 +10734,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "tests_test_cli_e2e_rationale_106",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "test cli with hitl enabled to ensure user interactions work."
     },
     {
@@ -11912,7 +12022,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "test_langgraph_core_migration.py"
     },
     {
@@ -11945,7 +12055,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_all_nodes_importable",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "test_all_nodes_importable()"
     },
     {
@@ -11956,7 +12066,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_patch",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "patch"
     },
     {
@@ -11967,7 +12077,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_complete_workflow_creation",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "test_complete_workflow_creation()"
     },
     {
@@ -11977,8 +12087,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_state_schema_completeness",
-      "community": 58,
-      "community_name": "create_initial_state",
+      "community": 8,
+      "community_name": "formatter_node.py",
       "norm_label": "test_state_schema_completeness()"
     },
     {
@@ -11989,7 +12099,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_asyncio",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "asyncio"
     },
     {
@@ -12000,7 +12110,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_node_basic_functionality",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "test_node_basic_functionality()"
     },
     {
@@ -12011,7 +12121,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_workflow_structure_stability",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "formatter_node.py",
       "norm_label": "test_workflow_structure_stability()"
     },
     {
@@ -12099,7 +12209,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "test_langgraph_planning_workflow.py"
     },
     {
@@ -12110,7 +12220,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowstability",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "testworkflowstability"
     },
     {
@@ -12121,7 +12231,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowstability_test_planning_workflow_creation",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_planning_workflow_creation()"
     },
     {
@@ -12132,7 +12242,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowstability_test_integrated_workflow_creation",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_integrated_workflow_creation()"
     },
     {
@@ -12143,7 +12253,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowstability_test_state_schema_compatibility",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_state_schema_compatibility()"
     },
     {
@@ -12154,7 +12264,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowintegration",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "testworkflowintegration"
     },
     {
@@ -12164,8 +12274,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_py_fixture",
-      "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community": 58,
+      "community_name": "create_initial_state",
       "norm_label": "fixture"
     },
     {
@@ -12175,8 +12285,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowintegration_minimal_valid_state",
-      "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community": 58,
+      "community_name": "create_initial_state",
       "norm_label": ".minimal_valid_state()"
     },
     {
@@ -12187,7 +12297,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowintegration_test_workflow_accepts_valid_state",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_workflow_accepts_valid_state()"
     },
     {
@@ -12198,7 +12308,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowintegration_test_state_preserves_data_through_workflow",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_state_preserves_data_through_workflow()"
     },
     {
@@ -12209,7 +12319,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowintegration_test_workflow_node_count_stability",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_workflow_node_count_stability()"
     },
     {
@@ -12253,7 +12363,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowimports",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "testworkflowimports"
     },
     {
@@ -12264,7 +12374,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowimports_test_all_planning_nodes_importable",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_all_planning_nodes_importable()"
     },
     {
@@ -12275,7 +12385,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowimports_test_workflow_functions_importable",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_workflow_functions_importable()"
     },
     {
@@ -12297,7 +12407,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_rationale_64",
       "community": 12,
-      "community_name": "TrainingAnalysisState",
+      "community_name": "planning_workflow.py",
       "norm_label": "test workflows can accept valid state structure."
     },
     {
@@ -12417,8 +12527,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_logseq_connection",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "test_logseq_connection.py"
     },
     {
@@ -12428,8 +12538,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_journal_sftp_path_resolution",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "test_journal_sftp_path_resolution()"
     },
     {
@@ -12439,7 +12549,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_ssh_key_path_fallback",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "test_ssh_key_path_fallback()"
     },
@@ -12450,8 +12560,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_upsert_properties_merging",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "test_upsert_properties_merging()"
     },
     {
@@ -12461,8 +12571,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_py_patch",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "patch"
     },
     {
@@ -12472,8 +12582,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_write_via_sftp_success",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "test_write_via_sftp_success()"
     },
     {
@@ -12483,8 +12593,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_17",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "verify that graph path normalization works for both root directory and explicit"
     },
     {
@@ -12494,7 +12604,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_34",
-      "community": 64,
+      "community": 67,
       "community_name": "logseq_client.py",
       "norm_label": "verify key path fallback logic."
     },
@@ -12505,8 +12615,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_40",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "verify that property block is built cleanly without corrupting existing markdown"
     },
     {
@@ -12516,8 +12626,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_54",
-      "community": 64,
-      "community_name": "logseq_client.py",
+      "community": 53,
+      "community_name": "build_props",
       "norm_label": "simulate successful sftp journal write on linux host."
     },
     {
@@ -14435,6 +14545,105 @@
       "norm_label": "test_withings_gate_records_attempts_not_successes()"
     },
     {
+      "label": "_vault_with()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L314",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_vault_with",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "_vault_with()"
+    },
+    {
+      "label": "test_matching_profile_is_not_flagged()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L326",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_test_matching_profile_is_not_flagged",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "test_matching_profile_is_not_flagged()"
+    },
+    {
+      "label": "test_wrong_family_profile_is_flagged()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L332",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_test_wrong_family_profile_is_flagged",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "test_wrong_family_profile_is_flagged()"
+    },
+    {
+      "label": "test_explicit_pin_overrides_the_vault()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L340",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_test_explicit_pin_overrides_the_vault",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "test_explicit_pin_overrides_the_vault()"
+    },
+    {
+      "label": "test_first_ever_run_is_unconstrained()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L347",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_test_first_ever_run_is_unconstrained",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "test_first_ever_run_is_unconstrained()"
+    },
+    {
+      "label": "test_deliberate_profile_change_can_be_authorized()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L357",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_test_deliberate_profile_change_can_be_authorized",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "test_deliberate_profile_change_can_be_authorized()"
+    },
+    {
+      "label": "test_guard_is_inert_without_vault_access()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L364",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_test_guard_is_inert_without_vault_access",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "test_guard_is_inert_without_vault_access()"
+    },
+    {
+      "label": "test_push_refuses_to_overwrite_the_vault_with_another_profile()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L370",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_test_push_refuses_to_overwrite_the_vault_with_another_profile",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "test_push_refuses_to_overwrite_the_vault_with_another_profile()"
+    },
+    {
+      "label": "test_sync_aborts_before_touching_garmin_on_a_profile_mismatch()",
+      "file_type": "code",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L391",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_test_sync_aborts_before_touching_garmin_on_a_profile_mismatch",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "test_sync_aborts_before_touching_garmin_on_a_profile_mismatch()"
+    },
+    {
       "label": "Guards for durable Withings credential storage.  The failure this protects again",
       "file_type": "rationale",
       "source_file": "tests/test_withings_credential_store.py",
@@ -14576,6 +14785,50 @@
       "community": 19,
       "community_name": "test_withings_credential_store.py",
       "norm_label": "marking only on success lets a permanently failing sync spin hourly."
+    },
+    {
+      "label": "With nothing stored yet there is no profile to contradict.",
+      "file_type": "rationale",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L348",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_rationale_348",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "with nothing stored yet there is no profile to contradict."
+    },
+    {
+      "label": "No stored profile means no basis to reject; must not block the sync.",
+      "file_type": "rationale",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L365",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_rationale_365",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "no stored profile means no basis to reject; must not block the sync."
+    },
+    {
+      "label": "The vault copy is what a rebuilt host restores from; a bad overwrite is permanen",
+      "file_type": "rationale",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L371",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_rationale_371",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "the vault copy is what a rebuilt host restores from; a bad overwrite is permanen"
+    },
+    {
+      "label": "The upload is the irreversible step, so the guard must precede it.",
+      "file_type": "rationale",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L392",
+      "_origin": "ast",
+      "id": "tests_test_withings_credential_store_rationale_392",
+      "community": 19,
+      "community_name": "test_withings_credential_store.py",
+      "norm_label": "the upload is the irreversible step, so the guard must precede it."
     },
     {
       "label": "test_withings_token_guard.py",
@@ -17020,6 +17273,72 @@
       "norm_label": "alternatives considered"
     },
     {
+      "label": "2026-09-29_withings-profile-guard.md",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_withings_profile_guard",
+      "community": 70,
+      "community_name": "Pin the Withings sync to a single family profile",
+      "norm_label": "2026-09-29_withings-profile-guard.md"
+    },
+    {
+      "label": "Pin the Withings sync to a single family profile",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_withings_profile_guard_pin_the_withings_sync_to_a_single_family_profile",
+      "community": 70,
+      "community_name": "Pin the Withings sync to a single family profile",
+      "norm_label": "pin the withings sync to a single family profile"
+    },
+    {
+      "label": "Context",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_withings_profile_guard_context",
+      "community": 70,
+      "community_name": "Pin the Withings sync to a single family profile",
+      "norm_label": "context"
+    },
+    {
+      "label": "Decision",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_withings_profile_guard_decision",
+      "community": 70,
+      "community_name": "Pin the Withings sync to a single family profile",
+      "norm_label": "decision"
+    },
+    {
+      "label": "Consequences",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_withings_profile_guard_consequences",
+      "community": 70,
+      "community_name": "Pin the Withings sync to a single family profile",
+      "norm_label": "consequences"
+    },
+    {
+      "label": "Alternatives considered",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_withings_profile_guard_alternatives_considered",
+      "community": 70,
+      "community_name": "Pin the Withings sync to a single family profile",
+      "norm_label": "alternatives considered"
+    },
+    {
       "label": "decisions/README.md",
       "file_type": "document",
       "source_file": "decisions/README.md",
@@ -19395,7 +19714,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "daemon.py",
-      "source_location": "L673",
+      "source_location": "L681",
       "weight": 1.0,
       "_origin": "ast",
       "source": "daemon",
@@ -19866,7 +20185,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "daemon.py",
-      "source_location": "L680",
+      "source_location": "L688",
       "weight": 1.0,
       "_origin": "ast",
       "source": "daemon_main",
@@ -19913,7 +20232,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "daemon.py",
-      "source_location": "L679",
+      "source_location": "L687",
       "weight": 1.0,
       "_origin": "ast",
       "source": "daemon_main",
@@ -19937,7 +20256,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "daemon.py",
-      "source_location": "L661",
+      "source_location": "L669",
       "weight": 1.0,
       "_origin": "ast",
       "source": "daemon_run_withings_sync",
@@ -19954,6 +20273,18 @@
       "_origin": "ast",
       "source": "daemon_run_withings_sync",
       "target": "services_withings_credential_store_seed_from_vault"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "daemon.py",
+      "source_location": "L614",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "daemon_run_withings_sync",
+      "target": "services_withings_credential_store_userid_mismatch"
     },
     {
       "relation": "contains",
@@ -48620,6 +48951,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_init",
+      "target": "services_withings_credential_store_expected_userid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/__init__.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_init",
       "target": "services_withings_credential_store_push_to_vault",
       "confidence_score": 1.0
     },
@@ -48645,6 +48988,18 @@
       "_origin": "ast",
       "source": "services_withings_init",
       "target": "services_withings_credential_store_seed_from_vault",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/__init__.py",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_init",
+      "target": "services_withings_credential_store_userid_mismatch",
       "confidence_score": 1.0
     },
     {
@@ -48674,7 +49029,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L67",
+      "source_location": "L293",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store",
+      "target": "services_withings_credential_store_already_pushed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L146",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48696,7 +49062,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L63",
+      "source_location": "L142",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48707,7 +49073,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L59",
+      "source_location": "L138",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48718,7 +49084,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L149",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store",
+      "target": "services_withings_credential_store_expected_userid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L228",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48729,7 +49106,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L214",
+      "source_location": "L333",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48740,7 +49117,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L119",
+      "source_location": "L302",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store",
+      "target": "services_withings_credential_store_read_credential_for_push",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L198",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48751,7 +49139,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L88",
+      "source_location": "L167",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48762,7 +49150,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L166",
+      "source_location": "L245",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48773,7 +49161,29 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L79",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store",
+      "target": "services_withings_credential_store_userid_mismatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store",
+      "target": "services_withings_credential_store_userid_of",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L158",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store",
@@ -48828,18 +49238,6 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "services/withings/credential_store.py",
-      "source_location": "L219",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "services_withings_credential_store_push_to_vault",
-      "target": "services_withings_credential_store_credential_path",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
@@ -48855,12 +49253,96 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L171",
+      "source_location": "L309",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_read_credential_for_push",
+      "target": "services_withings_credential_store_credential_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L250",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_seed_from_vault",
       "target": "services_withings_credential_store_credential_path",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L112",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_userid_mismatch",
+      "target": "services_withings_credential_store_credential_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L359",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_deliberate_profile_change_can_be_authorized",
+      "target": "services_withings_credential_store_credential_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L342",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_explicit_pin_overrides_the_vault",
+      "target": "services_withings_credential_store_credential_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L350",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_first_ever_run_is_unconstrained",
+      "target": "services_withings_credential_store_credential_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L366",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_guard_is_inert_without_vault_access",
+      "target": "services_withings_credential_store_credential_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L327",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_matching_profile_is_not_flagged",
+      "target": "services_withings_credential_store_credential_path"
     },
     {
       "relation": "calls",
@@ -48896,6 +49378,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_test_withings_credential_store_test_push_failure_does_not_record_a_digest",
+      "target": "services_withings_credential_store_credential_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L373",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_push_refuses_to_overwrite_the_vault_with_another_profile",
       "target": "services_withings_credential_store_credential_path"
     },
     {
@@ -48971,11 +49465,47 @@
       "target": "services_withings_credential_store_credential_path"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L398",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_sync_aborts_before_touching_garmin_on_a_profile_mismatch",
+      "target": "services_withings_credential_store_credential_path"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L333",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_wrong_family_profile_is_flagged",
+      "target": "services_withings_credential_store_credential_path"
+    },
+    {
       "relation": "references",
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L59",
+      "source_location": "L293",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_already_pushed",
+      "target": "pathlike",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L138",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_digest_path",
@@ -48987,7 +49517,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L214",
+      "source_location": "L333",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_push_to_vault",
@@ -48999,7 +49529,19 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L166",
+      "source_location": "L302",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_read_credential_for_push",
+      "target": "pathlike",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L245",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_seed_from_vault",
@@ -49008,10 +49550,22 @@
     },
     {
       "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_userid_mismatch",
+      "target": "pathlike",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L59",
+      "source_location": "L138",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_digest_path",
@@ -49023,7 +49577,208 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L230",
+      "source_location": "L93",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_expected_userid",
+      "target": "services_withings_credential_store_userid_of",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_rationale_60",
+      "target": "services_withings_credential_store_userid_of",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_userid_mismatch",
+      "target": "services_withings_credential_store_userid_of",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L90",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_expected_userid",
+      "target": "services_withings_credential_store_find_secret",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_expected_userid",
+      "target": "services_withings_credential_store_resolve_project_id",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_expected_userid",
+      "target": "services_withings_credential_store_vault_unavailable_reason",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_rationale_69",
+      "target": "services_withings_credential_store_expected_userid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_userid_mismatch",
+      "target": "services_withings_credential_store_expected_userid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_rationale_97",
+      "target": "services_withings_credential_store_userid_mismatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L325",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_read_credential_for_push",
+      "target": "services_withings_credential_store_userid_mismatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L361",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_deliberate_profile_change_can_be_authorized",
+      "target": "services_withings_credential_store_userid_mismatch"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L344",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_explicit_pin_overrides_the_vault",
+      "target": "services_withings_credential_store_userid_mismatch"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L354",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_first_ever_run_is_unconstrained",
+      "target": "services_withings_credential_store_userid_mismatch"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L367",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_guard_is_inert_without_vault_access",
+      "target": "services_withings_credential_store_userid_mismatch"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L329",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_matching_profile_is_not_flagged",
+      "target": "services_withings_credential_store_userid_mismatch"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L335",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_wrong_family_profile_is_flagged",
+      "target": "services_withings_credential_store_userid_mismatch"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L295",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_already_pushed",
+      "target": "services_withings_credential_store_digest_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L342",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_push_to_vault",
@@ -49035,7 +49790,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L209",
+      "source_location": "L288",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_seed_from_vault",
@@ -49047,7 +49802,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L229",
+      "source_location": "L341",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_push_to_vault",
@@ -49059,7 +49814,19 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L209",
+      "source_location": "L319",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_read_credential_for_push",
+      "target": "services_withings_credential_store_digest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L288",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_seed_from_vault",
@@ -49070,10 +49837,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L68",
+      "source_location": "L147",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_withings_credential_store_rationale_68",
+      "source": "services_withings_credential_store_rationale_147",
       "target": "services_withings_credential_store_bws_binary",
       "confidence_score": 1.0
     },
@@ -49082,7 +49849,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L94",
+      "source_location": "L173",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_run_bws",
@@ -49094,7 +49861,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L83",
+      "source_location": "L162",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_vault_unavailable_reason",
@@ -49106,7 +49873,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L237",
+      "source_location": "L344",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_push_to_vault",
@@ -49117,10 +49884,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L80",
+      "source_location": "L159",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_withings_credential_store_rationale_80",
+      "source": "services_withings_credential_store_rationale_159",
       "target": "services_withings_credential_store_vault_unavailable_reason",
       "confidence_score": 1.0
     },
@@ -49129,7 +49896,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L175",
+      "source_location": "L254",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_seed_from_vault",
@@ -49141,7 +49908,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L151",
+      "source_location": "L230",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_find_secret",
@@ -49153,7 +49920,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L248",
+      "source_location": "L355",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_push_to_vault",
@@ -49164,10 +49931,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L89",
+      "source_location": "L168",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_withings_credential_store_rationale_89",
+      "source": "services_withings_credential_store_rationale_168",
       "target": "services_withings_credential_store_run_bws",
       "confidence_score": 1.0
     },
@@ -49176,7 +49943,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L127",
+      "source_location": "L206",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_resolve_project_id",
@@ -49212,7 +49979,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L242",
+      "source_location": "L349",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_push_to_vault",
@@ -49223,10 +49990,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L120",
+      "source_location": "L199",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_withings_credential_store_rationale_120",
+      "source": "services_withings_credential_store_rationale_199",
       "target": "services_withings_credential_store_resolve_project_id",
       "confidence_score": 1.0
     },
@@ -49235,7 +50002,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L183",
+      "source_location": "L262",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_seed_from_vault",
@@ -49259,7 +50026,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L246",
+      "source_location": "L353",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_push_to_vault",
@@ -49270,10 +50037,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L150",
+      "source_location": "L229",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_withings_credential_store_rationale_150",
+      "source": "services_withings_credential_store_rationale_229",
       "target": "services_withings_credential_store_find_secret",
       "confidence_score": 1.0
     },
@@ -49282,7 +50049,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L187",
+      "source_location": "L266",
       "weight": 1.0,
       "_origin": "ast",
       "source": "services_withings_credential_store_seed_from_vault",
@@ -49305,10 +50072,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L167",
+      "source_location": "L246",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_withings_credential_store_rationale_167",
+      "source": "services_withings_credential_store_rationale_246",
       "target": "services_withings_credential_store_seed_from_vault",
       "confidence_score": 1.0
     },
@@ -49376,10 +50143,56 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "services/withings/credential_store.py",
-      "source_location": "L215",
+      "source_location": "L294",
       "weight": 1.0,
       "_origin": "ast",
-      "source": "services_withings_credential_store_rationale_215",
+      "source": "services_withings_credential_store_rationale_294",
+      "target": "services_withings_credential_store_already_pushed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L319",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_read_credential_for_push",
+      "target": "services_withings_credential_store_already_pushed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L338",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_push_to_vault",
+      "target": "services_withings_credential_store_read_credential_for_push",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L303",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_rationale_303",
+      "target": "services_withings_credential_store_read_credential_for_push",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "services/withings/credential_store.py",
+      "source_location": "L334",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "services_withings_credential_store_rationale_334",
       "target": "services_withings_credential_store_push_to_vault",
       "confidence_score": 1.0
     },
@@ -49429,6 +50242,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_test_withings_credential_store_test_push_is_a_no_op_when_no_credential_exists",
+      "target": "services_withings_credential_store_push_to_vault"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L387",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_push_refuses_to_overwrite_the_vault_with_another_profile",
       "target": "services_withings_credential_store_push_to_vault"
     },
     {
@@ -56034,6 +56859,61 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L357",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_test_deliberate_profile_change_can_be_authorized",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L340",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_test_explicit_pin_overrides_the_vault",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L347",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_test_first_ever_run_is_unconstrained",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L364",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_test_guard_is_inert_without_vault_access",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L326",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_test_matching_profile_is_not_flagged",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
       "source_location": "L109",
       "weight": 1.0,
       "_origin": "ast",
@@ -56083,6 +56963,17 @@
       "_origin": "ast",
       "source": "tests_test_withings_credential_store",
       "target": "tests_test_withings_credential_store_test_push_is_a_no_op_when_no_credential_exists",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L370",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_test_push_refuses_to_overwrite_the_vault_with_another_profile",
       "confidence_score": 1.0
     },
     {
@@ -56177,6 +57068,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L391",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_test_sync_aborts_before_touching_garmin_on_a_profile_mismatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
       "source_location": "L292",
       "weight": 1.0,
       "_origin": "ast",
@@ -56193,6 +57095,28 @@
       "_origin": "ast",
       "source": "tests_test_withings_credential_store",
       "target": "tests_test_withings_credential_store_test_withings_sync_runs_once_per_day",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L332",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_test_wrong_family_profile_is_flagged",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L314",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store",
+      "target": "tests_test_withings_credential_store_vault_with",
       "confidence_score": 1.0
     },
     {
@@ -56237,6 +57161,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_test_withings_credential_store_rationale_28",
+      "target": "tests_test_withings_credential_store_fake_bws",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L351",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_first_ever_run_is_unconstrained",
       "target": "tests_test_withings_credential_store_fake_bws",
       "confidence_score": 1.0
     },
@@ -56297,6 +57233,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_test_withings_credential_store_test_push_is_a_no_op_when_no_credential_exists",
+      "target": "tests_test_withings_credential_store_fake_bws",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L386",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_push_refuses_to_overwrite_the_vault_with_another_profile",
       "target": "tests_test_withings_credential_store_fake_bws",
       "confidence_score": 1.0
     },
@@ -56381,6 +57329,18 @@
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_test_withings_credential_store_test_seed_writes_the_credential_readable_only_by_its_owner",
+      "target": "tests_test_withings_credential_store_fake_bws",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L316",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_vault_with",
       "target": "tests_test_withings_credential_store_fake_bws",
       "confidence_score": 1.0
     },
@@ -56492,6 +57452,98 @@
       "_origin": "ast",
       "source": "tests_test_withings_credential_store_rationale_293",
       "target": "tests_test_withings_credential_store_test_withings_gate_records_attempts_not_successes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L360",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_deliberate_profile_change_can_be_authorized",
+      "target": "tests_test_withings_credential_store_vault_with",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L343",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_explicit_pin_overrides_the_vault",
+      "target": "tests_test_withings_credential_store_vault_with",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L328",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_matching_profile_is_not_flagged",
+      "target": "tests_test_withings_credential_store_vault_with",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L334",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_test_wrong_family_profile_is_flagged",
+      "target": "tests_test_withings_credential_store_vault_with",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L348",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_rationale_348",
+      "target": "tests_test_withings_credential_store_test_first_ever_run_is_unconstrained",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L365",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_rationale_365",
+      "target": "tests_test_withings_credential_store_test_guard_is_inert_without_vault_access",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L371",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_rationale_371",
+      "target": "tests_test_withings_credential_store_test_push_refuses_to_overwrite_the_vault_with_another_profile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_withings_credential_store.py",
+      "source_location": "L392",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_withings_credential_store_rationale_392",
+      "target": "tests_test_withings_credential_store_test_sync_aborts_before_touching_garmin_on_a_profile_mismatch",
       "confidence_score": 1.0
     },
     {
@@ -58874,6 +59926,61 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_withings_profile_guard",
+      "target": "decisions_2026_09_29_withings_profile_guard_pin_the_withings_sync_to_a_single_family_profile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_withings_profile_guard_pin_the_withings_sync_to_a_single_family_profile",
+      "target": "decisions_2026_09_29_withings_profile_guard_alternatives_considered",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_withings_profile_guard_pin_the_withings_sync_to_a_single_family_profile",
+      "target": "decisions_2026_09_29_withings_profile_guard_consequences",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_withings_profile_guard_pin_the_withings_sync_to_a_single_family_profile",
+      "target": "decisions_2026_09_29_withings_profile_guard_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_withings-profile-guard.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_withings_profile_guard_pin_the_withings_sync_to_a_single_family_profile",
+      "target": "decisions_2026_09_29_withings_profile_guard_decision",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "decisions/README.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -59203,5 +60310,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "32797be7fe6bf859c84a0dfd807629f1ed31bf24"
+  "built_at_commit": "0180e56922fc0170ce9f7448f56b3836ad7946e8"
 }

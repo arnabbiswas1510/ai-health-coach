@@ -56,6 +56,85 @@ def credential_path(tokens_dir: str | os.PathLike[str]) -> Path:
     return Path(tokens_dir) / CREDENTIAL_FILENAME
 
 
+def _userid_of(text: str) -> str | None:
+    """Extract the Withings profile id a credential is bound to."""
+    try:
+        value = json.loads(text).get("userid")
+    except (json.JSONDecodeError, AttributeError):
+        return None
+    return str(value) if value not in (None, "") else None
+
+
+def expected_userid() -> str | None:
+    """The Withings profile this deployment is pinned to, if known.
+
+    Resolution order:
+
+    1. ``WITHINGS_EXPECTED_USERID`` -- an explicit pin, which also lets an
+       operator deliberately move to a different profile.
+    2. The profile already recorded in Bitwarden -- trust-on-first-use. The
+       vault copy is the durable record of "whose scale this deployment
+       tracks", so it needs no extra state to maintain.
+
+    Returns None when neither is available (i.e. the very first run), in which
+    case no constraint is applied.
+    """
+    pinned = os.getenv("WITHINGS_EXPECTED_USERID", "").strip()
+    if pinned:
+        return pinned
+    if vault_unavailable_reason():
+        return None
+    project_id = resolve_project_id()
+    if project_id is None:
+        return None
+    secret = _find_secret(project_id)
+    if not secret:
+        return None
+    return _userid_of(secret.get("value", ""))
+
+
+def userid_mismatch(tokens_dir: str | os.PathLike[str]) -> str | None:
+    """Return a human-readable reason if the local credential is the wrong profile.
+
+    The Withings account hosts several family profiles, and re-running the
+    interactive authorization silently overwrites the credential with whichever
+    profile was picked. That is not merely a storage problem: the sync would
+    upload another person's weight and body composition into *this* athlete's
+    Garmin history, corrupting the very metrics the coach reads to track the
+    weight-loss goal. Garmin has no clean way to unpick that after the fact, so
+    the check has to happen before the upload, not after.
+
+    Returns None when the credential is correct, unknown, or unconstrained.
+    """
+    if os.getenv("WITHINGS_ALLOW_USERID_CHANGE", "").strip().lower() in {"1", "true", "yes"}:
+        return None
+
+    path = credential_path(tokens_dir)
+    if not path.exists():
+        return None
+
+    try:
+        actual = _userid_of(path.read_text(encoding="utf-8"))
+    except OSError:
+        return None
+    if actual is None:
+        return None
+
+    expected = expected_userid()
+    if expected is None or expected == actual:
+        return None
+
+    return (
+        f"the local Withings credential is bound to profile {actual}, but this "
+        f"deployment is pinned to profile {expected}. Re-running the interactive "
+        f"authorization and selecting a different family profile is the usual "
+        f"cause. Syncing would upload that person's measurements into this "
+        f"athlete's Garmin history. Restore the correct credential (delete "
+        f"{path} and let it reseed from Bitwarden), or set "
+        f"WITHINGS_ALLOW_USERID_CHANGE=true if the change is intended."
+    )
+
+
 def _digest_path(tokens_dir: str | os.PathLike[str]) -> Path:
     return Path(tokens_dir) / DIGEST_FILENAME
 
@@ -211,28 +290,56 @@ def seed_from_vault(tokens_dir: str | os.PathLike[str]) -> bool:
     return True
 
 
-def push_to_vault(tokens_dir: str | os.PathLike[str]) -> bool:
-    """Mirror the local credential into Bitwarden if it changed.
+def _already_pushed(tokens_dir: str | os.PathLike[str], digest: str) -> bool:
+    """True if this exact credential was already mirrored successfully."""
+    digest_file = _digest_path(tokens_dir)
+    try:
+        return digest_file.exists() and digest_file.read_text(encoding="utf-8").strip() == digest
+    except OSError:
+        return False  # an unreadable marker just means we push again
 
-    Returns True only if the vault was actually written.
+
+def _read_credential_for_push(tokens_dir: str | os.PathLike[str]) -> str | None:
+    """Return the credential to mirror, or None if there is nothing to send.
+
+    Covers every reason a push should be skipped before any network call:
+    no credential, an unreadable one, an unchanged one, or one belonging to a
+    different family profile.
     """
     path = credential_path(tokens_dir)
     if not path.exists():
-        return False
+        return None
 
     try:
         value = path.read_text(encoding="utf-8")
     except OSError as exc:
         logger.warning("Withings vault: could not read %s: %s", path, exc)
-        return False
+        return None
 
+    if _already_pushed(tokens_dir, _digest(value)):
+        return None
+
+    # Never let a different family profile's credential replace the stored one:
+    # the vault copy is what a rebuilt host restores from, so overwriting it
+    # would make the wrong profile permanent.
+    mismatch = userid_mismatch(tokens_dir)
+    if mismatch:
+        logger.error("Refusing to mirror the Withings credential: %s", mismatch)
+        return None
+
+    return value
+
+
+def push_to_vault(tokens_dir: str | os.PathLike[str]) -> bool:
+    """Mirror the local credential into Bitwarden if it changed.
+
+    Returns True only if the vault was actually written.
+    """
+    value = _read_credential_for_push(tokens_dir)
+    if value is None:
+        return False
     current = _digest(value)
     digest_file = _digest_path(tokens_dir)
-    try:
-        if digest_file.exists() and digest_file.read_text(encoding="utf-8").strip() == current:
-            return False  # unchanged since the last successful push
-    except OSError:
-        pass  # an unreadable marker just means we push again
 
     reason = vault_unavailable_reason()
     if reason:

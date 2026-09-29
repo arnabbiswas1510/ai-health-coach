@@ -297,3 +297,119 @@ def test_withings_gate_records_attempts_not_successes(tmp_path, monkeypatch):
     daemon._withings_sync_due(date(2026, 9, 29))
     marker = tmp_path / ".withings_last_sync"
     assert marker.read_text(encoding="utf-8").strip() == "2026-09-29"
+
+
+# ── family-profile guard ─────────────────────────────────────────────────────
+#
+# The Withings account hosts four family profiles. Re-running the interactive
+# authorization and picking the wrong one silently rebinds the credential. The
+# damage is not storage: the sync would upload another person's weight into
+# this athlete's Garmin history, corrupting the metrics the coach reads to
+# track the weight-loss goal.
+
+ARNAB = json.dumps({"access_token": "a", "refresh_token": "r", "userid": 2324109})
+OTHER = json.dumps({"access_token": "b", "refresh_token": "s", "userid": 9999999})
+
+
+def _vault_with(monkeypatch, credential):
+    monkeypatch.setenv("BWS_ACCESS_TOKEN", "tok")
+    _fake_bws(
+        monkeypatch,
+        lambda args: PROJECTS
+        if args[0] == "project"
+        else json.dumps(
+            [{"id": "s1", "key": cs.SECRET_KEY, "value": credential, "projectId": PROJECT_ID}]
+        ),
+    )
+
+
+def test_matching_profile_is_not_flagged(tmp_path, monkeypatch):
+    cs.credential_path(tmp_path).write_text(ARNAB, encoding="utf-8")
+    _vault_with(monkeypatch, ARNAB)
+    assert cs.userid_mismatch(tmp_path) is None
+
+
+def test_wrong_family_profile_is_flagged(tmp_path, monkeypatch):
+    cs.credential_path(tmp_path).write_text(OTHER, encoding="utf-8")
+    _vault_with(monkeypatch, ARNAB)
+    reason = cs.userid_mismatch(tmp_path)
+    assert reason is not None
+    assert "9999999" in reason and "2324109" in reason
+
+
+def test_explicit_pin_overrides_the_vault(tmp_path, monkeypatch):
+    monkeypatch.setenv("WITHINGS_EXPECTED_USERID", "2324109")
+    cs.credential_path(tmp_path).write_text(OTHER, encoding="utf-8")
+    _vault_with(monkeypatch, OTHER)  # vault agrees with the wrong profile
+    assert cs.userid_mismatch(tmp_path) is not None
+
+
+def test_first_ever_run_is_unconstrained(tmp_path, monkeypatch):
+    """With nothing stored yet there is no profile to contradict."""
+    monkeypatch.setenv("BWS_ACCESS_TOKEN", "tok")
+    cs.credential_path(tmp_path).write_text(ARNAB, encoding="utf-8")
+    _fake_bws(
+        monkeypatch, lambda args: PROJECTS if args[0] == "project" else "[]"
+    )
+    assert cs.userid_mismatch(tmp_path) is None
+
+
+def test_deliberate_profile_change_can_be_authorized(tmp_path, monkeypatch):
+    monkeypatch.setenv("WITHINGS_ALLOW_USERID_CHANGE", "true")
+    cs.credential_path(tmp_path).write_text(OTHER, encoding="utf-8")
+    _vault_with(monkeypatch, ARNAB)
+    assert cs.userid_mismatch(tmp_path) is None
+
+
+def test_guard_is_inert_without_vault_access(tmp_path):
+    """No stored profile means no basis to reject; must not block the sync."""
+    cs.credential_path(tmp_path).write_text(OTHER, encoding="utf-8")
+    assert cs.userid_mismatch(tmp_path) is None
+
+
+def test_push_refuses_to_overwrite_the_vault_with_another_profile(tmp_path, monkeypatch):
+    """The vault copy is what a rebuilt host restores from; a bad overwrite is permanent."""
+    monkeypatch.setenv("BWS_ACCESS_TOKEN", "tok")
+    cs.credential_path(tmp_path).write_text(OTHER, encoding="utf-8")
+    writes = []
+
+    def handler(args):
+        if args[0] == "project":
+            return PROJECTS
+        if args[1] == "list":
+            return json.dumps(
+                [{"id": "s1", "key": cs.SECRET_KEY, "value": ARNAB, "projectId": PROJECT_ID}]
+            )
+        writes.append(args)
+        return "ok"
+
+    _fake_bws(monkeypatch, handler)
+    assert cs.push_to_vault(tmp_path) is False
+    assert writes == []
+
+
+def test_sync_aborts_before_touching_garmin_on_a_profile_mismatch(tmp_path, monkeypatch):
+    """The upload is the irreversible step, so the guard must precede it."""
+    import daemon
+
+    monkeypatch.setenv("GARMINCONNECT_TOKENS", str(tmp_path))
+    monkeypatch.setenv("GARMIN_EMAIL", "a@b.c")
+    monkeypatch.setenv("WITHINGS_EXPECTED_USERID", "2324109")
+    cs.credential_path(tmp_path).write_text(OTHER, encoding="utf-8")
+
+    touched = []
+
+    def record(*args, **kwargs):
+        touched.append(args)
+        raise RuntimeError("stop here")
+
+    monkeypatch.setattr(daemon, "_withings_sync_due", lambda *a, **k: True)
+    monkeypatch.setattr(cs, "seed_from_vault", lambda *a, **k: False)
+    import garminconnect
+
+    monkeypatch.setattr(garminconnect, "Garmin", record)
+
+    # run_withings_sync swallows exceptions, so assert on the observable effect
+    # rather than relying on one propagating out.
+    daemon.run_withings_sync()
+    assert touched == [], "sync authenticated to Garmin despite a wrong profile"

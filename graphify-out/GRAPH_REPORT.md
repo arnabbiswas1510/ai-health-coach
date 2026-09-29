@@ -1,33 +1,33 @@
 # Graph Report - ai-health-coach  (2026-09-29)
 
 ## Corpus Check
-- 140 files · ~131,157 words
+- 141 files · ~132,706 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1576 nodes · 3607 edges · 75 communities (69 shown, 6 thin omitted)
-- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 165 edges (avg confidence: 0.59)
+- 1605 nodes · 3675 edges · 75 communities (69 shown, 6 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 165 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `32797be7`
+- Built from commit: `0180e569`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- zone_calibrator.py
+- test_hr_zones.py
 - OutsideApiGraphQlClient
 - main.py
 - run_analysis_from_config
 - TriathlonCoachDataExtractor
 - Technology Stack
 - Changelog
-- AgentRole
-- analysis_workflow.py
+- TrainingAnalysisState
+- formatter_node.py
 - LangSmithCostExtractor
 - PlotStorage
 - PlanParser
-- TrainingAnalysisState
+- planning_workflow.py
 - GarminCalendarSyncer
 - _make_syncer
 - Garmin AI Coach — Project Context & Memory
@@ -64,7 +64,7 @@
 - 2026-08-24 — Manual WOTD Dashboard Trigger
 - 2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`
 - Production consumes the published image instead of building on the host
-- AdaptiveRunningCoach
+- build_props
 - .env.template declares every key docker-compose.yml reads
 - Withings credential durability via Bitwarden
 - GarminConnectClient
@@ -75,15 +75,15 @@
 - feedback/__init__.py
 - load_weighted_feedback
 - detect_timing
-- logseq_client.py
+- write_props_dict
 - Scope secrets to one Bitwarden project, reduce the mandatory set to six, and actually run the renderer
 - FakeLLM
-- compute_zones
+- logseq_client.py
 - test_dashboard_layout.py
 - Dashboard shell moves out of the repository root into frontend/
-- test_hr_zones.py
-- Exception
-- hr_zones.py
+- Pin the Withings sync to a single family profile
+- Garmin
+- retry_with_backoff
 - test_withings_token_guard.py
 - A deploy must prove production is running the code it just published
 
@@ -100,8 +100,6 @@
 10. `GarminCalendarSyncer` - 30 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `ConfigParser` --uses--> `UserProfile`  [INFERRED]
-  cli/garmin_ai_coach_cli.py → services/garmin/models.py
 - `AgentRole` --uses--> `AIMode`  [INFERRED]
   services/ai/ai_settings.py → core/config.py
 - `_StubSettings` --uses--> `AgentRole`  [INFERRED]
@@ -110,31 +108,33 @@
   tests/test_plotting_tool_integration.py → services/ai/ai_settings.py
 - `test_all_nodes_importable()` --indirect_call--> `activity_expert_node()`  [INFERRED]
   tests/test_langgraph_core_migration.py → services/ai/langgraph/nodes/activity_expert_node.py
+- `test_all_nodes_importable()` --indirect_call--> `metrics_expert_node()`  [INFERRED]
+  tests/test_langgraph_core_migration.py → services/ai/langgraph/nodes/metrics_expert_node.py
 
 ## Import Cycles
 - None detected.
 
 ## Communities (75 total, 6 thin omitted)
 
-### Community 0 - "zone_calibrator.py"
-Cohesion: 0.19
-Nodes (19): _cal_path(), _compute_new_percentages(), _extract_zone_boundaries(), _fetch_recent_run_zones(), increment_run_counter(), is_calibration_due(), load_calibration(), maybe_recalibrate() (+11 more)
+### Community 0 - "test_hr_zones.py"
+Cohesion: 0.06
+Nodes (56): calibration_for(), compute_zones(), get_hr_zones(), HRZones, Any, Path, Single source of truth for the athlete's heart-rate zones.  Both WOTD generation, Build the full zone set from a live LTHR and calibrated percentages.      A manu (+48 more)
 
 ### Community 1 - "OutsideApiGraphQlClient"
 Cohesion: 0.05
-Nodes (16): Client, dt, OutsideApiGraphQlClient, Any, datetime, CalendarNode, CalendarResult, Event (+8 more)
+Nodes (15): dt, OutsideApiGraphQlClient, Any, datetime, CalendarNode, CalendarResult, Event, EventCategory (+7 more)
 
 ### Community 2 - "main.py"
 Cohesion: 0.06
 Nodes (65): delete, get, post, _apply_suggested_run_override(), _build_planning_context(), _build_run_reply(), _build_week_dates(), _build_wotd_status() (+57 more)
 
 ### Community 3 - "run_analysis_from_config"
-Cohesion: 0.10
-Nodes (22): ABC, ConfigParser, create_config_template(), fetch_outside_competitions_from_config(), get_weight_analysis_context(), main(), parse_height_to_cm(), Any (+14 more)
+Cohesion: 0.08
+Nodes (29): ABC, ConfigParser, create_config_template(), fetch_outside_competitions_from_config(), get_weight_analysis_context(), main(), parse_height_to_cm(), Any (+21 more)
 
 ### Community 4 - "TriathlonCoachDataExtractor"
-Cohesion: 0.07
-Nodes (43): GarminEncoder, main(), Any, DataExtractor, _daterange(), _deep_get(), _dg(), _merge_missing() (+35 more)
+Cohesion: 0.06
+Nodes (52): GarminEncoder, main(), Any, AdaptiveRunningCoach, Any, Path, Dynamically adjusts and suggests the next run.          Redistributes missed mil, DataExtractor (+44 more)
 
 ### Community 5 - "Technology Stack"
 Cohesion: 0.04
@@ -144,29 +144,29 @@ Nodes (46): AI & LLM Providers, AI Orchestration & Observability, CLI Interface,
 Cohesion: 0.04
 Nodes (45): [0.1.0] - Previous, [1.0.0] - 2025-10-14, [1.1.0] - 2025-10-17, [2.0.0] - 2025-11-02, [2.1.0] - 2025-11-22, [2.2.0] - 2026-01-25, 2-Stage Agent Pipeline, ACWR v2 Implementation (+37 more)
 
-### Community 7 - "AgentRole"
-Cohesion: 0.17
-Nodes (15): AgentRole, Enum, create_data_summarizer_node(), AgentType, Any, _parse_json_safely(), Formatter Node (analysis.html / Physiology & Metrics tab).  Asks the LLM for a s, _strip_fences() (+7 more)
+### Community 7 - "TrainingAnalysisState"
+Cohesion: 0.13
+Nodes (20): Command, MessagesState, Protocol, AgentRole, Enum, extract_activity_data(), create_data_summarizer_node(), AgentType (+12 more)
 
-### Community 8 - "analysis_workflow.py"
-Cohesion: 0.24
-Nodes (15): combined_summarizer_node(), extract_combined_data(), formatter_node(), plot_resolution_node(), Any, synthesis_node(), create_analysis_workflow(), create_simple_sequential_workflow() (+7 more)
+### Community 8 - "formatter_node.py"
+Cohesion: 0.19
+Nodes (17): combined_summarizer_node(), extract_combined_data(), formatter_node(), _parse_json_safely(), Formatter Node (analysis.html / Physiology & Metrics tab).  Asks the LLM for a s, _strip_fences(), synthesis_node(), create_analysis_workflow() (+9 more)
 
 ### Community 9 - "LangSmithCostExtractor"
-Cohesion: 0.17
-Nodes (13): LangSmithCostExtractor, NodeCostSummary, Any, WorkflowCostSummary, ProgressIntegratedCostTracker, Any, WorkflowCostTracker, WorkflowExecution (+5 more)
+Cohesion: 0.15
+Nodes (14): Client, LangSmithCostExtractor, NodeCostSummary, Any, WorkflowCostSummary, ProgressIntegratedCostTracker, Any, WorkflowCostTracker (+6 more)
 
 ### Community 10 - "PlotStorage"
 Cohesion: 0.08
-Nodes (12): create_plotting_tools(), LangGraphPlottingTool, PlotMetadata, PlotStorage, Any, ProductionSecureExecutor, run_plot_code_get_html(), HTMLPlotEmbedder (+4 more)
+Nodes (14): plot_resolution_node(), Any, create_plotting_tools(), LangGraphPlottingTool, PlotMetadata, PlotStorage, Any, ProductionSecureExecutor (+6 more)
 
 ### Community 11 - "PlanParser"
-Cohesion: 0.11
-Nodes (18): Match, clean_corrupted_json(), PlanParser, date, datetime, Initialize PlanParser.          Args:             zones: The athlete's resolved, Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects., Split plan text into (date_str, block_text) tuples.          Uses a sliding wind (+10 more)
+Cohesion: 0.12
+Nodes (18): Match, clean_corrupted_json(), PlanParser, date, datetime, Plan Parser: converts the AI weekly planner markdown output into structured work, Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects., Split plan text into (date_str, block_text) tuples.          Uses a sliding wind (+10 more)
 
-### Community 12 - "TrainingAnalysisState"
-Cohesion: 0.09
-Nodes (28): Command, MessagesState, Protocol, extract_activity_data(), data_integration_node(), Any, extract_metrics_data(), ConsoleInteractionProvider (+20 more)
+### Community 12 - "planning_workflow.py"
+Cohesion: 0.14
+Nodes (18): data_integration_node(), Any, master_orchestrator_node(), _parse_json_safely(), plan_formatter_node(), Remove ```json ... ``` or ``` ... ``` wrappers if present., Try to parse LLM output as JSON; return None on failure., _strip_fences() (+10 more)
 
 ### Community 13 - "GarminCalendarSyncer"
 Cohesion: 0.13
@@ -185,16 +185,16 @@ Cohesion: 0.21
 Nodes (4): dict, configure_langsmith_for_user(), LangSmithConfig, TestLangGraphFoundation
 
 ### Community 17 - "combined_analyst_node.py"
-Cohesion: 0.37
-Nodes (20): activity_expert_node(), combined_analyst_node(), metrics_expert_node(), configure_node_tools(), create_cost_entry(), create_plot_entries(), execute_node_with_error_handling(), log_node_completion() (+12 more)
+Cohesion: 0.39
+Nodes (18): activity_expert_node(), combined_analyst_node(), metrics_expert_node(), configure_node_tools(), create_cost_entry(), create_plot_entries(), execute_node_with_error_handling(), log_node_completion() (+10 more)
 
 ### Community 18 - ".get_llm"
-Cohesion: 0.16
-Nodes (16): AIMode, Config, get_config(), Enum, reload_config(), AISettings, Any, parametrize (+8 more)
+Cohesion: 0.18
+Nodes (15): AIMode, Config, get_config(), Enum, reload_config(), AISettings, parametrize, _StubSettings (+7 more)
 
 ### Community 19 - "test_withings_credential_store.py"
-Cohesion: 0.07
-Nodes (55): PathLike, _bws_binary(), credential_path(), _digest(), _digest_path(), _find_secret(), push_to_vault(), Path (+47 more)
+Cohesion: 0.06
+Nodes (78): PathLike, _already_pushed(), _bws_binary(), credential_path(), _digest(), _digest_path(), expected_userid(), _find_secret() (+70 more)
 
 ### Community 20 - "_make_syncer"
 Cohesion: 0.13
@@ -244,6 +244,10 @@ Nodes (4): AgentCostSummary, CostTracker, ModelUsage, Any
 Cohesion: 0.18
 Nodes (10): 1. 6:20 AM Cutoff Time Gate, 1. Premature State Mutation (The Core Issue), 2. Coupled Sleep Sync & WOTD Pushing, 2. Separate WOTD Pushing from Sleep Data Processing, 3. Update Marker Only AFTER Successful Push, 4. Automatic Hourly Retry Loop, Executive Summary, 🛠️ Implemented Architectural Fix (+2 more)
 
+### Community 32 - "extract_text_content"
+Cohesion: 0.18
+Nodes (5): Exception, extract_text_content(), If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted., TestExtractTextContent
+
 ### Community 33 - "analysis_template.py"
 Cohesion: 0.44
 Nodes (9): _e(), Static HTML template for analysis.html (Physiology & Metrics tab).  The LLM supp, Render the full analysis.html from structured data., render_analysis_html(), _render_deep_dive(), _render_kpis(), _render_recommendations(), _render_summary() (+1 more)
@@ -292,9 +296,9 @@ Nodes (4): 2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`, Con
 Cohesion: 0.33
 Nodes (5): Consequences, Context, Decision, Production consumes the published image instead of building on the host, Verification
 
-### Community 53 - "AdaptiveRunningCoach"
-Cohesion: 0.15
-Nodes (19): AdaptiveRunningCoach, Any, Path, Dynamically adjusts and suggests the next run.          Redistributes missed mil, calibration_for(), Path, Return the persisted zone calibration, or factory defaults.      Consumers that, Activity (+11 more)
+### Community 53 - "build_props"
+Cohesion: 0.11
+Nodes (22): _build_garmin_block(), build_props(), _flatten_props(), _format_pace(), _parse_existing_garmin_block(), Any, Flatten nested {'sleep': {'duration': 7.5}} → {'sleep/duration': '7.5'}.      Al, Build the Logseq block format:     - Garmin Health Sync       - sleep:         d (+14 more)
 
 ### Community 54 - ".env.template declares every key docker-compose.yml reads"
 Cohesion: 0.33
@@ -305,8 +309,8 @@ Cohesion: 0.33
 Nodes (5): Alternatives considered, Consequences, Context, Decision, Withings credential durability via Bitwarden
 
 ### Community 56 - "GarminConnectClient"
-Cohesion: 0.14
-Nodes (10): main(), mfa_callback(), Garmin, main(), GarminConnectClient, test_client_property_raises_if_not_connected(), test_connect_failure(), test_connect_successful() (+2 more)
+Cohesion: 0.16
+Nodes (10): backfill(), One-off backfill of Garmin sleep/run metrics into the Logseq journal.  Writes vi, main(), mfa_callback(), GarminConnectClient, test_client_property_raises_if_not_connected(), test_connect_failure(), test_connect_successful() (+2 more)
 
 ### Community 57 - "record_feedback"
 Cohesion: 0.24
@@ -336,17 +340,17 @@ Nodes (8): load_weighted_feedback(), Return active feedback from the recency win
 Cohesion: 0.29
 Nodes (7): detect_timing(), date, Infer whether a note is a pre-workout heads-up or a post-run report.      Derive, test_timing_is_issued_not_run_when_wotd_pushed_but_no_run(), test_timing_is_post_run_after_a_run_is_logged(), test_timing_is_pre_workout_when_nothing_pushed_yet(), test_yesterdays_run_does_not_mark_today_as_post_run()
 
-### Community 64 - "logseq_client.py"
-Cohesion: 0.06
-Nodes (66): backfill(), One-off backfill of Garmin sleep/run metrics into the Logseq journal.  Writes vi, check_and_run(), _flush_pending_syncs(), _load_pending_syncs(), main(), date, Path (+58 more)
+### Community 64 - "write_props_dict"
+Cohesion: 0.16
+Nodes (23): check_and_run(), _flush_pending_syncs(), _load_pending_syncs(), main(), date, Path, _queue_pending_sync(), Write sleep + weight to today's Logseq journal page.      WOTD is intentionally (+15 more)
 
 ### Community 65 - "Scope secrets to one Bitwarden project, reduce the mandatory set to six, and actually run the renderer"
 Cohesion: 0.40
 Nodes (4): Consequences, Context, Decision, Scope secrets to one Bitwarden project, reduce the mandatory set to six, and actually run the renderer
 
-### Community 67 - "compute_zones"
-Cohesion: 0.18
-Nodes (14): compute_zones(), Build the full zone set from a live LTHR and calibrated percentages.      A manu, Path, Build a parser from a live LTHR using the persisted calibration., _default_calibration(), Z1-Z5 must tile without gaps and every edge must derive from LTHR., PlanParser must not reintroduce its own age-derived max-HR zone table., The old bug produced Z2 = 100-120 bpm; assert we are nowhere near it. (+6 more)
+### Community 67 - "logseq_client.py"
+Cohesion: 0.17
+Nodes (19): _format_time(), _get_graph_path(), _get_ssh_host(), _get_ssh_key_path(), _get_ssh_port(), _get_ssh_user(), _is_property_line(), _journal_sftp_path() (+11 more)
 
 ### Community 68 - "test_dashboard_layout.py"
 Cohesion: 0.29
@@ -356,17 +360,13 @@ Nodes (3): parametrize, Guards on the dashboard's location in the repository tre
 Cohesion: 0.33
 Nodes (5): Consequences, Context, Dashboard shell moves out of the repository root into frontend/, Decision, Verification
 
-### Community 70 - "test_hr_zones.py"
-Cohesion: 0.22
-Nodes (15): get_hr_zones(), Any, Resolve LTHR and return the athlete's zones.      Args:         recalibrate: whe, Return the athlete's current LTHR from Garmin.      Priority:       1. ``get_use, resolve_lthr(), _client_with_profile_lthr(), Path, Zone consistency between WOTD and post-run coaching feedback.  Regression guard (+7 more)
+### Community 70 - "Pin the Withings sync to a single family profile"
+Cohesion: 0.33
+Nodes (5): Alternatives considered, Consequences, Context, Decision, Pin the Withings sync to a single family profile
 
-### Community 72 - "Exception"
-Cohesion: 0.25
-Nodes (5): Exception, APIOverloadError, RetryableError, If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted.
-
-### Community 73 - "hr_zones.py"
-Cohesion: 0.25
-Nodes (5): HRZones, Single source of truth for the athlete's heart-rate zones.  Both WOTD generation, Resolved HR zones for the athlete, anchored on a live LTHR., Return Z1-Z5 as absolute bpm ranges.          Every boundary is anchored on LTHR, Plan Parser: converts the AI weekly planner markdown output into structured work
+### Community 72 - "retry_with_backoff"
+Cohesion: 0.39
+Nodes (6): APIOverloadError, Any, retry_with_backoff(), RetryableError, RetryConfig, with_retry()
 
 ### Community 74 - "test_withings_token_guard.py"
 Cohesion: 0.17
@@ -377,7 +377,7 @@ Cohesion: 0.25
 Nodes (7): 1. The container must reach a stable running state, 2. The container must report the commit that was just published, A deploy must prove production is running the code it just published, Alternatives considered, Consequences, Context, Decision
 
 ## Knowledge Gaps
-- **162 isolated node(s):** `garmin-ai-coach`, `Competition`, `Project Overview`, `Tech Stack & Architecture`, `Key Rules & Guidelines` (+157 more)
+- **166 isolated node(s):** `garmin-ai-coach`, `Competition`, `Project Overview`, `Tech Stack & Architecture`, `Key Rules & Guidelines` (+161 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -386,10 +386,10 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `OutsideApiGraphQlClient` connect `OutsideApiGraphQlClient` to `run_analysis_from_config`?**
   _High betweenness centrality (0.083) - this node is a cross-community bridge._
-- **Why does `TriathlonCoachDataExtractor` connect `TriathlonCoachDataExtractor` to `GarminConnectClient`, `run_analysis_from_config`, `AdaptiveRunningCoach`?**
-  _High betweenness centrality (0.074) - this node is a cross-community bridge._
-- **Why does `write_props_dict()` connect `logseq_client.py` to `feedback_adr.py`, `AgentRole`?**
-  _High betweenness centrality (0.068) - this node is a cross-community bridge._
+- **Why does `TriathlonCoachDataExtractor` connect `TriathlonCoachDataExtractor` to `GarminConnectClient`, `run_analysis_from_config`?**
+  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+- **Why does `write_props_dict()` connect `write_props_dict` to `logseq_client.py`, `feedback_adr.py`, `TrainingAnalysisState`, `build_props`, `GarminConnectClient`?**
+  _High betweenness centrality (0.069) - this node is a cross-community bridge._
 - **Are the 17 inferred relationships involving `TriathlonCoachDataExtractor` (e.g. with `GarminEncoder` and `GarminConnectClient`) actually correct?**
   _`TriathlonCoachDataExtractor` has 17 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 9 inferred relationships involving `TrainingAnalysisState` (e.g. with `ConsoleInteractionProvider` and `InteractionProvider`) actually correct?**
@@ -397,4 +397,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 4 inferred relationships involving `PlotStorage` (e.g. with `LangGraphPlottingTool` and `HTMLPlotEmbedder`) actually correct?**
   _`PlotStorage` has 4 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `garmin-ai-coach`, `Competition`, `Project Overview` to the rest of the system?**
-  _162 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _166 weakly-connected nodes found - possible documentation gaps or missing edges._

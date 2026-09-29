@@ -608,6 +608,14 @@ def run_withings_sync():
             )
             return
 
+        # A credential for the wrong family profile would upload someone else's
+        # weight into this athlete's Garmin history, which Garmin offers no
+        # clean way to undo. Refuse before the upload, not after.
+        mismatch = credential_store.userid_mismatch(tokens_dir)
+        if mismatch:
+            logger.error("Aborting Withings-Garmin sync: %s", mismatch)
+            return
+
         # ── Step 1: authenticate to Garmin via the existing tokenstore ────────
         sanitized = garmin_email.replace("@", "_").replace(".", "_")
         user_tokens_dir = os.path.join(tokens_dir, sanitized)

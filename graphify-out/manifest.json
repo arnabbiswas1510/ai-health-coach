@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   "daemon.py": {
-    "mtime": 1790718467.1497784,
-    "ast_hash": "427c188fd73e6f62368176b38998db86",
+    "mtime": 1790720577.9815269,
+    "ast_hash": "d1748c190b3b4cbee863d63e3cd00092",
     "semantic_hash": ""
   },
   "examples/garmin/test_extractor.py": {
@@ -760,23 +760,28 @@
     "semantic_hash": ""
   },
   "services/withings/__init__.py": {
-    "mtime": 1790718218.884199,
-    "ast_hash": "ceda1720a222705996c2f4aee31d5e49",
+    "mtime": 1790720516.2710326,
+    "ast_hash": "dd3f60d469e25fec7cbf879db8dbc701",
     "semantic_hash": ""
   },
   "services/withings/credential_store.py": {
-    "mtime": 1790718459.1621258,
-    "ast_hash": "38c058447e1ad9abc93361f0c2b583ae",
+    "mtime": 1790720642.485,
+    "ast_hash": "d78aead25f9bd2ddc701fc1f14486424",
     "semantic_hash": ""
   },
   "tests/test_withings_credential_store.py": {
-    "mtime": 1790718435.6744642,
-    "ast_hash": "df3b211dcaebe2712c8d3ae1f7c0ddfc",
+    "mtime": 1790720570.6458724,
+    "ast_hash": "919f923da32bd5d56ca3c9c41c0c0a7c",
     "semantic_hash": ""
   },
   "decisions/2026-09-29_withings-credential-durability.md": {
     "mtime": 1790718550.1708078,
     "ast_hash": "238d7f16f05f71f70ce99abf6b8ee1a9",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-29_withings-profile-guard.md": {
+    "mtime": 1790720601.0618896,
+    "ast_hash": "2ec551d7d4f9e92d0ae151605b32d7c4",
     "semantic_hash": ""
   }
 }
