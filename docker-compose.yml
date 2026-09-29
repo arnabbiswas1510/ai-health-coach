@@ -75,6 +75,14 @@ services:
       - LOGSEQ_GRAPH_PATH=${LOGSEQ_GRAPH_PATH}
       - OUTPUT_DIR=/app/data
       - POLL_INTERVAL_SECONDS=${POLL_INTERVAL_SECONDS:-3600}
+      # ── Bitwarden Secrets Manager (Withings credential durability) ────────
+      # Optional. When set, the daemon mirrors the rotating Withings OAuth
+      # credential into the vault so a rebuilt host never needs the one-time
+      # interactive authorization again. Unset, everything still works but the
+      # credential lives only in ./tokens. Requires the machine account to have
+      # write access to the ai-health-coach project.
+      - BWS_ACCESS_TOKEN=${BWS_ACCESS_TOKEN:-}
+      - BWS_PROJECT_NAME=${BWS_PROJECT_NAME:-ai-health-coach}
     volumes:
       - ./tokens:/app/tokens                        # Garmin auth tokens (persisted)
       - ./data:/app/data                            # Generated HTML + JSON (persisted)

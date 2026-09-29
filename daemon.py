@@ -365,7 +365,9 @@ def check_and_run():  # noqa: C901
     # 2. If at or after 06:20 AM and today's WOTD hasn't been pushed yet, force WOTD generation.
     #    If today's sleep metrics are still missing, use yesterday's sleep data as fallback.
     # 3. Only mark last_pushed_wotd_date.txt AFTER WOTD is successfully generated and pushed.
-    from datetime import datetime as _dt_cls, time as _time_cls, timedelta as _td_cls
+    from datetime import datetime as _dt_cls
+    from datetime import time as _time_cls
+    from datetime import timedelta as _td_cls
 
     last_sleep_file = user_data_dir / "last_processed_sleep_date.txt"
     last_wotd_file = user_data_dir / "last_pushed_wotd_date.txt"
@@ -514,6 +516,40 @@ def check_and_run():  # noqa: C901
     # ── End Daily Run Backfill ────────────────────────────────────────────────
 
 
+def _withings_sync_due(today: date | None = None) -> bool:
+    """Return True when the Withings sync should run, and record the attempt.
+
+    Withings issues a new refresh token on every refresh and withings-sync
+    refreshes unconditionally, so an hourly poll rotates the credential ~24
+    times a day. Scale measurements arrive a few times a day at most, so that
+    churn buys nothing -- and it makes any external mirror of the credential
+    expensive to keep current. Gate on a date marker so the token rotates
+    roughly once a day.
+
+    The marker is written on every *attempt*, not on success, so a persistently
+    failing sync cannot spin once an hour.
+    """
+    tokens_dir = os.getenv("GARMINCONNECT_TOKENS", "/app/tokens")
+    marker = Path(tokens_dir) / ".withings_last_sync"
+    stamp = (today or date.today()).isoformat()
+
+    try:
+        if marker.exists() and marker.read_text(encoding="utf-8").strip() == stamp:
+            return False
+    except OSError:
+        pass  # an unreadable marker just means we try again
+
+    try:
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.write_text(stamp, encoding="utf-8")
+    except OSError as exc:
+        # Without a marker we would retry hourly; log it rather than silently
+        # reverting to the old behaviour.
+        logger.warning("Could not record Withings sync marker at %s: %s", marker, exc)
+
+    return True
+
+
 def run_withings_sync():
     """Push Withings scale measurements to Garmin Connect.
 
@@ -542,6 +578,20 @@ def run_withings_sync():
             logger.warning("GARMIN_EMAIL not set — skipping Withings-Garmin sync.")
             return
 
+        # Withings rotates the refresh token on every sync, so running this
+        # hourly burns credentials for no benefit -- scale measurements appear
+        # at most a few times a day. Gate it so the token rotates about once a
+        # day, which also keeps the Bitwarden mirror cheap.
+        if not _withings_sync_due():
+            logger.debug("Withings-Garmin sync already ran today — skipping.")
+            return
+
+        # A missing credential is recoverable without operator interaction if
+        # Bitwarden holds a copy (see services/withings/credential_store.py).
+        from services.withings import credential_store
+
+        credential_store.seed_from_vault(tokens_dir)
+
         # withings-sync keeps its OAuth credential at <config>/.withings_user.json.
         # When that file is absent it falls back to prompting for the token on
         # stdin, which in a detached container raises EOFError and dumps a full
@@ -569,6 +619,7 @@ def run_withings_sync():
 
         # ── Step 2: import withings_sync modules ──────────────────────────────
         import sys as _sys
+
         import withings_sync.sync as _ws_sync
         from withings_sync.garmin import GarminConnect as WGarminConnect
 
@@ -605,6 +656,9 @@ def run_withings_sync():
         try:
             _ws_sync.sync()
             logger.info("Withings-Garmin sync completed successfully!")
+            # The sync just rotated the refresh token. Mirror it immediately:
+            # a snapshot taken later would hold a superseded credential.
+            credential_store.push_to_vault(tokens_dir)
         finally:
             WGarminConnect.login = _orig_login  # always restore
 

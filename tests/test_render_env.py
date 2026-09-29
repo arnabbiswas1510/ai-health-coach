@@ -402,3 +402,41 @@ def test_explicit_project_id_still_overrides_a_shared_bootstrap_file(tmp_path):
     result = _run_render(home, proj, bws, BWS_PROJECT_ID="COACH-1")
     assert result.returncode == 0, result.stderr
     assert "GOOGLE_API_KEY=COACH-1" in (proj / ".env").read_text()
+
+
+# ── @bootstrap sentinel ──────────────────────────────────────────────────────
+#
+# BWS_ACCESS_TOKEN is the credential that unlocks Bitwarden, so it is the one
+# value that cannot be stored in Bitwarden. It is resolved from the bootstrap
+# file that render_env.sh sources instead.
+
+
+def test_bootstrap_sentinel_resolves_from_the_environment_not_the_vault():
+    out = render(
+        "BWS_ACCESS_TOKEN=@bootstrap\n",
+        {"BWS_ACCESS_TOKEN": "from-vault"},
+        environ={"BWS_ACCESS_TOKEN": "from-bootstrap"},
+    )
+    assert "BWS_ACCESS_TOKEN=from-bootstrap" in out
+
+
+def test_unset_bootstrap_sentinel_renders_empty_without_failing():
+    """Bitwarden mirroring is optional; a missing token must not block a deploy."""
+    out = render("BWS_ACCESS_TOKEN=@bootstrap\n", {}, environ={})
+    assert "BWS_ACCESS_TOKEN=\n" in out
+
+
+def test_bootstrap_sentinel_does_not_count_as_a_missing_bws_secret():
+    render("BWS_ACCESS_TOKEN=@bootstrap\nGOOGLE_API_KEY=@bws\n",
+           {"GOOGLE_API_KEY": "k"}, environ={})
+
+
+def test_template_marks_the_access_token_as_bootstrap_not_bws():
+    """Reject @bws for the access token.
+
+    @bws here would send render_env.py hunting for the token inside the vault
+    it is required to open -- a bootstrap paradox that fails the whole render.
+    """
+    text = (REPO_ROOT / ".env.template").read_text()
+    assert "BWS_ACCESS_TOKEN=@bootstrap" in text
+    assert "BWS_ACCESS_TOKEN=@bws" not in text

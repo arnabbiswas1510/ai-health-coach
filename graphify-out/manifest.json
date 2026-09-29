@@ -25,8 +25,8 @@
     "semantic_hash": ""
   },
   "daemon.py": {
-    "mtime": 1790716763.9742975,
-    "ast_hash": "793440fdcada11e1a67d2ff9d6cbb92b",
+    "mtime": 1790718467.1497784,
+    "ast_hash": "427c188fd73e6f62368176b38998db86",
     "semantic_hash": ""
   },
   "examples/garmin/test_extractor.py": {
@@ -35,8 +35,8 @@
     "semantic_hash": ""
   },
   "force_wotd.py": {
-    "mtime": 1787609569.6773167,
-    "ast_hash": "fe7880d2c9db691da27debf77525be29",
+    "mtime": 1790717396.245005,
+    "ast_hash": "4118678eab7202a0445784733df75372",
     "semantic_hash": ""
   },
   "local_dev_server.py": {
@@ -315,7 +315,7 @@
     "semantic_hash": ""
   },
   "services/chat_api/main.py": {
-    "mtime": 1790716772.9958193,
+    "mtime": 1790718224.680824,
     "ast_hash": "9ba6f5df5de292b0ea0bbf0b1d7b2fac",
     "semantic_hash": ""
   },
@@ -370,8 +370,8 @@
     "semantic_hash": ""
   },
   "services/garmin/wotd_generator.py": {
-    "mtime": 1790633030.572429,
-    "ast_hash": "8320c3b7d3e1c05a2f4dc43e2e00b82f",
+    "mtime": 1790717396.2545724,
+    "ast_hash": "219adca4de39c0ece08a0a54078472ba",
     "semantic_hash": ""
   },
   "services/garmin/zone_calibrator.py": {
@@ -405,7 +405,7 @@
     "semantic_hash": ""
   },
   "startup.sh": {
-    "mtime": 1790716388.7061908,
+    "mtime": 1790718224.5089545,
     "ast_hash": "7524a07364c0e253ba243c664d49f119",
     "semantic_hash": ""
   },
@@ -515,12 +515,12 @@
     "semantic_hash": ""
   },
   ".github/workflows/deploy.yml": {
-    "mtime": 1790716772.9903383,
+    "mtime": 1790718224.6716242,
     "ast_hash": "ac9570d6ca9006766b4593dcf85dbc6c",
     "semantic_hash": ""
   },
   ".github/workflows/deploy_to_server.yml": {
-    "mtime": 1790716800.3887794,
+    "mtime": 1790718224.6719348,
     "ast_hash": "daf7a5c9ab839b1cda8d3aacb9518339",
     "semantic_hash": ""
   },
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "docker-compose.yml": {
-    "mtime": 1790698210.1852355,
-    "ast_hash": "42e7a5f4214909fd746d610b1da3546e",
+    "mtime": 1790718467.152377,
+    "ast_hash": "451eb0e9b52a4b63703c4831bf4256c3",
     "semantic_hash": ""
   },
   "docs/wotd_plan.md": {
@@ -640,8 +640,8 @@
     "semantic_hash": ""
   },
   "scripts/render_env.py": {
-    "mtime": 1790648311.4623253,
-    "ast_hash": "0cf5c98dd2cc6502b5900212465301a7",
+    "mtime": 1790718467.1548324,
+    "ast_hash": "afe9ccd5c41143c6d8961fdfa12bf912",
     "semantic_hash": ""
   },
   "scripts/render_env.sh": {
@@ -655,8 +655,8 @@
     "semantic_hash": ""
   },
   "tests/test_render_env.py": {
-    "mtime": 1790697263.8471723,
-    "ast_hash": "b14a979b1aa5a16aa03007e10b8938fa",
+    "mtime": 1790718496.9029746,
+    "ast_hash": "ab5ce09d52e6486f63950163b2ee51e1",
     "semantic_hash": ""
   },
   "decisions/2026-09-28_bitwarden-secret-resolution.md": {
@@ -715,7 +715,7 @@
     "semantic_hash": ""
   },
   "tests/test_deploy_image_pipeline.py": {
-    "mtime": 1790716792.4946973,
+    "mtime": 1790718224.6813514,
     "ast_hash": "852d4c3bd0ff3475f36ce6a8cfa7e721",
     "semantic_hash": ""
   },
@@ -745,18 +745,38 @@
     "semantic_hash": ""
   },
   "tests/test_shell_scripts_parse.py": {
-    "mtime": 1790716839.1112685,
+    "mtime": 1790718224.5093422,
     "ast_hash": "e05242805d0a0fb2571ca001b9dfd5dd",
     "semantic_hash": ""
   },
   "tests/test_withings_token_guard.py": {
-    "mtime": 1790716750.2152822,
+    "mtime": 1790718224.6815448,
     "ast_hash": "279fe36a3a7eaf6bc44151694cdae712",
     "semantic_hash": ""
   },
   "decisions/2026-09-29_deploy-verifies-running-commit.md": {
-    "mtime": 1790716868.2168994,
+    "mtime": 1790718224.6730576,
     "ast_hash": "166dfc58887b5f2d2c095c4e2bf51653",
+    "semantic_hash": ""
+  },
+  "services/withings/__init__.py": {
+    "mtime": 1790718218.884199,
+    "ast_hash": "ceda1720a222705996c2f4aee31d5e49",
+    "semantic_hash": ""
+  },
+  "services/withings/credential_store.py": {
+    "mtime": 1790718459.1621258,
+    "ast_hash": "38c058447e1ad9abc93361f0c2b583ae",
+    "semantic_hash": ""
+  },
+  "tests/test_withings_credential_store.py": {
+    "mtime": 1790718435.6744642,
+    "ast_hash": "df3b211dcaebe2712c8d3ae1f7c0ddfc",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-29_withings-credential-durability.md": {
+    "mtime": 1790718550.1708078,
+    "ast_hash": "238d7f16f05f71f70ce99abf6b8ee1a9",
     "semantic_hash": ""
   }
 }

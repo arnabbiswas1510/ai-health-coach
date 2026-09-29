@@ -51,8 +51,30 @@ def build_secret_map(secrets: list[dict], project_id: str | None = None) -> dict
     return mapping
 
 
-def render(template_text: str, secrets: dict[str, str], sentinel: str = "@bws") -> str:
-    """Return the rendered .env text, or raise KeyError listing unmet sentinels."""
+BOOTSTRAP_SENTINEL = "@bootstrap"
+
+
+def render(
+    template_text: str,
+    secrets: dict[str, str],
+    sentinel: str = "@bws",
+    environ: dict[str, str] | None = None,
+) -> str:
+    """Return the rendered .env text, or raise KeyError listing unmet sentinels.
+
+    Two sentinels are understood:
+
+    ``@bws``
+        Resolve from Bitwarden. This is the normal case.
+    ``@bootstrap``
+        Resolve from the process environment (i.e. the bootstrap file that
+        render_env.sh sourced). This exists for BWS_ACCESS_TOKEN, which cannot
+        come from Bitwarden because it is the credential that unlocks
+        Bitwarden. An unresolved ``@bootstrap`` renders as empty and is *not*
+        an error: these values are optional, and failing the whole render would
+        make an optional feature able to block a deploy.
+    """
+    env = os.environ if environ is None else environ
     out: list[str] = []
     missing: list[str] = []
     for raw in template_text.splitlines():
@@ -69,6 +91,8 @@ def render(template_text: str, secrets: dict[str, str], sentinel: str = "@bws") 
                 out.append(f"{key_name}=")
             else:
                 out.append(f"{key_name}={resolved}")
+        elif value.strip() == BOOTSTRAP_SENTINEL:
+            out.append(f"{key_name}={env.get(key_name, '')}")
         else:
             out.append(raw)
     if missing:

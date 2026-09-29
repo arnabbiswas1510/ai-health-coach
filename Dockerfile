@@ -21,7 +21,35 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     nginx \
+    ca-certificates \
+    curl \
+    unzip \
     && rm -rf /var/lib/apt/lists/*
+
+# Bitwarden Secrets Manager CLI.
+#
+# The daemon uses this to mirror the Withings OAuth credential into the vault.
+# Withings rotates its refresh token on every sync, so the copy has to be
+# written by the process that rotates it -- an external snapshot would capture
+# a credential that is already superseded. Without this binary the daemon still
+# works; it just falls back to local-only storage, so a wiped tokens/ directory
+# would once again need a manual interactive re-authorization.
+#
+# Pinned to match the version already installed on the production host.
+ARG BWS_VERSION=2.1.0
+RUN set -eux; \
+    arch="$(dpkg --print-architecture)"; \
+    case "$arch" in \
+      amd64) bws_arch="x86_64" ;; \
+      arm64) bws_arch="aarch64" ;; \
+      *) echo "unsupported architecture for bws: $arch" >&2; exit 1 ;; \
+    esac; \
+    curl -fsSL -o /tmp/bws.zip \
+      "https://github.com/bitwarden/sdk-sm/releases/download/bws-v${BWS_VERSION}/bws-${bws_arch}-unknown-linux-gnu-${BWS_VERSION}.zip"; \
+    unzip -q -o /tmp/bws.zip -d /usr/local/bin; \
+    rm -f /tmp/bws.zip; \
+    chmod +x /usr/local/bin/bws; \
+    bws --version
 
 # Install Python dependencies first (layer-cached unless requirements.txt changes)
 COPY requirements.txt .
