@@ -60,7 +60,10 @@ jobs:
             fi
 
             echo "=== Pulling latest images ==="
-            docker compose pull
+            if ! docker compose pull; then
+              echo "::error::docker compose pull failed. Aborting rather than restarting on a stale image, which would look like a successful deploy of code that never shipped."
+              exit 1
+            fi
 
             echo "=== Shutting down compose stack to remove old and orphaned containers ==="
             docker compose down
@@ -69,5 +72,5 @@ jobs:
             docker compose up -d --remove-orphans
 
             echo "=== Deployment complete ==="
-            docker inspect ai-health-coach --format 'ai-health-coach: {{.State.Status}} (restarts: {{.RestartCount}})'
+            docker inspect ai-health-coach --format 'ai-health-coach: {{.State.Status}} (restarts: {{.RestartCount}}) image={{.Image}}'
             exit 0

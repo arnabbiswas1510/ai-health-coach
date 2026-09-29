@@ -21,8 +21,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "backfill_logseq",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "backfill_logseq.py"
     },
     {
@@ -32,8 +32,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "backfill_logseq_backfill",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "backfill()"
     },
     {
@@ -43,8 +43,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "backfill_logseq_rationale_1",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "one-off backfill of garmin sleep/run metrics into the logseq journal.  writes vi"
     },
     {
@@ -483,8 +483,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "daemon",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "daemon.py"
     },
     {
@@ -494,8 +494,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "daemon_load_pending_syncs",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_load_pending_syncs()"
     },
     {
@@ -505,8 +505,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "daemon_py_path",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "path"
     },
     {
@@ -516,8 +516,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "daemon_save_pending_syncs",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_save_pending_syncs()"
     },
     {
@@ -527,8 +527,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "daemon_queue_pending_sync",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_queue_pending_sync()"
     },
     {
@@ -538,8 +538,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "daemon_flush_pending_syncs",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_flush_pending_syncs()"
     },
     {
@@ -549,8 +549,8 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "daemon_sync_sleep_to_logseq",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_sync_sleep_to_logseq()"
     },
     {
@@ -560,8 +560,8 @@
       "source_location": "L228",
       "_origin": "ast",
       "id": "daemon_check_and_run",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "check_and_run()"
     },
     {
@@ -571,8 +571,8 @@
       "source_location": "L517",
       "_origin": "ast",
       "id": "daemon_run_withings_sync",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "run_withings_sync()"
     },
     {
@@ -582,8 +582,8 @@
       "source_location": "L603",
       "_origin": "ast",
       "id": "daemon_main",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "main()"
     },
     {
@@ -593,8 +593,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "daemon_rationale_28",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "return the list of pending sync entries, or [] if none."
     },
     {
@@ -604,8 +604,8 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "daemon_rationale_52",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "add or update a pending sync entry for date_iso (deduplicates by date)."
     },
     {
@@ -615,8 +615,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "daemon_rationale_69",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "try to write all pending syncs to their correct journal pages.      processes en"
     },
     {
@@ -626,8 +626,8 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "daemon_rationale_115",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write sleep + weight to today's logseq journal page.      wotd is intentionally"
     },
     {
@@ -637,8 +637,8 @@
       "source_location": "L518",
       "_origin": "ast",
       "id": "daemon_rationale_518",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "push withings scale measurements to garmin connect.      calls withings-sync pro"
     },
     {
@@ -824,8 +824,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "poll_garmin",
-      "community": 67,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "poll_garmin.py"
     },
     {
@@ -835,8 +835,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "poll_garmin_main",
-      "community": 67,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "main()"
     },
     {
@@ -1151,8 +1151,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "services_ai_langgraph_config_langsmith_config_langsmithconfig_setup_langsmith",
-      "community": 16,
-      "community_name": "LangSmithConfig",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".setup_langsmith()"
     },
     {
@@ -1405,7 +1405,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_summarizer_node_combined_summarizer_node",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "combined_summarizer_node()"
     },
     {
@@ -1526,7 +1526,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node_formatter_node",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "formatter_node()"
     },
     {
@@ -2108,8 +2108,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 8,
+      "community_name": "analysis_workflow.py",
       "norm_label": "plot_resolution_node.py"
     },
     {
@@ -2120,7 +2120,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_plot_resolution_node",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "plot_resolution_node()"
     },
     {
@@ -2131,7 +2131,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_py_any",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "any"
     },
     {
@@ -2230,7 +2230,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_synthesis_node_synthesis_node",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "synthesis_node()"
     },
     {
@@ -2493,8 +2493,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_init",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "state/__init__.py"
     },
     {
@@ -2537,8 +2537,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_training_analysis_state_create_initial_state",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "create_initial_state()"
     },
     {
@@ -2548,8 +2548,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_training_analysis_state_py_any",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "any"
     },
     {
@@ -2890,7 +2890,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "analysis_workflow.py"
     },
     {
@@ -2901,7 +2901,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_analysis_workflow",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "create_analysis_workflow()"
     },
     {
@@ -2912,7 +2912,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_run_training_analysis",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "run_training_analysis()"
     },
     {
@@ -2923,7 +2923,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_simple_sequential_workflow",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "create_simple_sequential_workflow()"
     },
     {
@@ -2988,8 +2988,8 @@
       "source_location": "L220",
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow_run_weekly_planning_with_context",
-      "community": 2,
-      "community_name": "main.py",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "run_weekly_planning_with_context()"
     },
     {
@@ -3032,8 +3032,8 @@
       "source_location": "L233",
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_planning_workflow_rationale_233",
-      "community": 2,
-      "community_name": "main.py",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "re-run only the planning branch using cached expert outputs.      used by the"
     },
     {
@@ -3142,8 +3142,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_tools_init",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "tools/__init__.py"
     },
     {
@@ -3153,8 +3153,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_init",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "plotting/__init__.py"
     },
     {
@@ -3164,8 +3164,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_langgraph_plotting_tool",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "langgraph_plotting_tool.py"
     },
     {
@@ -3230,8 +3230,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_plot_storage",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "plot_storage.py"
     },
     {
@@ -3395,8 +3395,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_production_secure_executor",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "production_secure_executor.py"
     },
     {
@@ -3406,8 +3406,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_production_secure_executor_run_plot_code_get_html",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "run_plot_code_get_html()"
     },
     {
@@ -3417,8 +3417,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_production_secure_executor_productionsecureexecutor",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "productionsecureexecutor"
     },
     {
@@ -3428,8 +3428,8 @@
       "source_location": "L78",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_production_secure_executor_productionsecureexecutor_init",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".__init__()"
     },
     {
@@ -3439,8 +3439,8 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_production_secure_executor_productionsecureexecutor_execute_plotting_code",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".execute_plotting_code()"
     },
     {
@@ -3450,8 +3450,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "reference_resolver.py"
     },
     {
@@ -3461,8 +3461,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_plotreferenceresolver",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "plotreferenceresolver"
     },
     {
@@ -3472,8 +3472,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_plotreferenceresolver_init",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".__init__()"
     },
     {
@@ -3483,8 +3483,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_plotreferenceresolver_resolve_plot_references",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".resolve_plot_references()"
     },
     {
@@ -3494,8 +3494,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_plotreferenceresolver_embed_plot",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "._embed_plot()"
     },
     {
@@ -3505,8 +3505,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_plotreferenceresolver_wrap_plot_html",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "._wrap_plot_html()"
     },
     {
@@ -3516,8 +3516,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_plotreferenceresolver_extract_plot_references",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".extract_plot_references()"
     },
     {
@@ -3527,8 +3527,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_plotreferenceresolver_validate_plot_references",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".validate_plot_references()"
     },
     {
@@ -3538,8 +3538,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_py_any",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "any"
     },
     {
@@ -3549,8 +3549,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_plotreferenceresolver_get_plot_summary",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".get_plot_summary()"
     },
     {
@@ -3560,8 +3560,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_htmlplotembedder",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": "htmlplotembedder"
     },
     {
@@ -3571,8 +3571,8 @@
       "source_location": "L103",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_htmlplotembedder_add_plot_styles",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".add_plot_styles()"
     },
     {
@@ -3582,8 +3582,8 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "services_ai_tools_plotting_reference_resolver_htmlplotembedder_wrap_html_document",
-      "community": 10,
-      "community_name": "PlotStorage",
+      "community": 38,
+      "community_name": "PlotReferenceResolver",
       "norm_label": ".wrap_html_document()"
     },
     {
@@ -3890,8 +3890,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "retry_handler.py"
     },
     {
@@ -3901,8 +3901,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryableerror",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "retryableerror"
     },
     {
@@ -3923,8 +3923,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_apioverloaderror",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "apioverloaderror"
     },
     {
@@ -3934,8 +3934,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "retryconfig"
     },
     {
@@ -3945,8 +3945,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_init",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": ".__init__()"
     },
     {
@@ -3956,8 +3956,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_calculate_delay",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": ".calculate_delay()"
     },
     {
@@ -3989,8 +3989,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_with_retry",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "with_retry()"
     },
     {
@@ -5265,8 +5265,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_calendar_syncer",
-      "community": 13,
-      "community_name": "GarminCalendarSyncer",
+      "community": 64,
+      "community_name": "calendar_syncer.py",
       "norm_label": "calendar_syncer.py"
     },
     {
@@ -5353,8 +5353,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "services_garmin_calendar_syncer_garmincalendarsyncer_schedule_workout_for_today",
-      "community": 68,
-      "community_name": ".schedule_workout_for_today",
+      "community": 13,
+      "community_name": "GarminCalendarSyncer",
       "norm_label": ".schedule_workout_for_today()"
     },
     {
@@ -5430,8 +5430,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_calendar_syncer_rationale_1",
-      "community": 13,
-      "community_name": "GarminCalendarSyncer",
+      "community": 64,
+      "community_name": "calendar_syncer.py",
       "norm_label": "garmincalendarsyncer: creates garmin connect workout objects and schedules worko"
     },
     {
@@ -5474,8 +5474,8 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "services_garmin_calendar_syncer_rationale_191",
-      "community": 68,
-      "community_name": ".schedule_workout_for_today",
+      "community": 13,
+      "community_name": "GarminCalendarSyncer",
       "norm_label": "schedule an already-uploaded workout on today's calendar date.          this is"
     },
     {
@@ -5551,8 +5551,8 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "services_garmin_calendar_syncer_rationale_186",
-      "community": 13,
-      "community_name": "GarminCalendarSyncer",
+      "community": 64,
+      "community_name": "calendar_syncer.py",
       "norm_label": "# note: no schedule_workout() call here \u2014 caller decides when to schedule"
     },
     {
@@ -5562,8 +5562,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_client",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "garmin/client.py"
     },
     {
@@ -5595,8 +5595,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "services_garmin_client_garminconnectclient_connect",
-      "community": 67,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": ".connect()"
     },
     {
@@ -5606,8 +5606,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "services_garmin_client_garminconnectclient_client",
-      "community": 67,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": ".client()"
     },
     {
@@ -5617,8 +5617,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "garmin",
-      "community": 67,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "garmin"
     },
     {
@@ -6355,7 +6355,7 @@
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "hrzones"
     },
     {
@@ -6366,7 +6366,7 @@
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones_describe",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": ".describe()"
     },
     {
@@ -6377,7 +6377,7 @@
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones_zone_table",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": ".zone_table()"
     },
     {
@@ -6420,8 +6420,8 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_calibration_for",
-      "community": 58,
-      "community_name": "calibration_for",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "calibration_for()"
     },
     {
@@ -6431,8 +6431,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_py_path",
-      "community": 58,
-      "community_name": "calibration_for",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -6465,7 +6465,7 @@
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_58",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "resolved hr zones for the athlete, anchored on a live lthr."
     },
     {
@@ -6476,7 +6476,7 @@
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_80",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "return z1-z5 as absolute bpm ranges.          every boundary is anchored on lthr"
     },
     {
@@ -6508,8 +6508,8 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_204",
-      "community": 58,
-      "community_name": "calibration_for",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "return the persisted zone calibration, or factory defaults.      consumers that"
     },
     {
@@ -6696,7 +6696,7 @@
       "_origin": "ast",
       "id": "services_garmin_plan_parser",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "plan_parser.py"
     },
     {
@@ -6707,7 +6707,7 @@
       "_origin": "ast",
       "id": "services_garmin_plan_parser_clean_corrupted_json",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "clean_corrupted_json()"
     },
     {
@@ -6740,7 +6740,7 @@
       "_origin": "ast",
       "id": "services_garmin_plan_parser_planparser_init",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": ".__init__()"
     },
     {
@@ -6750,8 +6750,8 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_planparser_from_lthr",
-      "community": 58,
-      "community_name": "calibration_for",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".from_lthr()"
     },
     {
@@ -6761,8 +6761,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_py_path",
-      "community": 58,
-      "community_name": "calibration_for",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -6784,7 +6784,7 @@
       "_origin": "ast",
       "id": "services_garmin_plan_parser_py_datetime",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "datetime"
     },
     {
@@ -6916,7 +6916,7 @@
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_1",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "plan parser: converts the ai weekly planner markdown output into structured work"
     },
     {
@@ -6927,7 +6927,7 @@
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_28",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "remove invalid unicode/token corruptions printed outside json strings.      thes"
     },
     {
@@ -6949,7 +6949,7 @@
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_117",
       "community": 64,
-      "community_name": "HRZones",
+      "community_name": "calendar_syncer.py",
       "norm_label": "initialize planparser.          args:             zones: the athlete's resolved"
     },
     {
@@ -6959,8 +6959,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_136",
-      "community": 58,
-      "community_name": "calibration_for",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "build a parser from a live lthr using the persisted calibration."
     },
     {
@@ -7080,8 +7080,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "run_coach_feedback.py"
     },
     {
@@ -7091,8 +7091,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_generate_run_feedback",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "generate_run_feedback()"
     },
     {
@@ -7102,8 +7102,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_py_any",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "any"
     },
     {
@@ -7113,8 +7113,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_py_path",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "path"
     },
     {
@@ -7124,8 +7124,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_rationale_1",
-      "community": 7,
-      "community_name": "AgentRole",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "lightweight post-run coaching feedback.  called from daemon.py when a new comple"
     },
     {
@@ -7135,8 +7135,8 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_rationale_36",
-      "community": 55,
-      "community_name": "daemon.py",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "generate a short ai coaching note for a completed run.      returns the feedback"
     },
     {
@@ -7586,8 +7586,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "zone_calibrator.py"
     },
     {
@@ -7597,8 +7597,8 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_cal_path",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "_cal_path()"
     },
     {
@@ -7608,8 +7608,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_py_path",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -7619,8 +7619,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_load_calibration",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "load_calibration()"
     },
     {
@@ -7641,8 +7641,8 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_save_calibration",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "_save_calibration()"
     },
     {
@@ -7652,8 +7652,8 @@
       "source_location": "L114",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_increment_run_counter",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "increment_run_counter()"
     },
     {
@@ -7663,8 +7663,8 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_is_calibration_due",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "is_calibration_due()"
     },
     {
@@ -7674,8 +7674,8 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_extract_zone_boundaries",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "_extract_zone_boundaries()"
     },
     {
@@ -7685,8 +7685,8 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_fetch_recent_run_zones",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "_fetch_recent_run_zones()"
     },
     {
@@ -7696,8 +7696,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_py_any",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "any"
     },
     {
@@ -7707,8 +7707,8 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_compute_new_percentages",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "_compute_new_percentages()"
     },
     {
@@ -7718,8 +7718,8 @@
       "source_location": "L295",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_maybe_recalibrate",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "maybe_recalibrate()"
     },
     {
@@ -7729,8 +7729,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_1",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "zone auto-calibrator for wotd.  analyses the last n (default 10) runs from garmi"
     },
     {
@@ -7740,8 +7740,8 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_71",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "load calibration from disk; return defaults if file missing or corrupt."
     },
     {
@@ -7751,8 +7751,8 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_115",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "bump the run counter and return the new count.      called by the daemon each ti"
     },
     {
@@ -7762,8 +7762,8 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_127",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "return true if we have accumulated runs_per_calibration runs since last calibrat"
     },
     {
@@ -7773,8 +7773,8 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_135",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "extract (zone3_low, zone4_low) boundaries from garmin's hr-timezones response."
     },
     {
@@ -7784,8 +7784,8 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_165",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "fetch hr-in-timezones data for the last ``n`` running activities.      returns a"
     },
     {
@@ -7795,8 +7795,8 @@
       "source_location": "L228",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_228",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "compute new (floor_pct, ceiling_pct) from run zone data.      algorithm:     1."
     },
     {
@@ -7806,8 +7806,8 @@
       "source_location": "L300",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_300",
-      "community": 52,
-      "community_name": "zone_calibrator.py",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "check if calibration is due; if so, run it and return updated calibration."
     },
     {
@@ -7817,8 +7817,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_logseq_init",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "logseq/__init__.py"
     },
     {
@@ -7905,8 +7905,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_py_date",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "date"
     },
     {
@@ -7927,8 +7927,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_flatten_props",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_flatten_props()"
     },
     {
@@ -7938,8 +7938,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_py_any",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "any"
     },
     {
@@ -7949,8 +7949,8 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_build_garmin_block",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_build_garmin_block()"
     },
     {
@@ -7960,8 +7960,8 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_parse_existing_garmin_block",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_parse_existing_garmin_block()"
     },
     {
@@ -7971,8 +7971,8 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_upsert_properties",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_upsert_properties()"
     },
     {
@@ -8015,8 +8015,8 @@
       "source_location": "L366",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_format_time",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_format_time()"
     },
     {
@@ -8037,8 +8037,8 @@
       "source_location": "L408",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_build_props",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "build_props()"
     },
     {
@@ -8048,8 +8048,8 @@
       "source_location": "L477",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_write_props_dict",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write_props_dict()"
     },
     {
@@ -8059,8 +8059,8 @@
       "source_location": "L524",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_write_daily_properties",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write_daily_properties()"
     },
     {
@@ -8103,8 +8103,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_112",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "flatten nested {'sleep': {'duration': 7.5}} \u2192 {'sleep/duration': '7.5'}.      al"
     },
     {
@@ -8114,8 +8114,8 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_127",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "build the logseq block format:     - garmin health sync       - sleep:         d"
     },
     {
@@ -8125,8 +8125,8 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_155",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "extract the existing garmin health sync block from journal content.      parses"
     },
     {
@@ -8136,8 +8136,8 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_200",
-      "community": 39,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write/update garmin health sync block in a logseq journal .md string.      the i"
     },
     {
@@ -8158,8 +8158,8 @@
       "source_location": "L367",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_367",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "convert garmin time value to display 'hh:mm', or none if invalid.      handles t"
     },
     {
@@ -8180,8 +8180,8 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_424",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "convert raw garmin values into a formatted logseq properties dict.      only non"
     },
     {
@@ -8191,8 +8191,8 @@
       "source_location": "L482",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_482",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write a pre-built props dict to the logseq journal for a specific date.      arg"
     },
     {
@@ -8202,8 +8202,8 @@
       "source_location": "L536",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_536",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "build and write health properties to today's (or a specific) logseq journal."
     },
     {
@@ -8411,8 +8411,8 @@
       "source_location": "L332",
       "_origin": "ast",
       "id": "services_outside_client_outsideapigraphqlclient_to_float",
-      "community": 1,
-      "community_name": "OutsideApiGraphQlClient",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "._to_float()"
     },
     {
@@ -9256,8 +9256,8 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_plan_parser_honours_manual_zone_override",
-      "community": 58,
-      "community_name": "calibration_for",
+      "community": 54,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_plan_parser_honours_manual_zone_override()"
     },
     {
@@ -10664,8 +10664,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "test_data_summarization_nodes.py"
     },
     {
@@ -10675,8 +10675,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_py_asyncio",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "asyncio"
     },
     {
@@ -10686,8 +10686,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_metrics_summarizer_node_basic",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "test_metrics_summarizer_node_basic()"
     },
     {
@@ -10697,8 +10697,8 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_physiology_summarizer_node_basic",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "test_physiology_summarizer_node_basic()"
     },
     {
@@ -10708,8 +10708,8 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_metrics_summarizer_with_empty_data",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "test_metrics_summarizer_with_empty_data()"
     },
     {
@@ -10719,9 +10719,141 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_physiology_summarizer_with_empty_data",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "test_physiology_summarizer_with_empty_data()"
+    },
+    {
+      "label": "test_deploy_image_pipeline.py",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "test_deploy_image_pipeline.py"
+    },
+    {
+      "label": "_service()",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_service",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "_service()"
+    },
+    {
+      "label": "_mount_targets()",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_mount_targets",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "_mount_targets()"
+    },
+    {
+      "label": "test_compose_consumes_the_published_image()",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_test_compose_consumes_the_published_image",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "test_compose_consumes_the_published_image()"
+    },
+    {
+      "label": "test_compose_does_not_build_on_the_production_host()",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_test_compose_does_not_build_on_the_production_host",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "test_compose_does_not_build_on_the_production_host()"
+    },
+    {
+      "label": "parametrize",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_py_parametrize",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "parametrize"
+    },
+    {
+      "label": "test_no_bind_mount_shadows_application_code()",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_test_no_bind_mount_shadows_application_code",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "test_no_bind_mount_shadows_application_code()"
+    },
+    {
+      "label": "test_persistent_state_is_still_mounted()",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_test_persistent_state_is_still_mounted",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "test_persistent_state_is_still_mounted()"
+    },
+    {
+      "label": "test_publish_workflow_pushes_the_image_compose_consumes()",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L89",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_test_publish_workflow_pushes_the_image_compose_consumes",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "test_publish_workflow_pushes_the_image_compose_consumes()"
+    },
+    {
+      "label": "test_deploy_workflow_aborts_when_the_image_pull_fails()",
+      "file_type": "code",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L96",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_test_deploy_workflow_aborts_when_the_image_pull_fails",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "test_deploy_workflow_aborts_when_the_image_pull_fails()"
+    },
+    {
+      "label": "Guards on the image-based deploy pipeline.  CI publishes ghcr.io/<repo>:latest o",
+      "file_type": "rationale",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_rationale_1",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "guards on the image-based deploy pipeline.  ci publishes ghcr.io/<repo>:latest o"
+    },
+    {
+      "label": "The fix removed source mounts; it must not have removed data mounts.",
+      "file_type": "rationale",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L80",
+      "_origin": "ast",
+      "id": "tests_test_deploy_image_pipeline_rationale_80",
+      "community": 39,
+      "community_name": "test_deploy_image_pipeline.py",
+      "norm_label": "the fix removed source mounts; it must not have removed data mounts."
     },
     {
       "label": "test_extract_text_content.py",
@@ -11270,7 +11402,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_langgraph_core_migration.py"
     },
     {
@@ -11280,8 +11412,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_fixture",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "fixture"
     },
     {
@@ -11291,8 +11423,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_basic_test_state",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "basic_test_state()"
     },
     {
@@ -11303,7 +11435,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_all_nodes_importable",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_all_nodes_importable()"
     },
     {
@@ -11314,7 +11446,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_patch",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "patch"
     },
     {
@@ -11325,7 +11457,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_complete_workflow_creation",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_complete_workflow_creation()"
     },
     {
@@ -11335,8 +11467,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_state_schema_completeness",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "test_state_schema_completeness()"
     },
     {
@@ -11347,7 +11479,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_asyncio",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "asyncio"
     },
     {
@@ -11358,7 +11490,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_node_basic_functionality",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_node_basic_functionality()"
     },
     {
@@ -11369,7 +11501,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_workflow_structure_stability",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_workflow_structure_stability()"
     },
     {
@@ -11522,8 +11654,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_py_fixture",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "fixture"
     },
     {
@@ -11533,8 +11665,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowintegration_minimal_valid_state",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".minimal_valid_state()"
     },
     {
@@ -11577,8 +11709,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "testworkflowdataflow"
     },
     {
@@ -11588,8 +11720,8 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow_test_planning_state_fields",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_planning_state_fields()"
     },
     {
@@ -11599,8 +11731,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow_test_state_update_functionality",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_state_update_functionality()"
     },
     {
@@ -11643,8 +11775,8 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowimports_test_state_management_importable",
-      "community": 8,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".test_state_management_importable()"
     },
     {
@@ -11666,7 +11798,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_langgraph_poc.py"
     },
     {
@@ -11677,7 +11809,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_fixture",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "fixture"
     },
     {
@@ -11688,7 +11820,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_sample_garmin_data",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "sample_garmin_data()"
     },
     {
@@ -11699,7 +11831,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_sample_state",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "sample_state()"
     },
     {
@@ -11710,7 +11842,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_state_creation",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_state_creation()"
     },
     {
@@ -11721,7 +11853,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_patch",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "patch"
     },
     {
@@ -11732,7 +11864,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_workflow_creation",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_workflow_creation()"
     },
     {
@@ -11743,7 +11875,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_asyncio",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "asyncio"
     },
     {
@@ -11754,7 +11886,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_metrics_expert_node_basic",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_metrics_expert_node_basic()"
     },
     {
@@ -11765,7 +11897,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_rationale_1",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "minimal tests for langgraph proof of concept."
     },
     {
@@ -11775,8 +11907,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_logseq_connection",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "test_logseq_connection.py"
     },
     {
@@ -11797,8 +11929,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_ssh_key_path_fallback",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "test_ssh_key_path_fallback()"
     },
     {
@@ -11808,8 +11940,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_upsert_properties_merging",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "test_upsert_properties_merging()"
     },
     {
@@ -11819,8 +11951,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_py_patch",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "patch"
     },
     {
@@ -11830,8 +11962,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_write_via_sftp_success",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "test_write_via_sftp_success()"
     },
     {
@@ -11852,8 +11984,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_34",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "verify key path fallback logic."
     },
     {
@@ -11863,8 +11995,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_40",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "verify that property block is built cleanly without corrupting existing markdown"
     },
     {
@@ -11874,8 +12006,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_54",
-      "community": 38,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "simulate successful sftp journal write on linux host."
     },
     {
@@ -15364,6 +15496,72 @@
       "community": 51,
       "community_name": "2026-09-28 \u2014 HR zones unified in `services/garmin/hr_zones.py`",
       "norm_label": "consequences"
+    },
+    {
+      "label": "2026-09-29_production-consumes-published-image.md",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_production_consumes_published_image",
+      "community": 52,
+      "community_name": "Production consumes the published image instead of building on the host",
+      "norm_label": "2026-09-29_production-consumes-published-image.md"
+    },
+    {
+      "label": "Production consumes the published image instead of building on the host",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_production_consumes_published_image_production_consumes_the_published_image_instead_of_building_on_the_host",
+      "community": 52,
+      "community_name": "Production consumes the published image instead of building on the host",
+      "norm_label": "production consumes the published image instead of building on the host"
+    },
+    {
+      "label": "Context",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_production_consumes_published_image_context",
+      "community": 52,
+      "community_name": "Production consumes the published image instead of building on the host",
+      "norm_label": "context"
+    },
+    {
+      "label": "Decision",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_production_consumes_published_image_decision",
+      "community": 52,
+      "community_name": "Production consumes the published image instead of building on the host",
+      "norm_label": "decision"
+    },
+    {
+      "label": "Consequences",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_production_consumes_published_image_consequences",
+      "community": 52,
+      "community_name": "Production consumes the published image instead of building on the host",
+      "norm_label": "consequences"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L99",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_production_consumes_published_image_verification",
+      "community": 52,
+      "community_name": "Production consumes the published image instead of building on the host",
+      "norm_label": "verification"
     },
     {
       "label": "decisions/README.md",
@@ -49325,6 +49523,176 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L40",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline",
+      "target": "tests_test_deploy_image_pipeline_mount_targets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline",
+      "target": "tests_test_deploy_image_pipeline_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline",
+      "target": "tests_test_deploy_image_pipeline_test_compose_consumes_the_published_image",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline",
+      "target": "tests_test_deploy_image_pipeline_test_compose_does_not_build_on_the_production_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline",
+      "target": "tests_test_deploy_image_pipeline_test_deploy_workflow_aborts_when_the_image_pull_fails",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline",
+      "target": "tests_test_deploy_image_pipeline_test_no_bind_mount_shadows_application_code",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L79",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline",
+      "target": "tests_test_deploy_image_pipeline_test_persistent_state_is_still_mounted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline",
+      "target": "tests_test_deploy_image_pipeline_test_publish_workflow_pushes_the_image_compose_consumes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline_rationale_1",
+      "target": "tests_test_deploy_image_pipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L42",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline_mount_targets",
+      "target": "tests_test_deploy_image_pipeline_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline_test_compose_consumes_the_published_image",
+      "target": "tests_test_deploy_image_pipeline_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline_test_compose_does_not_build_on_the_production_host",
+      "target": "tests_test_deploy_image_pipeline_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline_test_persistent_state_is_still_mounted",
+      "target": "tests_test_deploy_image_pipeline_mount_targets",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L69",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline_test_no_bind_mount_shadows_application_code",
+      "target": "tests_test_deploy_image_pipeline_py_parametrize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_deploy_image_pipeline.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_deploy_image_pipeline_rationale_80",
+      "target": "tests_test_deploy_image_pipeline_test_persistent_state_is_still_mounted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_extract_text_content.py",
       "source_location": "L7",
       "weight": 1.0,
@@ -54637,6 +55005,61 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_production_consumes_published_image",
+      "target": "decisions_2026_09_29_production_consumes_published_image_production_consumes_the_published_image_instead_of_building_on_the_host",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_production_consumes_published_image_production_consumes_the_published_image_instead_of_building_on_the_host",
+      "target": "decisions_2026_09_29_production_consumes_published_image_consequences",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_production_consumes_published_image_production_consumes_the_published_image_instead_of_building_on_the_host",
+      "target": "decisions_2026_09_29_production_consumes_published_image_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L57",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_production_consumes_published_image_production_consumes_the_published_image_instead_of_building_on_the_host",
+      "target": "decisions_2026_09_29_production_consumes_published_image_decision",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
+      "source_location": "L99",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_production_consumes_published_image_production_consumes_the_published_image_instead_of_building_on_the_host",
+      "target": "decisions_2026_09_29_production_consumes_published_image_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "decisions/README.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -54966,5 +55389,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4cc399cd75ca144c48e7b264ab5879b8ad3597fb"
+  "built_at_commit": "6954de6fe0e05d2c8217f07b033e4c7f7f5affb9"
 }

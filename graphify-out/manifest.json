@@ -520,8 +520,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/deploy_to_server.yml": {
-    "mtime": 1790649480.1912339,
-    "ast_hash": "3452f632be8a9c2bc1f36087445c16e5",
+    "mtime": 1790698210.1880376,
+    "ast_hash": "f3266ba4c52eafeda76ac7312424fb85",
     "semantic_hash": ""
   },
   ".pre-commit-config.yaml": {
@@ -575,8 +575,8 @@
     "semantic_hash": ""
   },
   "docker-compose.yml": {
-    "mtime": 1790633330.359859,
-    "ast_hash": "55c817d227014ad1de2afe189b217ec4",
+    "mtime": 1790698210.1852355,
+    "ast_hash": "42e7a5f4214909fd746d610b1da3546e",
     "semantic_hash": ""
   },
   "docs/wotd_plan.md": {
@@ -717,6 +717,16 @@
   "decisions/2026-09-28_minimal-bitwarden-secret-set.md": {
     "mtime": 1790697288.3619642,
     "ast_hash": "7a2665c263235b8055b123e499bd36aa",
+    "semantic_hash": ""
+  },
+  "tests/test_deploy_image_pipeline.py": {
+    "mtime": 1790698234.7260382,
+    "ast_hash": "06ec4372043d455878241a490a197376",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-29_production-consumes-published-image.md": {
+    "mtime": 1790698259.3780425,
+    "ast_hash": "792e2dc6d54cc3955e9d8b177a857bb4",
     "semantic_hash": ""
   }
 }

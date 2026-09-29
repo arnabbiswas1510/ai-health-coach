@@ -2,7 +2,17 @@
 # docker-compose.yml
 # =============================================================================
 # Usage:
-#   docker compose up -d        # pulls ghcr.io/arnabbiswas1510/ai-health-coach:latest
+#   docker compose pull && docker compose up -d
+#
+# The image is built and published by the "Publish Docker Image" workflow on
+# every push to main; production consumes that artifact and never builds. The
+# Dockerfile's `COPY . .` means all application code lives in the image, so a
+# deploy is a pull. Do not bind-mount source over /app: it masks the image's
+# code with whatever stale copy happens to sit on the host.
+#
+# For local development, build and run the image under a different tag:
+#   docker build -t ai-health-coach:dev .
+#   IMAGE=ai-health-coach:dev docker compose up -d
 #
 # On every `up`, the container automatically:
 #   1. Deletes stale HTML artifacts
@@ -15,8 +25,7 @@
 
 services:
   ai-health-coach:
-    build: .
-    image: ai-health-coach:local
+    image: ${IMAGE:-ghcr.io/arnabbiswas1510/ai-health-coach:latest}
     entrypoint: ["/app/startup.sh"]
     container_name: ai-health-coach
     restart: unless-stopped
@@ -70,9 +79,8 @@ services:
       - ./tokens:/app/tokens                        # Garmin auth tokens (persisted)
       - ./data:/app/data                            # Generated HTML + JSON (persisted)
       - ./coach_config.yaml:/app/coach_config.yaml  # Athlete config
-      - ./daemon.py:/app/daemon.py                  # Hot-reload: local overrides image
-      - ./force_wotd.py:/app/force_wotd.py          # Hot-reload: local overrides image
-      - ./services/garmin:/app/services/garmin      # Hot-reload: local overrides image
-      - ./services/feedback:/app/services/feedback  # Hot-reload: local overrides image
-      - ./services/logseq:/app/services/logseq      # Hot-reload: local overrides image
-      - ./id_ed25519:/root/.ssh/id_ed25519:ro                    # SSH key for Logseq direct-write
+      - /root/.ssh:/root/.ssh:ro                    # SSH key for Logseq direct-write
+      # NOTE: application code is deliberately NOT mounted. It ships in the
+      # image. Mounting ./services/* or ./daemon.py over /app shadows the
+      # image's code with the host's checkout, so a deploy would silently run
+      # whatever stale source the host last received.
