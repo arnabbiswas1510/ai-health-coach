@@ -41,6 +41,24 @@ jobs:
 
             chmod +x scripts/render_env.sh
 
+            echo "=== Rendering .env from Bitwarden Secrets Manager ==="
+            AUTORENDER_MARKER="$HOME/.config/garmin-ai-coach/autorender.enabled"
+            if [ -f "$AUTORENDER_MARKER" ]; then
+              if ./scripts/render_env.sh; then
+                echo "render_env: .env refreshed from Bitwarden"
+              elif [ -f .env ]; then
+                echo "::warning::render_env.sh failed; continuing with the existing .env, which may hold stale secrets. Check the bws CLI and the bootstrap token (~/.config/garmin-ai-coach/bws.env or the shared ~/.config/bws/bws.env) on the server."
+              else
+                echo "::error::render_env.sh failed and no .env exists to fall back on. Aborting before the stack starts with no configuration."
+                exit 1
+              fi
+            elif [ -f .env ]; then
+              echo "::notice::auto-render disabled (no $AUTORENDER_MARKER); keeping the hand-maintained .env. Run scripts/render_env.sh manually for the Bitwarden cutover, diff the result, then 'touch $AUTORENDER_MARKER' to enable auto-render."
+            else
+              echo "::error::no .env on the host and auto-render is not enabled. Run scripts/render_env.sh manually for the cutover before deploying."
+              exit 1
+            fi
+
             echo "=== Pulling latest images ==="
             docker compose pull
 

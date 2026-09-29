@@ -7,6 +7,50 @@ import os
 import sys
 
 
+def resolve_project_id(projects_json_text: str, name: str) -> str:
+    """Map a Bitwarden project name to its id, or raise LookupError."""
+    projects = json.loads(projects_json_text)
+    matches = [p for p in projects if p.get("name") == name]
+    if not matches:
+        visible = ", ".join(sorted(str(p.get("name", "?")) for p in projects))
+        raise LookupError(
+            f"no Bitwarden project named {name!r}; the machine account can see: "
+            f"{visible or '<none>'}"
+        )
+    if len(matches) > 1:
+        raise LookupError(
+            f"{len(matches)} Bitwarden projects are named {name!r}; set "
+            f"BWS_PROJECT_ID explicitly to disambiguate"
+        )
+    return str(matches[0]["id"])
+
+
+def build_secret_map(secrets: list[dict], project_id: str | None = None) -> dict[str, str]:
+    """Index secrets by key, scoped to a project and refusing ambiguous keys.
+
+    A machine account with access to several projects can surface the same key
+    more than once. Silently letting the last one win would quietly render
+    another app's credential into this .env, so conflicting duplicates are a
+    hard error.
+    """
+    mapping: dict[str, str] = {}
+    conflicts: set[str] = set()
+    for secret in secrets:
+        if project_id is not None and secret.get("projectId") != project_id:
+            continue
+        key = secret["key"]
+        value = secret.get("value", "")
+        if key in mapping and mapping[key] != value:
+            conflicts.add(key)
+        mapping[key] = value
+    if conflicts:
+        raise ValueError(
+            "duplicate Bitwarden secrets with conflicting values for: "
+            + ",".join(sorted(conflicts))
+        )
+    return mapping
+
+
 def render(template_text: str, secrets: dict[str, str], sentinel: str = "@bws") -> str:
     """Return the rendered .env text, or raise KeyError listing unmet sentinels."""
     out: list[str] = []
@@ -32,9 +76,31 @@ def render(template_text: str, secrets: dict[str, str], sentinel: str = "@bws") 
     return "\n".join(out) + "\n"
 
 
+def _resolve_project_mode(name: str) -> int:
+    try:
+        projects_json = os.environ["BWS_PROJECTS_JSON"]
+    except KeyError:
+        sys.stderr.write("missing BWS_PROJECTS_JSON\n")
+        return 2
+    try:
+        sys.stdout.write(resolve_project_id(projects_json, name) + "\n")
+    except json.JSONDecodeError as exc:
+        sys.stderr.write(f"bad BWS_PROJECTS_JSON: {exc}\n")
+        return 2
+    except LookupError as exc:
+        sys.stderr.write(f"{exc}\n")
+        return 4
+    return 0
+
+
 def main(argv: list[str]) -> int:
+    if len(argv) >= 3 and argv[1] == "--resolve-project":
+        return _resolve_project_mode(argv[2])
     if len(argv) < 2:
-        sys.stderr.write("usage: render_env.py <template> [sentinel]\n")
+        sys.stderr.write(
+            "usage: render_env.py <template> [sentinel]\n"
+            "       render_env.py --resolve-project <project-name>\n"
+        )
         return 2
     template_path = argv[1]
     sentinel = argv[2] if len(argv) > 2 else "@bws"
@@ -43,7 +109,11 @@ def main(argv: list[str]) -> int:
     except (KeyError, json.JSONDecodeError) as exc:
         sys.stderr.write(f"bad or missing BWS_SECRETS_JSON: {exc}\n")
         return 2
-    secrets = {secret["key"]: secret.get("value", "") for secret in secrets_list}
+    try:
+        secrets = build_secret_map(secrets_list, os.environ.get("BWS_PROJECT_ID") or None)
+    except ValueError as exc:
+        sys.stderr.write(f"{exc}\n")
+        return 5
     with open(template_path, encoding="utf-8") as handle:
         template_text = handle.read()
     try:

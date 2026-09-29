@@ -8,19 +8,28 @@ import pytest
 
 REPO = Path(__file__).resolve().parents[1]
 SENTINEL = "@bws"
-BWS_SECRET_KEYS = {
+# Keys the app genuinely needs at runtime. These must carry the sentinel so the
+# resolver fails loudly rather than starting the stack with no credentials.
+REQUIRED_BWS_KEYS = {
     "GOOGLE_API_KEY",
-    "ANTHROPIC_API_KEY",
-    "OPENAI_API_KEY",
-    "OPENROUTER_API_KEY",
-    "DEEPSEEK_API_KEY",
     "GARMIN_EMAIL",
     "GARMIN_PASSWORD",
-    "LANGSMITH_API_KEY",
     "LOGSEQ_SSH_HOST",
     "LOGSEQ_SSH_USER",
     "LOGSEQ_GRAPH_PATH",
 }
+# Providers and observability hooks this deployment does not use. render_env.py
+# counts an empty resolved secret as MISSING and aborts the entire render, so a
+# sentinel here would demand a junk Bitwarden entry purely to appease the
+# resolver. Blank is allowed; a literal value is still forbidden.
+OPTIONAL_BWS_KEYS = {
+    "ANTHROPIC_API_KEY",
+    "OPENAI_API_KEY",
+    "OPENROUTER_API_KEY",
+    "DEEPSEEK_API_KEY",
+    "LANGSMITH_API_KEY",
+}
+BWS_SECRET_KEYS = REQUIRED_BWS_KEYS | OPTIONAL_BWS_KEYS
 SKIP_PREFIXES = ("graphify-out/", "frontend/dist/", "node_modules/")
 SKIP_SUFFIXES = (".patch",)
 
@@ -48,14 +57,42 @@ def _parse_env_template() -> dict[str, str]:
     return values
 
 
-@pytest.mark.parametrize("key", sorted(BWS_SECRET_KEYS))
-def test_env_template_secret_is_a_sentinel(key: str):
+@pytest.mark.parametrize("key", sorted(REQUIRED_BWS_KEYS))
+def test_required_env_template_secret_is_a_sentinel(key: str):
     values = _parse_env_template()
     assert key in values, f"{key} missing from .env.template"
     assert values[key] == SENTINEL, (
         f".env.template must not carry a literal for {key}; expected the "
         f"'{SENTINEL}' sentinel but found '{values[key]}'. Store the value in the "
         f"Bitwarden ai-health-coach project instead."
+    )
+
+
+@pytest.mark.parametrize("key", sorted(OPTIONAL_BWS_KEYS))
+def test_optional_env_template_secret_is_sentinel_or_blank(key: str):
+    values = _parse_env_template()
+    assert key in values, f"{key} missing from .env.template"
+    assert values[key] in {SENTINEL, ""}, (
+        f".env.template must not carry a literal for {key}; expected the "
+        f"'{SENTINEL}' sentinel or a blank value but found '{values[key]}'. "
+        f"Store the value in the Bitwarden ai-health-coach project instead."
+    )
+
+
+def test_every_template_sentinel_is_a_known_secret_key():
+    """Every sentinel in the template must be a declared key.
+
+    Each @bws line adds a hard requirement on the Bitwarden project that would
+    otherwise break deploys the moment the secret is absent.
+    """
+    values = _parse_env_template()
+    sentinels = {key for key, val in values.items() if val == SENTINEL}
+    undeclared = sentinels - BWS_SECRET_KEYS
+    assert not undeclared, (
+        "Undeclared @bws sentinels in .env.template: "
+        f"{sorted(undeclared)}. Every sentinel must resolve to a non-empty "
+        "Bitwarden secret or render_env.py aborts the whole render; add the key "
+        "to REQUIRED_BWS_KEYS once the secret exists in the project."
     )
 
 

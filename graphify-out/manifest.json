@@ -315,7 +315,7 @@
     "semantic_hash": ""
   },
   "services/chat_api/main.py": {
-    "mtime": 1790633030.5701685,
+    "mtime": 1790633638.4780712,
     "ast_hash": "c4f477137fe54c1668fcd2c56ff24a39",
     "semantic_hash": ""
   },
@@ -520,8 +520,8 @@
     "semantic_hash": ""
   },
   ".github/workflows/deploy_to_server.yml": {
-    "mtime": 1790620338.9754539,
-    "ast_hash": "ee8e42506f43b04e0338ab3689c50823",
+    "mtime": 1790649480.1912339,
+    "ast_hash": "3452f632be8a9c2bc1f36087445c16e5",
     "semantic_hash": ""
   },
   ".pre-commit-config.yaml": {
@@ -590,7 +590,7 @@
     "semantic_hash": ""
   },
   "index.html": {
-    "mtime": 1790633369.6679494,
+    "mtime": 1790633638.4822023,
     "ast_hash": "66d6b5a225bd12b9f6a295a16ffe234e",
     "semantic_hash": ""
   },
@@ -645,23 +645,23 @@
     "semantic_hash": ""
   },
   "scripts/render_env.py": {
-    "mtime": 1790620338.9159732,
-    "ast_hash": "d21cf796a26634622c1dcc0113e1ed42",
+    "mtime": 1790648311.4623253,
+    "ast_hash": "0cf5c98dd2cc6502b5900212465301a7",
     "semantic_hash": ""
   },
   "scripts/render_env.sh": {
-    "mtime": 1790620338.9296842,
-    "ast_hash": "38c066101f123c045a602f8576527a61",
+    "mtime": 1790697277.582328,
+    "ast_hash": "ffa4ea428a0654a721f1bdf3f386a5c9",
     "semantic_hash": ""
   },
   "tests/test_no_secrets_committed.py": {
-    "mtime": 1790620338.9429154,
-    "ast_hash": "84412030b4e23a09a31ea64a60e711e0",
+    "mtime": 1790647835.3602982,
+    "ast_hash": "ca7d1621c1dd57d7a2751971e5f803f6",
     "semantic_hash": ""
   },
   "tests/test_render_env.py": {
-    "mtime": 1790620338.937605,
-    "ast_hash": "78157346b03d6e7cc232ed6ef42b7b40",
+    "mtime": 1790697263.8471723,
+    "ast_hash": "b14a979b1aa5a16aa03007e10b8938fa",
     "semantic_hash": ""
   },
   "decisions/2026-09-28_bitwarden-secret-resolution.md": {
@@ -712,6 +712,11 @@
   "decisions/2026-09-28_daily-athlete-feedback-adrs.md": {
     "mtime": 1790633410.5368586,
     "ast_hash": "1d35db7889265e1aa9e784e11a544920",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-28_minimal-bitwarden-secret-set.md": {
+    "mtime": 1790697288.3619642,
+    "ast_hash": "7a2665c263235b8055b123e499bd36aa",
     "semantic_hash": ""
   }
 }
