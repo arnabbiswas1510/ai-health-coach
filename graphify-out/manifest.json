@@ -10,8 +10,8 @@
     "semantic_hash": ""
   },
   "cli/garmin_ai_coach_cli.py": {
-    "mtime": 1790624854.1490588,
-    "ast_hash": "16f76b320bd123117b8c1ab047494923",
+    "mtime": 1790698786.791528,
+    "ast_hash": "c7fabfa0c2beff5b2599a8b5069e0bce",
     "semantic_hash": ""
   },
   "core/__init__.py": {
@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "startup.sh": {
-    "mtime": 1787609569.7039032,
-    "ast_hash": "e0ba9b53be38a9a2e0c43ed27bb43ac0",
+    "mtime": 1790698786.7878168,
+    "ast_hash": "cbbb4d5247c2172dc54ef20649ccac4c",
     "semantic_hash": ""
   },
   "tests/garmin/test_calendar_syncer_workout_limit.py": {
@@ -530,8 +530,8 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1790633030.56024,
-    "ast_hash": "e0fd8d6973cc171028b61f06048a1290",
+    "mtime": 1790698658.8067973,
+    "ast_hash": "3bba22e8c3fb40a23df7b2bfc1f548a6",
     "semantic_hash": ""
   },
   "CHANGELOG.md": {
@@ -587,11 +587,6 @@
   "docs/wotd_resilience_fix.md": {
     "mtime": 1787609569.676507,
     "ast_hash": "9978d78f2e83b3fa58d1805d59cc1f69",
-    "semantic_hash": ""
-  },
-  "index.html": {
-    "mtime": 1790633638.4822023,
-    "ast_hash": "66d6b5a225bd12b9f6a295a16ffe234e",
     "semantic_hash": ""
   },
   "requirements-dev.txt": {
@@ -727,6 +722,21 @@
   "decisions/2026-09-29_production-consumes-published-image.md": {
     "mtime": 1790698259.3780425,
     "ast_hash": "792e2dc6d54cc3955e9d8b177a857bb4",
+    "semantic_hash": ""
+  },
+  "tests/test_dashboard_layout.py": {
+    "mtime": 1790698780.4068956,
+    "ast_hash": "8bf9c09bf20b978ba6d6809146f61afe",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-29_dashboard-moves-to-frontend.md": {
+    "mtime": 1790698817.0361888,
+    "ast_hash": "01f6d9dcbafae0595e6cf259ac4a048c",
+    "semantic_hash": ""
+  },
+  "frontend/index.html": {
+    "mtime": 1790698780.6104605,
+    "ast_hash": "66d6b5a225bd12b9f6a295a16ffe234e",
     "semantic_hash": ""
   }
 }

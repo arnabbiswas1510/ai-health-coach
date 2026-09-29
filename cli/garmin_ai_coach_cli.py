@@ -907,8 +907,11 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
                 except Exception as e:
                     logger.warning("Failed to copy %s to root: %s", filename, e)
 
-        # Copy the dashboard index.html if it exists in the root workspace
-        root_index = Path("index.html")
+        # Copy the dashboard shell into the output root so nginx can serve it
+        # as index.html. It lives under frontend/ rather than the repository
+        # root so that a plain static server on the root lists files instead of
+        # rendering this page detached from data/ and the /api/ proxy.
+        root_index = Path("frontend/index.html")
         if root_index.exists():
             try:
                 shutil.copy2(root_index, output_dir.parent / "index.html")

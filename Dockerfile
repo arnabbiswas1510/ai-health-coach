@@ -43,11 +43,11 @@ COPY startup.sh /app/startup.sh
 RUN chmod +x /app/startup.sh
 
 # Generate a build hash from ONLY the files whose changes require fresh HTML output.
-# Narrowed to index.html and the two locked HTML template modules.
+# Narrowed to the dashboard and the two locked HTML template modules.
 # Changes to other Python files (nodes, CLI, formatters, etc.) do NOT force a re-run.
 # To force a re-run manually, set FORCE_ANALYTICS=true in your .env or docker-compose.
 RUN sha256sum \
-      /app/index.html \
+      /app/frontend/index.html \
       /app/services/ai/langgraph/nodes/planning_template.py \
       /app/services/ai/langgraph/nodes/analysis_template.py \
     > /app/build_hash.txt 2>/dev/null || \

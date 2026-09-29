@@ -79,10 +79,10 @@ if [ ! -L /usr/share/nginx/html ]; then
     ln -s /app/data /usr/share/nginx/html
 fi
 
-if [ -f "/app/index.html" ]; then
-    log "Copying latest index.html to /app/data/index.html..."
-    cp /app/index.html /app/data/index.html
-    ok "Latest index.html copied."
+if [ -f "/app/frontend/index.html" ]; then
+    log "Copying latest dashboard to /app/data/index.html..."
+    cp /app/frontend/index.html /app/data/index.html
+    ok "Latest dashboard copied."
 fi
 
 nginx
