@@ -1,6 +1,8 @@
 """Guard: no real secret may live in a tracked file."""
+
 from __future__ import annotations
 
+import re
 import subprocess
 from pathlib import Path
 
@@ -35,9 +37,7 @@ SKIP_SUFFIXES = (".patch",)
 
 
 def _tracked_text_files() -> list[Path]:
-    out = subprocess.run(
-        ["git", "ls-files"], cwd=REPO, capture_output=True, text=True, check=True
-    ).stdout.splitlines()
+    out = subprocess.run(["git", "ls-files"], cwd=REPO, capture_output=True, text=True, check=True).stdout.splitlines()
     files = []
     for rel in out:
         if rel.startswith(SKIP_PREFIXES) or rel.endswith(SKIP_SUFFIXES):
@@ -118,3 +118,30 @@ def test_no_bws_sentinel_bypassed_in_tracked_templates():
         if "GARMIN_PASSWORD=your_garmin_password" in text:
             offenders.append(str(path.relative_to(REPO)))
     assert not offenders, "Tracked env templates contain literal secret placeholders:\n" + "\n".join(offenders)
+
+
+# docker-compose.yml passes IMAGE through to select the image tag; it is a
+# compose-level dev override, not application configuration, so it is not
+# expected in .env.template.
+COMPOSE_ONLY_KEYS = {"IMAGE"}
+
+
+def _compose_referenced_keys() -> set[str]:
+    compose = (REPO / "docker-compose.yml").read_text()
+    return set(re.findall(r"\$\{([A-Z_][A-Z0-9_]*)", compose)) - COMPOSE_ONLY_KEYS
+
+
+def test_template_declares_every_key_compose_reads():
+    """.env is rendered wholesale from the template, so gaps are silent.
+
+    A key referenced by docker-compose.yml but absent from .env.template
+    disappears from .env on render. Compose then substitutes its own default,
+    so nothing errors and the loss only shows up as changed behaviour.
+    """
+    declared = set(_parse_env_template())
+    missing = sorted(_compose_referenced_keys() - declared)
+    assert not missing, (
+        f"docker-compose.yml reads these keys but .env.template does not "
+        f"declare them: {missing}. Rendering .env would drop them and silently "
+        f"fall back to the compose defaults. Declare each one in the template."
+    )

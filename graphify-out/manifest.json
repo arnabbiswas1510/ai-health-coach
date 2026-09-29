@@ -650,8 +650,8 @@
     "semantic_hash": ""
   },
   "tests/test_no_secrets_committed.py": {
-    "mtime": 1790647835.3602982,
-    "ast_hash": "ca7d1621c1dd57d7a2751971e5f803f6",
+    "mtime": 1790712484.1885893,
+    "ast_hash": "3d141bbbca7b9772869c34d5aeca9e95",
     "semantic_hash": ""
   },
   "tests/test_render_env.py": {
@@ -737,6 +737,11 @@
   "frontend/index.html": {
     "mtime": 1790698780.6104605,
     "ast_hash": "66d6b5a225bd12b9f6a295a16ffe234e",
+    "semantic_hash": ""
+  },
+  "decisions/2026-09-29_env-template-covers-all-compose-keys.md": {
+    "mtime": 1790712509.184516,
+    "ast_hash": "f5d06d3a0069048fbf1514c3dd4ef0ab",
     "semantic_hash": ""
   }
 }

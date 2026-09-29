@@ -484,7 +484,7 @@
       "_origin": "ast",
       "id": "daemon",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "daemon.py"
     },
     {
@@ -495,7 +495,7 @@
       "_origin": "ast",
       "id": "daemon_load_pending_syncs",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "_load_pending_syncs()"
     },
     {
@@ -506,7 +506,7 @@
       "_origin": "ast",
       "id": "daemon_py_path",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "path"
     },
     {
@@ -517,7 +517,7 @@
       "_origin": "ast",
       "id": "daemon_save_pending_syncs",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "_save_pending_syncs()"
     },
     {
@@ -528,7 +528,7 @@
       "_origin": "ast",
       "id": "daemon_queue_pending_sync",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "_queue_pending_sync()"
     },
     {
@@ -539,7 +539,7 @@
       "_origin": "ast",
       "id": "daemon_flush_pending_syncs",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "_flush_pending_syncs()"
     },
     {
@@ -550,7 +550,7 @@
       "_origin": "ast",
       "id": "daemon_sync_sleep_to_logseq",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "_sync_sleep_to_logseq()"
     },
     {
@@ -561,7 +561,7 @@
       "_origin": "ast",
       "id": "daemon_check_and_run",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "check_and_run()"
     },
     {
@@ -572,7 +572,7 @@
       "_origin": "ast",
       "id": "daemon_run_withings_sync",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "run_withings_sync()"
     },
     {
@@ -583,7 +583,7 @@
       "_origin": "ast",
       "id": "daemon_main",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "main()"
     },
     {
@@ -594,7 +594,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_28",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "return the list of pending sync entries, or [] if none."
     },
     {
@@ -605,7 +605,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_52",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "add or update a pending sync entry for date_iso (deduplicates by date)."
     },
     {
@@ -616,7 +616,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_69",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "try to write all pending syncs to their correct journal pages.      processes en"
     },
     {
@@ -627,7 +627,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_115",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "write sleep + weight to today's logseq journal page.      wotd is intentionally"
     },
     {
@@ -638,7 +638,7 @@
       "_origin": "ast",
       "id": "daemon_rationale_518",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "push withings scale measurements to garmin connect.      calls withings-sync pro"
     },
     {
@@ -824,8 +824,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "poll_garmin",
-      "community": 70,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "poll_garmin.py"
     },
     {
@@ -835,8 +835,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "poll_garmin_main",
-      "community": 70,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "main()"
     },
     {
@@ -1405,7 +1405,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_summarizer_node_combined_summarizer_node",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "combined_summarizer_node()"
     },
     {
@@ -1526,7 +1526,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node_formatter_node",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "formatter_node()"
     },
     {
@@ -1866,8 +1866,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "plan_formatter_node.py"
     },
     {
@@ -1910,8 +1910,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node_rationale_1",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "plan formatter node.  asks the llm for a structured json data object describing"
     },
     {
@@ -2120,7 +2120,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_plot_resolution_node",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "plot_resolution_node()"
     },
     {
@@ -2131,7 +2131,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_py_any",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "any"
     },
     {
@@ -2230,7 +2230,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_synthesis_node_synthesis_node",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "synthesis_node()"
     },
     {
@@ -2493,8 +2493,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_init",
-      "community": 7,
-      "community_name": "TrainingAnalysisState",
+      "community": 38,
+      "community_name": "create_initial_state",
       "norm_label": "state/__init__.py"
     },
     {
@@ -2537,7 +2537,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_training_analysis_state_create_initial_state",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "create_initial_state()"
     },
@@ -2548,7 +2548,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_training_analysis_state_py_any",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "any"
     },
@@ -2890,7 +2890,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "analysis_workflow.py"
     },
     {
@@ -2901,7 +2901,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_analysis_workflow",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "create_analysis_workflow()"
     },
     {
@@ -2912,7 +2912,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_run_training_analysis",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "run_training_analysis()"
     },
     {
@@ -2923,7 +2923,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_simple_sequential_workflow",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "create_simple_sequential_workflow()"
     },
     {
@@ -3890,8 +3890,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler",
-      "community": 17,
-      "community_name": "combined_analyst_node.py",
+      "community": 53,
+      "community_name": "retry_handler.py",
       "norm_label": "retry_handler.py"
     },
     {
@@ -3902,7 +3902,7 @@
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryableerror",
       "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community_name": "retry_handler.py",
       "norm_label": "retryableerror"
     },
     {
@@ -3912,8 +3912,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "exception",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": "exception"
     },
     {
@@ -3924,7 +3924,7 @@
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_apioverloaderror",
       "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community_name": "retry_handler.py",
       "norm_label": "apioverloaderror"
     },
     {
@@ -3934,8 +3934,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig",
-      "community": 17,
-      "community_name": "combined_analyst_node.py",
+      "community": 53,
+      "community_name": "retry_handler.py",
       "norm_label": "retryconfig"
     },
     {
@@ -3946,7 +3946,7 @@
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_init",
       "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community_name": "retry_handler.py",
       "norm_label": ".__init__()"
     },
     {
@@ -3956,8 +3956,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_calculate_delay",
-      "community": 17,
-      "community_name": "combined_analyst_node.py",
+      "community": 53,
+      "community_name": "retry_handler.py",
       "norm_label": ".calculate_delay()"
     },
     {
@@ -3989,8 +3989,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_with_retry",
-      "community": 17,
-      "community_name": "combined_analyst_node.py",
+      "community": 53,
+      "community_name": "retry_handler.py",
       "norm_label": "with_retry()"
     },
     {
@@ -5595,8 +5595,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "services_garmin_client_garminconnectclient_connect",
-      "community": 70,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": ".connect()"
     },
     {
@@ -5606,8 +5606,8 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "services_garmin_client_garminconnectclient_client",
-      "community": 70,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": ".client()"
     },
     {
@@ -5617,8 +5617,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "garmin",
-      "community": 70,
-      "community_name": "Garmin",
+      "community": 56,
+      "community_name": "GarminConnectClient",
       "norm_label": "garmin"
     },
     {
@@ -6343,7 +6343,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_hr_zones",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "hr_zones.py"
     },
@@ -6354,8 +6354,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "hrzones"
     },
     {
@@ -6365,8 +6365,8 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones_describe",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".describe()"
     },
     {
@@ -6376,8 +6376,8 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_hrzones_zone_table",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".zone_table()"
     },
     {
@@ -6387,7 +6387,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_resolve_lthr",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "resolve_lthr()"
     },
@@ -6398,7 +6398,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_py_any",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "any"
     },
@@ -6409,8 +6409,8 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_compute_zones",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "compute_zones()"
     },
     {
@@ -6420,8 +6420,8 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_calibration_for",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "calibration_for()"
     },
     {
@@ -6431,8 +6431,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_py_path",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -6442,7 +6442,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_get_hr_zones",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "get_hr_zones()"
     },
@@ -6453,7 +6453,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_1",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "single source of truth for the athlete's heart-rate zones.  both wotd generation"
     },
@@ -6464,8 +6464,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_58",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "resolved hr zones for the athlete, anchored on a live lthr."
     },
     {
@@ -6475,8 +6475,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_80",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "return z1-z5 as absolute bpm ranges.          every boundary is anchored on lthr"
     },
     {
@@ -6486,7 +6486,7 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_96",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "return the athlete's current lthr from garmin.      priority:       1. ``get_use"
     },
@@ -6497,8 +6497,8 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_157",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "build the full zone set from a live lthr and calibrated percentages.      a manu"
     },
     {
@@ -6508,8 +6508,8 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_204",
-      "community": 4,
-      "community_name": "TriathlonCoachDataExtractor",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "return the persisted zone calibration, or factory defaults.      consumers that"
     },
     {
@@ -6519,7 +6519,7 @@
       "source_location": "L222",
       "_origin": "ast",
       "id": "services_garmin_hr_zones_rationale_222",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "resolve lthr and return the athlete's zones.      args:         recalibrate: whe"
     },
@@ -6695,8 +6695,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_plan_parser",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "plan_parser.py"
     },
     {
@@ -6706,8 +6706,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_clean_corrupted_json",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": "clean_corrupted_json()"
     },
     {
@@ -6739,8 +6739,8 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_planparser_init",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": ".__init__()"
     },
     {
@@ -6750,8 +6750,8 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_planparser_from_lthr",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".from_lthr()"
     },
     {
@@ -6761,8 +6761,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_py_path",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -6783,8 +6783,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_py_datetime",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": "datetime"
     },
     {
@@ -6915,8 +6915,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_1",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "plan parser: converts the ai weekly planner markdown output into structured work"
     },
     {
@@ -6926,8 +6926,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_28",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": "remove invalid unicode/token corruptions printed outside json strings.      thes"
     },
     {
@@ -6948,8 +6948,8 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_117",
-      "community": 64,
-      "community_name": "HRZones",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": "initialize planparser.          args:             zones: the athlete's resolved"
     },
     {
@@ -6959,8 +6959,8 @@
       "source_location": "L136",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_136",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "build a parser from a live lthr using the persisted calibration."
     },
     {
@@ -7080,7 +7080,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "run_coach_feedback.py"
     },
@@ -7092,7 +7092,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_generate_run_feedback",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "generate_run_feedback()"
     },
     {
@@ -7103,7 +7103,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_py_any",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "any"
     },
     {
@@ -7114,7 +7114,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_py_path",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "path"
     },
     {
@@ -7124,7 +7124,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_rationale_1",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "lightweight post-run coaching feedback.  called from daemon.py when a new comple"
     },
@@ -7136,7 +7136,7 @@
       "_origin": "ast",
       "id": "services_garmin_run_coach_feedback_rationale_36",
       "community": 19,
-      "community_name": "daemon.py",
+      "community_name": "logseq_client.py",
       "norm_label": "generate a short ai coaching note for a completed run.      returns the feedback"
     },
     {
@@ -7587,7 +7587,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "zone_calibrator.py"
     },
     {
@@ -7598,7 +7598,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_cal_path",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_cal_path()"
     },
     {
@@ -7609,7 +7609,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_py_path",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
     {
@@ -7620,7 +7620,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_load_calibration",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "load_calibration()"
     },
     {
@@ -7630,8 +7630,8 @@
       "source_location": "L92",
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_default_calibration",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "_default_calibration()"
     },
     {
@@ -7642,7 +7642,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_save_calibration",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_save_calibration()"
     },
     {
@@ -7653,7 +7653,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_increment_run_counter",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "increment_run_counter()"
     },
     {
@@ -7664,7 +7664,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_is_calibration_due",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "is_calibration_due()"
     },
     {
@@ -7675,7 +7675,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_extract_zone_boundaries",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_extract_zone_boundaries()"
     },
     {
@@ -7686,7 +7686,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_fetch_recent_run_zones",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_fetch_recent_run_zones()"
     },
     {
@@ -7697,7 +7697,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_py_any",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "any"
     },
     {
@@ -7708,7 +7708,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_compute_new_percentages",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "_compute_new_percentages()"
     },
     {
@@ -7719,7 +7719,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_maybe_recalibrate",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "maybe_recalibrate()"
     },
     {
@@ -7730,7 +7730,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_1",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "zone auto-calibrator for wotd.  analyses the last n (default 10) runs from garmi"
     },
     {
@@ -7741,7 +7741,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_71",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "load calibration from disk; return defaults if file missing or corrupt."
     },
     {
@@ -7752,7 +7752,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_115",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "bump the run counter and return the new count.      called by the daemon each ti"
     },
     {
@@ -7763,7 +7763,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_127",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "return true if we have accumulated runs_per_calibration runs since last calibrat"
     },
     {
@@ -7774,7 +7774,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_135",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "extract (zone3_low, zone4_low) boundaries from garmin's hr-timezones response."
     },
     {
@@ -7785,7 +7785,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_165",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "fetch hr-in-timezones data for the last ``n`` running activities.      returns a"
     },
     {
@@ -7796,7 +7796,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_228",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "compute new (floor_pct, ceiling_pct) from run zone data.      algorithm:     1."
     },
     {
@@ -7807,7 +7807,7 @@
       "_origin": "ast",
       "id": "services_garmin_zone_calibrator_rationale_300",
       "community": 0,
-      "community_name": "zone_calibrator.py",
+      "community_name": "test_hr_zones.py",
       "norm_label": "check if calibration is due; if so, run it and return updated calibration."
     },
     {
@@ -7817,8 +7817,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_logseq_init",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "logseq/__init__.py"
     },
     {
@@ -7828,7 +7828,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_logseq_logseq_client",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "logseq_client.py"
     },
@@ -7839,7 +7839,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_ssh_host",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_get_ssh_host()"
     },
@@ -7850,7 +7850,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_ssh_user",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_get_ssh_user()"
     },
@@ -7861,7 +7861,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_ssh_port",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_get_ssh_port()"
     },
@@ -7872,7 +7872,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_ssh_key_path",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_get_ssh_key_path()"
     },
@@ -7883,7 +7883,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_get_graph_path",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_get_graph_path()"
     },
@@ -7894,7 +7894,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_journal_sftp_path",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_journal_sftp_path()"
     },
@@ -7905,8 +7905,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_py_date",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "date"
     },
     {
@@ -7916,7 +7916,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_is_property_line",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_is_property_line()"
     },
@@ -7927,8 +7927,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_flatten_props",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_flatten_props()"
     },
     {
@@ -7938,8 +7938,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_py_any",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "any"
     },
     {
@@ -7949,8 +7949,8 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_build_garmin_block",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_build_garmin_block()"
     },
     {
@@ -7960,8 +7960,8 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_parse_existing_garmin_block",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_parse_existing_garmin_block()"
     },
     {
@@ -7971,8 +7971,8 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_upsert_properties",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_upsert_properties()"
     },
     {
@@ -7982,7 +7982,7 @@
       "source_location": "L254",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_ssh_connect",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_ssh_connect()"
     },
@@ -7993,7 +7993,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "sshclient",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "sshclient"
     },
@@ -8004,7 +8004,7 @@
       "source_location": "L273",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_write_via_sftp",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_write_via_sftp()"
     },
@@ -8015,8 +8015,8 @@
       "source_location": "L366",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_format_time",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "_format_time()"
     },
     {
@@ -8026,7 +8026,7 @@
       "source_location": "L398",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_format_pace",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "_format_pace()"
     },
@@ -8037,8 +8037,8 @@
       "source_location": "L408",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_build_props",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "build_props()"
     },
     {
@@ -8048,8 +8048,8 @@
       "source_location": "L477",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_write_props_dict",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write_props_dict()"
     },
     {
@@ -8059,8 +8059,8 @@
       "source_location": "L524",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_write_daily_properties",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write_daily_properties()"
     },
     {
@@ -8070,7 +8070,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_1",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "services/logseq/logseq_client.py  writes garmin health metrics directly into log"
     },
@@ -8081,7 +8081,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_90",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "return the sftp path for the target journal file on the host machine.          h"
     },
@@ -8092,7 +8092,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_107",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "true if the line is a logseq page-level property (key:: value)."
     },
@@ -8103,8 +8103,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_112",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "flatten nested {'sleep': {'duration': 7.5}} \u2192 {'sleep/duration': '7.5'}.      al"
     },
     {
@@ -8114,8 +8114,8 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_127",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "build the logseq block format:     - garmin health sync       - sleep:         d"
     },
     {
@@ -8125,8 +8125,8 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_155",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "extract the existing garmin health sync block from journal content.      parses"
     },
     {
@@ -8136,8 +8136,8 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_200",
-      "community": 67,
-      "community_name": "_upsert_properties",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write/update garmin health sync block in a logseq journal .md string.      the i"
     },
     {
@@ -8147,7 +8147,7 @@
       "source_location": "L274",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_274",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "ssh into the host machine and write/update the journal .md file directly.      r"
     },
@@ -8158,8 +8158,8 @@
       "source_location": "L367",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_367",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "convert garmin time value to display 'hh:mm', or none if invalid.      handles t"
     },
     {
@@ -8169,7 +8169,7 @@
       "source_location": "L399",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_399",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "convert m/s to decimal min/km pace (e.g. 2.78 m/s \u2192 5.99 min/km)."
     },
@@ -8180,8 +8180,8 @@
       "source_location": "L424",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_424",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "convert raw garmin values into a formatted logseq properties dict.      only non"
     },
     {
@@ -8191,8 +8191,8 @@
       "source_location": "L482",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_482",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "write a pre-built props dict to the logseq journal for a specific date.      arg"
     },
     {
@@ -8202,8 +8202,8 @@
       "source_location": "L536",
       "_origin": "ast",
       "id": "services_logseq_logseq_client_rationale_536",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "build and write health properties to today's (or a specific) logseq journal."
     },
     {
@@ -8411,8 +8411,8 @@
       "source_location": "L332",
       "_origin": "ast",
       "id": "services_outside_client_outsideapigraphqlclient_to_float",
-      "community": 1,
-      "community_name": "OutsideApiGraphQlClient",
+      "community": 3,
+      "community_name": "run_analysis_from_config",
       "norm_label": "._to_float()"
     },
     {
@@ -8871,8 +8871,8 @@
       "source_location": "L137",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 14,
+      "community_name": "_make_syncer",
       "norm_label": "testclearcoachlibraryworkouts"
     },
     {
@@ -8882,8 +8882,8 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_deletes_all_coach_prefixed_workouts",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 14,
+      "community_name": "_make_syncer",
       "norm_label": ".test_deletes_all_coach_prefixed_workouts()"
     },
     {
@@ -8893,8 +8893,8 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_does_not_delete_non_coach_workouts",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 14,
+      "community_name": "_make_syncer",
       "norm_label": ".test_does_not_delete_non_coach_workouts()"
     },
     {
@@ -8904,8 +8904,8 @@
       "source_location": "L163",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_paginates_beyond_100_workouts",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 14,
+      "community_name": "_make_syncer",
       "norm_label": ".test_paginates_beyond_100_workouts()"
     },
     {
@@ -8915,8 +8915,8 @@
       "source_location": "L185",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_returns_zero_when_library_empty",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 14,
+      "community_name": "_make_syncer",
       "norm_label": ".test_returns_zero_when_library_empty()"
     },
     {
@@ -8926,8 +8926,8 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_handles_get_workouts_exception_gracefully",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": ".test_handles_get_workouts_exception_gracefully()"
     },
     {
@@ -8937,8 +8937,8 @@
       "source_location": "L202",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_testclearcoachlibraryworkouts_test_continues_deleting_after_single_delete_failure",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": ".test_continues_deleting_after_single_delete_failure()"
     },
     {
@@ -9058,8 +9058,8 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_rationale_138",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 14,
+      "community_name": "_make_syncer",
       "norm_label": "guard: all 'coach:' workouts are deleted before upload."
     },
     {
@@ -9069,8 +9069,8 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_rationale_164",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 14,
+      "community_name": "_make_syncer",
       "norm_label": "if library has >100 workouts, all pages must be fetched and cleaned."
     },
     {
@@ -9080,8 +9080,8 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_rationale_190",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": "if the library api fails, upload should proceed (not crash)."
     },
     {
@@ -9091,8 +9091,8 @@
       "source_location": "L203",
       "_origin": "ast",
       "id": "tests_garmin_test_calendar_syncer_workout_limit_rationale_203",
-      "community": 53,
-      "community_name": "TestClearCoachLibraryWorkouts",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": "if one delete call fails, the rest should still be attempted."
     },
     {
@@ -9113,7 +9113,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_hr_zones.py"
     },
@@ -9124,7 +9124,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_client_with_profile_lthr",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "_client_with_profile_lthr()"
     },
@@ -9135,7 +9135,7 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_resolve_lthr_prefers_user_profile",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_resolve_lthr_prefers_user_profile()"
     },
@@ -9146,7 +9146,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_resolve_lthr_falls_back_to_training_status_scan",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_resolve_lthr_falls_back_to_training_status_scan()"
     },
@@ -9157,7 +9157,7 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_resolve_lthr_raises_instead_of_using_age_formula",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_resolve_lthr_raises_instead_of_using_age_formula()"
     },
@@ -9168,8 +9168,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_zones_match_documented_calibration_at_lthr_177",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_zones_match_documented_calibration_at_lthr_177()"
     },
     {
@@ -9179,8 +9179,8 @@
       "source_location": "L57",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_zones_never_land_in_age_formula_territory",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_zones_never_land_in_age_formula_territory()"
     },
     {
@@ -9190,8 +9190,8 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_config_override_wins",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_config_override_wins()"
     },
     {
@@ -9201,7 +9201,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_wotd_and_feedback_resolve_identical_zones",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_wotd_and_feedback_resolve_identical_zones()"
     },
@@ -9212,7 +9212,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_py_path",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "path"
     },
@@ -9223,7 +9223,7 @@
       "source_location": "L86",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_feedback_path_does_not_consume_calibration_cycle",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "test_feedback_path_does_not_consume_calibration_cycle()"
     },
@@ -9234,8 +9234,8 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_zone_table_is_contiguous_and_lthr_anchored",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_zone_table_is_contiguous_and_lthr_anchored()"
     },
     {
@@ -9245,8 +9245,8 @@
       "source_location": "L120",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_plan_parser_zones_match_the_shared_model",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_plan_parser_zones_match_the_shared_model()"
     },
     {
@@ -9256,8 +9256,8 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_test_plan_parser_honours_manual_zone_override",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "test_plan_parser_honours_manual_zone_override()"
     },
     {
@@ -9267,7 +9267,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_1",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "zone consistency between wotd and post-run coaching feedback.  regression guard"
     },
@@ -9278,8 +9278,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_58",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "the old bug produced z2 = 100-120 bpm; assert we are nowhere near it."
     },
     {
@@ -9289,7 +9289,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_71",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "the whole point: both consumers must agree, bit for bit."
     },
@@ -9300,7 +9300,7 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_87",
-      "community": 54,
+      "community": 0,
       "community_name": "test_hr_zones.py",
       "norm_label": "recalibrate=false must never fire maybe_recalibrate (it resets the counter)."
     },
@@ -9311,8 +9311,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_106",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "z1-z5 must tile without gaps and every edge must derive from lthr."
     },
     {
@@ -9322,8 +9322,8 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "tests_garmin_test_hr_zones_rationale_121",
-      "community": 58,
-      "community_name": "compute_zones",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "planparser must not reintroduce its own age-derived max-hr zone table."
     },
     {
@@ -10741,7 +10741,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "test_data_summarization_nodes.py"
     },
@@ -10752,7 +10752,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_py_asyncio",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "asyncio"
     },
@@ -10763,7 +10763,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_metrics_summarizer_node_basic",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "test_metrics_summarizer_node_basic()"
     },
@@ -10774,7 +10774,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_physiology_summarizer_node_basic",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "test_physiology_summarizer_node_basic()"
     },
@@ -10785,7 +10785,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_metrics_summarizer_with_empty_data",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "test_metrics_summarizer_with_empty_data()"
     },
@@ -10796,7 +10796,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_physiology_summarizer_with_empty_data",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "test_physiology_summarizer_with_empty_data()"
     },
@@ -11479,7 +11479,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_langgraph_core_migration.py"
     },
     {
@@ -11489,7 +11489,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_fixture",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "fixture"
     },
@@ -11500,7 +11500,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_basic_test_state",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "basic_test_state()"
     },
@@ -11512,7 +11512,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_all_nodes_importable",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_all_nodes_importable()"
     },
     {
@@ -11523,7 +11523,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_patch",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "patch"
     },
     {
@@ -11534,7 +11534,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_complete_workflow_creation",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_complete_workflow_creation()"
     },
     {
@@ -11544,7 +11544,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_state_schema_completeness",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "test_state_schema_completeness()"
     },
@@ -11556,7 +11556,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_asyncio",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "asyncio"
     },
     {
@@ -11567,7 +11567,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_node_basic_functionality",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_node_basic_functionality()"
     },
     {
@@ -11578,7 +11578,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_workflow_structure_stability",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_workflow_structure_stability()"
     },
     {
@@ -11731,8 +11731,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_py_fixture",
-      "community": 12,
-      "community_name": "planning_workflow.py",
+      "community": 38,
+      "community_name": "create_initial_state",
       "norm_label": "fixture"
     },
     {
@@ -11742,8 +11742,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowintegration_minimal_valid_state",
-      "community": 12,
-      "community_name": "planning_workflow.py",
+      "community": 38,
+      "community_name": "create_initial_state",
       "norm_label": ".minimal_valid_state()"
     },
     {
@@ -11786,7 +11786,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": "testworkflowdataflow"
     },
@@ -11797,7 +11797,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow_test_planning_state_fields",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": ".test_planning_state_fields()"
     },
@@ -11808,7 +11808,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow_test_state_update_functionality",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": ".test_state_update_functionality()"
     },
@@ -11852,7 +11852,7 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowimports_test_state_management_importable",
-      "community": 8,
+      "community": 38,
       "community_name": "create_initial_state",
       "norm_label": ".test_state_management_importable()"
     },
@@ -11875,7 +11875,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_langgraph_poc.py"
     },
     {
@@ -11886,7 +11886,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_fixture",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "fixture"
     },
     {
@@ -11897,7 +11897,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_sample_garmin_data",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "sample_garmin_data()"
     },
     {
@@ -11908,7 +11908,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_sample_state",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "sample_state()"
     },
     {
@@ -11919,7 +11919,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_state_creation",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_state_creation()"
     },
     {
@@ -11930,7 +11930,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_patch",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "patch"
     },
     {
@@ -11941,7 +11941,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_workflow_creation",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_workflow_creation()"
     },
     {
@@ -11952,7 +11952,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_asyncio",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "asyncio"
     },
     {
@@ -11963,7 +11963,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_metrics_expert_node_basic",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "test_metrics_expert_node_basic()"
     },
     {
@@ -11974,7 +11974,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_rationale_1",
       "community": 8,
-      "community_name": "create_initial_state",
+      "community_name": "analysis_workflow.py",
       "norm_label": "minimal tests for langgraph proof of concept."
     },
     {
@@ -11984,8 +11984,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_logseq_connection",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "test_logseq_connection.py"
     },
     {
@@ -11995,7 +11995,7 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_journal_sftp_path_resolution",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "test_journal_sftp_path_resolution()"
     },
@@ -12006,8 +12006,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_ssh_key_path_fallback",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "test_ssh_key_path_fallback()"
     },
     {
@@ -12017,8 +12017,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_upsert_properties_merging",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "test_upsert_properties_merging()"
     },
     {
@@ -12028,8 +12028,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_py_patch",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "patch"
     },
     {
@@ -12039,8 +12039,8 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_test_write_via_sftp_success",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "test_write_via_sftp_success()"
     },
     {
@@ -12050,7 +12050,7 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_17",
-      "community": 38,
+      "community": 19,
       "community_name": "logseq_client.py",
       "norm_label": "verify that graph path normalization works for both root directory and explicit"
     },
@@ -12061,8 +12061,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_34",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "verify key path fallback logic."
     },
     {
@@ -12072,8 +12072,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_40",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "verify that property block is built cleanly without corrupting existing markdown"
     },
     {
@@ -12083,8 +12083,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "tests_test_logseq_connection_rationale_54",
-      "community": 55,
-      "community_name": "write_props_dict",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "simulate successful sftp journal write on linux host."
     },
     {
@@ -12234,7 +12234,7 @@
       "label": "_tracked_text_files()",
       "file_type": "code",
       "source_file": "tests/test_no_secrets_committed.py",
-      "source_location": "L37",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "tests_test_no_secrets_committed_tracked_text_files",
       "community": 24,
@@ -12330,6 +12330,28 @@
       "norm_label": "test_no_bws_sentinel_bypassed_in_tracked_templates()"
     },
     {
+      "label": "_compose_referenced_keys()",
+      "file_type": "code",
+      "source_file": "tests/test_no_secrets_committed.py",
+      "source_location": "L129",
+      "_origin": "ast",
+      "id": "tests_test_no_secrets_committed_compose_referenced_keys",
+      "community": 24,
+      "community_name": "test_no_secrets_committed.py",
+      "norm_label": "_compose_referenced_keys()"
+    },
+    {
+      "label": "test_template_declares_every_key_compose_reads()",
+      "file_type": "code",
+      "source_file": "tests/test_no_secrets_committed.py",
+      "source_location": "L134",
+      "_origin": "ast",
+      "id": "tests_test_no_secrets_committed_test_template_declares_every_key_compose_reads",
+      "community": 24,
+      "community_name": "test_no_secrets_committed.py",
+      "norm_label": "test_template_declares_every_key_compose_reads()"
+    },
+    {
       "label": "Guard: no real secret may live in a tracked file.",
       "file_type": "rationale",
       "source_file": "tests/test_no_secrets_committed.py",
@@ -12350,6 +12372,17 @@
       "community": 24,
       "community_name": "test_no_secrets_committed.py",
       "norm_label": "every sentinel in the template must be a declared key.      each @bws line adds"
+    },
+    {
+      "label": ".env is rendered wholesale from the template, so gaps are silent.      A key ref",
+      "file_type": "rationale",
+      "source_file": "tests/test_no_secrets_committed.py",
+      "source_location": "L135",
+      "_origin": "ast",
+      "id": "tests_test_no_secrets_committed_rationale_135",
+      "community": 24,
+      "community_name": "test_no_secrets_committed.py",
+      "norm_label": ".env is rendered wholesale from the template, so gaps are silent.      a key ref"
     },
     {
       "label": "test_outside_client.py",
@@ -15528,6 +15561,72 @@
       "id": "decisions_2026_09_29_dashboard_moves_to_frontend_verification",
       "community": 69,
       "community_name": "Dashboard shell moves out of the repository root into frontend/",
+      "norm_label": "verification"
+    },
+    {
+      "label": "2026-09-29_env-template-covers-all-compose-keys.md",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_env_template_covers_all_compose_keys",
+      "community": 54,
+      "community_name": ".env.template declares every key docker-compose.yml reads",
+      "norm_label": "2026-09-29_env-template-covers-all-compose-keys.md"
+    },
+    {
+      "label": ".env.template declares every key docker-compose.yml reads",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_env_template_covers_all_compose_keys_env_template_declares_every_key_docker_compose_yml_reads",
+      "community": 54,
+      "community_name": ".env.template declares every key docker-compose.yml reads",
+      "norm_label": ".env.template declares every key docker-compose.yml reads"
+    },
+    {
+      "label": "Context",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_env_template_covers_all_compose_keys_context",
+      "community": 54,
+      "community_name": ".env.template declares every key docker-compose.yml reads",
+      "norm_label": "context"
+    },
+    {
+      "label": "Decision",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_env_template_covers_all_compose_keys_decision",
+      "community": 54,
+      "community_name": ".env.template declares every key docker-compose.yml reads",
+      "norm_label": "decision"
+    },
+    {
+      "label": "Consequences",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L56",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_env_template_covers_all_compose_keys_consequences",
+      "community": 54,
+      "community_name": ".env.template declares every key docker-compose.yml reads",
+      "norm_label": "consequences"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L77",
+      "_origin": "ast",
+      "id": "decisions_2026_09_29_env_template_covers_all_compose_keys_verification",
+      "community": 54,
+      "community_name": ".env.template declares every key docker-compose.yml reads",
       "norm_label": "verification"
     },
     {
@@ -51354,6 +51453,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_no_secrets_committed.py",
+      "source_location": "L129",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_no_secrets_committed",
+      "target": "tests_test_no_secrets_committed_compose_referenced_keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_no_secrets_committed.py",
       "source_location": "L49",
       "weight": 1.0,
       "_origin": "ast",
@@ -51420,7 +51530,18 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_no_secrets_committed.py",
-      "source_location": "L37",
+      "source_location": "L134",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_no_secrets_committed",
+      "target": "tests_test_no_secrets_committed_test_template_declares_every_key_compose_reads",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_no_secrets_committed.py",
+      "source_location": "L39",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_test_no_secrets_committed",
@@ -51455,7 +51576,7 @@
       "context": "generic_arg",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_no_secrets_committed.py",
-      "source_location": "L37",
+      "source_location": "L39",
       "weight": 1.0,
       "_origin": "ast",
       "source": "tests_test_no_secrets_committed_tracked_text_files",
@@ -51499,6 +51620,18 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_no_secrets_committed.py",
+      "source_location": "L141",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_no_secrets_committed_test_template_declares_every_key_compose_reads",
+      "target": "tests_test_no_secrets_committed_parse_env_template",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "tests/test_no_secrets_committed.py",
@@ -51531,6 +51664,29 @@
       "_origin": "ast",
       "source": "tests_test_no_secrets_committed_rationale_83",
       "target": "tests_test_no_secrets_committed_test_every_template_sentinel_is_a_known_secret_key",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_no_secrets_committed.py",
+      "source_location": "L142",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_no_secrets_committed_test_template_declares_every_key_compose_reads",
+      "target": "tests_test_no_secrets_committed_compose_referenced_keys",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_no_secrets_committed.py",
+      "source_location": "L135",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_no_secrets_committed_rationale_135",
+      "target": "tests_test_no_secrets_committed_test_template_declares_every_key_compose_reads",
       "confidence_score": 1.0
     },
     {
@@ -55050,6 +55206,61 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_env_template_covers_all_compose_keys",
+      "target": "decisions_2026_09_29_env_template_covers_all_compose_keys_env_template_declares_every_key_docker_compose_yml_reads",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L56",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_env_template_covers_all_compose_keys_env_template_declares_every_key_docker_compose_yml_reads",
+      "target": "decisions_2026_09_29_env_template_covers_all_compose_keys_consequences",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_env_template_covers_all_compose_keys_env_template_declares_every_key_docker_compose_yml_reads",
+      "target": "decisions_2026_09_29_env_template_covers_all_compose_keys_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L37",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_env_template_covers_all_compose_keys_env_template_declares_every_key_docker_compose_yml_reads",
+      "target": "decisions_2026_09_29_env_template_covers_all_compose_keys_decision",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "decisions/2026-09-29_env-template-covers-all-compose-keys.md",
+      "source_location": "L77",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "decisions_2026_09_29_env_template_covers_all_compose_keys_env_template_declares_every_key_docker_compose_yml_reads",
+      "target": "decisions_2026_09_29_env_template_covers_all_compose_keys_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "decisions/2026-09-29_production-consumes-published-image.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -55434,5 +55645,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a7addd8bd9088881e90335fd3bd92847ad4e0bd6"
+  "built_at_commit": "c29f7998b3064afa797a7e816b14862f3160d2c0"
 }
