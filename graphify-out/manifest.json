@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "startup.sh": {
-    "mtime": 1790698786.7878168,
-    "ast_hash": "cbbb4d5247c2172dc54ef20649ccac4c",
+    "mtime": 1790716388.7061908,
+    "ast_hash": "7524a07364c0e253ba243c664d49f119",
     "semantic_hash": ""
   },
   "tests/garmin/test_calendar_syncer_workout_limit.py": {
@@ -742,6 +742,11 @@
   "decisions/2026-09-29_env-template-covers-all-compose-keys.md": {
     "mtime": 1790712509.184516,
     "ast_hash": "f5d06d3a0069048fbf1514c3dd4ef0ab",
+    "semantic_hash": ""
+  },
+  "tests/test_shell_scripts_parse.py": {
+    "mtime": 1790716379.9114826,
+    "ast_hash": "e54fbb8fcfbc38aead39b55b8d4ae668",
     "semantic_hash": ""
   }
 }

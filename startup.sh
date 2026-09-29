@@ -19,15 +19,15 @@ YELLOW="[1;33m"
 CYAN="[0;36m"
 RESET="[0m"
 
-log()  { echo -e "${CYAN}[startup]${RESET} "; }
-ok()   { echo -e "${GREEN}[startup] ✔${RESET} "; }
-warn() { echo -e "${YELLOW}[startup] ⚠${RESET} "; }
+log()  { echo -e "${CYAN}[startup]${RESET} $*"; }
+ok()   { echo -e "${GREEN}[startup] ✔${RESET} $*"; }
+warn() { echo -e "${YELLOW}[startup] ⚠${RESET} $*"; }
 die()  {
     echo -e ""
     echo -e "${RED}${BOLD}╔══════════════════════════════════════════════════════════════╗${RESET}"
     echo -e "${RED}${BOLD}║              GARMIN AI COACH — STARTUP FAILED                ║${RESET}"
     echo -e "${RED}${BOLD}╚══════════════════════════════════════════════════════════════╝${RESET}"
-    echo -e "${RED}${BOLD}  ERROR: Wait${RESET}"
+    echo -e "${RED}${BOLD}  ERROR: $*${RESET}"
     echo -e ""
     echo -e "${YELLOW}  Possible causes:${RESET}"
     echo -e "    • Garmin MFA triggered (new IP) → run interactive login below"
@@ -37,11 +37,11 @@ die()  {
     echo -e "    • coach_config.yaml missing or invalid"
     echo -e ""
     echo -e "${YELLOW}  Interactive login (run this on the NAS, then restart the container):${RESET}"
-    echo -e "    docker run -it --rm \"
-    echo -e "      -v \$(pwd)/tokens:/app/tokens \"
-    echo -e "      -v \$(pwd)/coach_config.yaml:/app/coach_config.yaml \"
-    echo -e "      --env-file \$(pwd)/.env \"
-    echo -e "      ghcr.io/arnabbiswas1510/ai-health-coach:latest \"
+    echo -e "    docker run -it --rm \\"
+    echo -e "      -v \$(pwd)/tokens:/app/tokens \\"
+    echo -e "      -v \$(pwd)/coach_config.yaml:/app/coach_config.yaml \\"
+    echo -e "      --env-file \$(pwd)/.env \\"
+    echo -e "      ghcr.io/arnabbiswas1510/ai-health-coach:latest \\"
     echo -e "      python cli/garmin_ai_coach_cli.py --config /app/coach_config.yaml"
     echo -e ""
     exit 1

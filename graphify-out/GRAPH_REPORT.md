@@ -1,16 +1,16 @@
 # Graph Report - ai-health-coach  (2026-09-29)
 
 ## Corpus Check
-- 133 files · ~124,980 words
+- 134 files · ~125,487 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1456 nodes · 3412 edges · 66 communities (60 shown, 6 thin omitted)
+- 1472 nodes · 3432 edges · 65 communities (60 shown, 5 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 165 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c29f7998`
+- Built from commit: `8650c837`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -23,7 +23,7 @@
 - Technology Stack
 - Changelog
 - TrainingAnalysisState
-- analysis_workflow.py
+- create_initial_state
 - LangSmithCostExtractor
 - PlotStorage
 - PlanParser
@@ -53,7 +53,7 @@
 - ProxyHTTPRequestHandler
 - feedback_adr.py
 - 2026-08-05 — 6:20 AM Time-Gated WOTD Generation and Fallback Sleep Data
-- create_initial_state
+- test_shell_scripts_parse.py
 - test_deploy_image_pipeline.py
 - startup.sh
 - competition_models.py
@@ -64,7 +64,6 @@
 - 2026-08-24 — Manual WOTD Dashboard Trigger
 - 2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`
 - Production consumes the published image instead of building on the host
-- retry_handler.py
 - .env.template declares every key docker-compose.yml reads
 - GarminConnectClient
 - record_feedback
@@ -105,7 +104,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (66 total, 6 thin omitted)
+## Communities (65 total, 5 thin omitted)
 
 ### Community 0 - "test_hr_zones.py"
 Cohesion: 0.06
@@ -136,12 +135,12 @@ Cohesion: 0.04
 Nodes (45): [0.1.0] - Previous, [1.0.0] - 2025-10-14, [1.1.0] - 2025-10-17, [2.0.0] - 2025-11-02, [2.1.0] - 2025-11-22, [2.2.0] - 2026-01-25, 2-Stage Agent Pipeline, ACWR v2 Implementation (+37 more)
 
 ### Community 7 - "TrainingAnalysisState"
-Cohesion: 0.13
-Nodes (22): Command, MessagesState, Protocol, AgentRole, Enum, extract_activity_data(), extract_combined_data(), create_data_summarizer_node() (+14 more)
+Cohesion: 0.12
+Nodes (23): Command, MessagesState, Protocol, AgentRole, Enum, extract_activity_data(), extract_combined_data(), create_data_summarizer_node() (+15 more)
 
-### Community 8 - "analysis_workflow.py"
-Cohesion: 0.14
-Nodes (23): combined_summarizer_node(), formatter_node(), plot_resolution_node(), Any, synthesis_node(), create_analysis_workflow(), create_simple_sequential_workflow(), run_training_analysis() (+15 more)
+### Community 8 - "create_initial_state"
+Cohesion: 0.09
+Nodes (34): combined_summarizer_node(), formatter_node(), plot_resolution_node(), Any, synthesis_node(), create_initial_state(), Any, create_analysis_workflow() (+26 more)
 
 ### Community 9 - "LangSmithCostExtractor"
 Cohesion: 0.15
@@ -152,12 +151,12 @@ Cohesion: 0.08
 Nodes (12): create_plotting_tools(), LangGraphPlottingTool, PlotMetadata, PlotStorage, Any, ProductionSecureExecutor, run_plot_code_get_html(), HTMLPlotEmbedder (+4 more)
 
 ### Community 11 - "PlanParser"
-Cohesion: 0.11
-Nodes (18): Match, clean_corrupted_json(), PlanParser, date, datetime, Initialize PlanParser.          Args:             zones: The athlete's resolved, Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects., Split plan text into (date_str, block_text) tuples.          Uses a sliding wind (+10 more)
+Cohesion: 0.12
+Nodes (18): Match, clean_corrupted_json(), PlanParser, date, datetime, Plan Parser: converts the AI weekly planner markdown output into structured work, Parse the 28-day plan markdown or JSON into a list of ParsedWorkout objects., Split plan text into (date_str, block_text) tuples.          Uses a sliding wind (+10 more)
 
 ### Community 12 - "planning_workflow.py"
-Cohesion: 0.13
-Nodes (19): data_integration_node(), Any, master_orchestrator_node(), _parse_json_safely(), plan_formatter_node(), Plan Formatter Node.  Asks the LLM for a structured JSON data object describing, Remove ```json ... ``` or ``` ... ``` wrappers if present., Try to parse LLM output as JSON; return None on failure. (+11 more)
+Cohesion: 0.12
+Nodes (19): data_integration_node(), Any, master_orchestrator_node(), _parse_json_safely(), plan_formatter_node(), Remove ```json ... ``` or ``` ... ``` wrappers if present., Try to parse LLM output as JSON; return None on failure., _strip_fences() (+11 more)
 
 ### Community 13 - "GarminCalendarSyncer"
 Cohesion: 0.13
@@ -176,8 +175,8 @@ Cohesion: 0.21
 Nodes (4): dict, configure_langsmith_for_user(), LangSmithConfig, TestLangGraphFoundation
 
 ### Community 17 - "combined_analyst_node.py"
-Cohesion: 0.37
-Nodes (20): activity_expert_node(), combined_analyst_node(), metrics_expert_node(), configure_node_tools(), create_cost_entry(), create_plot_entries(), execute_node_with_error_handling(), log_node_completion() (+12 more)
+Cohesion: 0.31
+Nodes (22): activity_expert_node(), combined_analyst_node(), metrics_expert_node(), configure_node_tools(), create_cost_entry(), create_plot_entries(), execute_node_with_error_handling(), log_node_completion() (+14 more)
 
 ### Community 18 - ".get_llm"
 Cohesion: 0.18
@@ -185,7 +184,7 @@ Nodes (15): AIMode, Config, get_config(), Enum, reload_config(), AISettings, par
 
 ### Community 19 - "logseq_client.py"
 Cohesion: 0.06
-Nodes (61): check_and_run(), _flush_pending_syncs(), _load_pending_syncs(), main(), Path, _queue_pending_sync(), Write sleep + weight to today's Logseq journal page.      WOTD is intentionally, Return the list of pending sync entries, or [] if none. (+53 more)
+Nodes (63): backfill(), One-off backfill of Garmin sleep/run metrics into the Logseq journal.  Writes vi, check_and_run(), _flush_pending_syncs(), _load_pending_syncs(), main(), Path, _queue_pending_sync() (+55 more)
 
 ### Community 20 - "_make_syncer"
 Cohesion: 0.13
@@ -236,8 +235,8 @@ Cohesion: 0.18
 Nodes (10): 1. 6:20 AM Cutoff Time Gate, 1. Premature State Mutation (The Core Issue), 2. Coupled Sleep Sync & WOTD Pushing, 2. Separate WOTD Pushing from Sleep Data Processing, 3. Update Marker Only AFTER Successful Push, 4. Automatic Hourly Retry Loop, Executive Summary, 🛠️ Implemented Architectural Fix (+2 more)
 
 ### Community 32 - "extract_text_content"
-Cohesion: 0.19
-Nodes (5): Exception, extract_text_content(), If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted., TestExtractTextContent
+Cohesion: 0.15
+Nodes (7): Exception, extract_text_content(), APIOverloadError, RetryableError, If the library API fails, upload should proceed (not crash)., If one delete call fails, the rest should still be attempted., TestExtractTextContent
 
 ### Community 33 - "analysis_template.py"
 Cohesion: 0.44
@@ -255,13 +254,17 @@ Nodes (22): _apply_supersession(), _classify_feedback(), _default_classification
 Cohesion: 0.29
 Nodes (6): 2026-08-05 — 6:20 AM Time-Gated WOTD Generation and Fallback Sleep Data, 2026-08-08 Resilience Fix & Model Alignment, Consequences, Context, Decision, Status
 
-### Community 38 - "create_initial_state"
-Cohesion: 0.16
-Nodes (12): create_initial_state(), Any, asyncio, test_metrics_summarizer_node_basic(), test_metrics_summarizer_with_empty_data(), test_physiology_summarizer_node_basic(), test_physiology_summarizer_with_empty_data(), basic_test_state() (+4 more)
+### Community 38 - "test_shell_scripts_parse.py"
+Cohesion: 0.15
+Nodes (14): _bash(), parametrize, Path, Guards that every committed shell script is syntactically valid.  `startup.sh` i, Guard the guard: a bad glob would make every test below vacuous., `bash -n` parses without executing -- catches unterminated strings., `log "msg"` must print msg, not an empty string., die() must interpolate its argument, not print a hardcoded word. (+6 more)
 
 ### Community 39 - "test_deploy_image_pipeline.py"
 Cohesion: 0.23
 Nodes (9): _mount_targets(), parametrize, Guards on the image-based deploy pipeline.  CI publishes ghcr.io/<repo>:latest o, The fix removed source mounts; it must not have removed data mounts., _service(), test_compose_consumes_the_published_image(), test_compose_does_not_build_on_the_production_host(), test_no_bind_mount_shadows_application_code() (+1 more)
+
+### Community 40 - "startup.sh"
+Cohesion: 0.53
+Nodes (4): die(), log(), ok(), startup.sh script
 
 ### Community 41 - "competition_models.py"
 Cohesion: 0.67
@@ -283,17 +286,13 @@ Nodes (4): 2026-09-28 — HR zones unified in `services/garmin/hr_zones.py`, Con
 Cohesion: 0.33
 Nodes (5): Consequences, Context, Decision, Production consumes the published image instead of building on the host, Verification
 
-### Community 53 - "retry_handler.py"
-Cohesion: 0.38
-Nodes (4): APIOverloadError, RetryableError, RetryConfig, with_retry()
-
 ### Community 54 - ".env.template declares every key docker-compose.yml reads"
 Cohesion: 0.33
 Nodes (5): Consequences, Context, Decision, .env.template declares every key docker-compose.yml reads, Verification
 
 ### Community 56 - "GarminConnectClient"
-Cohesion: 0.12
-Nodes (12): backfill(), One-off backfill of Garmin sleep/run metrics into the Logseq journal.  Writes vi, main(), mfa_callback(), Garmin, main(), GarminConnectClient, test_client_property_raises_if_not_connected() (+4 more)
+Cohesion: 0.14
+Nodes (10): main(), mfa_callback(), Garmin, main(), GarminConnectClient, test_client_property_raises_if_not_connected(), test_connect_failure(), test_connect_successful() (+2 more)
 
 ### Community 57 - "record_feedback"
 Cohesion: 0.24
@@ -332,24 +331,24 @@ Cohesion: 0.33
 Nodes (5): Consequences, Context, Dashboard shell moves out of the repository root into frontend/, Decision, Verification
 
 ## Knowledge Gaps
-- **154 isolated node(s):** `garmin-ai-coach`, `Competition`, `startup.sh script`, `Project Overview`, `Tech Stack & Architecture` (+149 more)
+- **153 isolated node(s):** `garmin-ai-coach`, `Competition`, `Project Overview`, `Tech Stack & Architecture`, `Key Rules & Guidelines` (+148 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `OutsideApiGraphQlClient` connect `OutsideApiGraphQlClient` to `run_analysis_from_config`?**
-  _High betweenness centrality (0.093) - this node is a cross-community bridge._
+  _High betweenness centrality (0.091) - this node is a cross-community bridge._
 - **Why does `GarminCalendarSyncer` connect `GarminCalendarSyncer` to `extract_text_content`, `run_analysis_from_config`, `TriathlonCoachDataExtractor`, `_make_syncer`, `_make_syncer`, `GarminConnectClient`?**
-  _High betweenness centrality (0.083) - this node is a cross-community bridge._
-- **Why does `TriathlonCoachDataExtractor` connect `TriathlonCoachDataExtractor` to `GarminConnectClient`, `run_analysis_from_config`?**
   _High betweenness centrality (0.081) - this node is a cross-community bridge._
+- **Why does `TriathlonCoachDataExtractor` connect `TriathlonCoachDataExtractor` to `GarminConnectClient`, `run_analysis_from_config`?**
+  _High betweenness centrality (0.079) - this node is a cross-community bridge._
 - **Are the 17 inferred relationships involving `TriathlonCoachDataExtractor` (e.g. with `GarminEncoder` and `GarminConnectClient`) actually correct?**
   _`TriathlonCoachDataExtractor` has 17 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 9 inferred relationships involving `TrainingAnalysisState` (e.g. with `ConsoleInteractionProvider` and `InteractionProvider`) actually correct?**
   _`TrainingAnalysisState` has 9 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 4 inferred relationships involving `PlotStorage` (e.g. with `LangGraphPlottingTool` and `HTMLPlotEmbedder`) actually correct?**
   _`PlotStorage` has 4 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `garmin-ai-coach`, `Competition`, `startup.sh script` to the rest of the system?**
-  _154 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **What connects `garmin-ai-coach`, `Competition`, `Project Overview` to the rest of the system?**
+  _153 weakly-connected nodes found - possible documentation gaps or missing edges._

@@ -21,8 +21,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "backfill_logseq",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "backfill_logseq.py"
     },
     {
@@ -32,8 +32,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "backfill_logseq_backfill",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "backfill()"
     },
     {
@@ -43,8 +43,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "backfill_logseq_rationale_1",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 19,
+      "community_name": "logseq_client.py",
       "norm_label": "one-off backfill of garmin sleep/run metrics into the logseq journal.  writes vi"
     },
     {
@@ -1405,7 +1405,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_combined_summarizer_node_combined_summarizer_node",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "combined_summarizer_node()"
     },
     {
@@ -1526,7 +1526,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_formatter_node_formatter_node",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "formatter_node()"
     },
     {
@@ -1866,8 +1866,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node",
-      "community": 12,
-      "community_name": "planning_workflow.py",
+      "community": 7,
+      "community_name": "TrainingAnalysisState",
       "norm_label": "plan_formatter_node.py"
     },
     {
@@ -1910,8 +1910,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plan_formatter_node_rationale_1",
-      "community": 12,
-      "community_name": "planning_workflow.py",
+      "community": 7,
+      "community_name": "TrainingAnalysisState",
       "norm_label": "plan formatter node.  asks the llm for a structured json data object describing"
     },
     {
@@ -2120,7 +2120,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_plot_resolution_node",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "plot_resolution_node()"
     },
     {
@@ -2131,7 +2131,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_plot_resolution_node_py_any",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "any"
     },
     {
@@ -2230,7 +2230,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_nodes_synthesis_node_synthesis_node",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "synthesis_node()"
     },
     {
@@ -2493,8 +2493,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_init",
-      "community": 38,
-      "community_name": "create_initial_state",
+      "community": 7,
+      "community_name": "TrainingAnalysisState",
       "norm_label": "state/__init__.py"
     },
     {
@@ -2537,7 +2537,7 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_training_analysis_state_create_initial_state",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "create_initial_state()"
     },
@@ -2548,7 +2548,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "services_ai_langgraph_state_training_analysis_state_py_any",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "any"
     },
@@ -2890,7 +2890,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "analysis_workflow.py"
     },
     {
@@ -2901,7 +2901,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_analysis_workflow",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "create_analysis_workflow()"
     },
     {
@@ -2912,7 +2912,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_run_training_analysis",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "run_training_analysis()"
     },
     {
@@ -2923,7 +2923,7 @@
       "_origin": "ast",
       "id": "services_ai_langgraph_workflows_analysis_workflow_create_simple_sequential_workflow",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "create_simple_sequential_workflow()"
     },
     {
@@ -3890,8 +3890,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler",
-      "community": 53,
-      "community_name": "retry_handler.py",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "retry_handler.py"
     },
     {
@@ -3901,8 +3901,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryableerror",
-      "community": 53,
-      "community_name": "retry_handler.py",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": "retryableerror"
     },
     {
@@ -3923,8 +3923,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_apioverloaderror",
-      "community": 53,
-      "community_name": "retry_handler.py",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": "apioverloaderror"
     },
     {
@@ -3934,8 +3934,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig",
-      "community": 53,
-      "community_name": "retry_handler.py",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "retryconfig"
     },
     {
@@ -3945,8 +3945,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_init",
-      "community": 53,
-      "community_name": "retry_handler.py",
+      "community": 32,
+      "community_name": "extract_text_content",
       "norm_label": ".__init__()"
     },
     {
@@ -3956,8 +3956,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_retryconfig_calculate_delay",
-      "community": 53,
-      "community_name": "retry_handler.py",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": ".calculate_delay()"
     },
     {
@@ -3989,8 +3989,8 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "services_ai_utils_retry_handler_with_retry",
-      "community": 53,
-      "community_name": "retry_handler.py",
+      "community": 17,
+      "community_name": "combined_analyst_node.py",
       "norm_label": "with_retry()"
     },
     {
@@ -5562,8 +5562,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_client",
-      "community": 56,
-      "community_name": "GarminConnectClient",
+      "community": 4,
+      "community_name": "TriathlonCoachDataExtractor",
       "norm_label": "garmin/client.py"
     },
     {
@@ -6695,8 +6695,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_plan_parser",
-      "community": 0,
-      "community_name": "test_hr_zones.py",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": "plan_parser.py"
     },
     {
@@ -6739,8 +6739,8 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_planparser_init",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": ".__init__()"
     },
     {
@@ -6915,8 +6915,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_1",
-      "community": 0,
-      "community_name": "test_hr_zones.py",
+      "community": 11,
+      "community_name": "PlanParser",
       "norm_label": "plan parser: converts the ai weekly planner markdown output into structured work"
     },
     {
@@ -6948,8 +6948,8 @@
       "source_location": "L117",
       "_origin": "ast",
       "id": "services_garmin_plan_parser_rationale_117",
-      "community": 11,
-      "community_name": "PlanParser",
+      "community": 0,
+      "community_name": "test_hr_zones.py",
       "norm_label": "initialize planparser.          args:             zones: the athlete's resolved"
     },
     {
@@ -8764,6 +8764,21 @@
       "community": 40,
       "community_name": "startup.sh",
       "norm_label": "warn()"
+    },
+    {
+      "label": "die()",
+      "file_type": "code",
+      "source_file": "startup.sh",
+      "source_location": "L25",
+      "metadata": {
+        "language": "bash",
+        "kind": "bash_function"
+      },
+      "_origin": "ast",
+      "id": "startup_die",
+      "community": 40,
+      "community_name": "startup.sh",
+      "norm_label": "die()"
     },
     {
       "label": "test_calendar_syncer_workout_limit.py",
@@ -10741,7 +10756,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "test_data_summarization_nodes.py"
     },
@@ -10752,7 +10767,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_py_asyncio",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "asyncio"
     },
@@ -10763,7 +10778,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_metrics_summarizer_node_basic",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "test_metrics_summarizer_node_basic()"
     },
@@ -10774,7 +10789,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_physiology_summarizer_node_basic",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "test_physiology_summarizer_node_basic()"
     },
@@ -10785,7 +10800,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_metrics_summarizer_with_empty_data",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "test_metrics_summarizer_with_empty_data()"
     },
@@ -10796,7 +10811,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "tests_test_data_summarization_nodes_test_physiology_summarizer_with_empty_data",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "test_physiology_summarizer_with_empty_data()"
     },
@@ -11479,7 +11494,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_langgraph_core_migration.py"
     },
     {
@@ -11489,7 +11504,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_fixture",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "fixture"
     },
@@ -11500,7 +11515,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_basic_test_state",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "basic_test_state()"
     },
@@ -11512,7 +11527,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_all_nodes_importable",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_all_nodes_importable()"
     },
     {
@@ -11523,7 +11538,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_patch",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "patch"
     },
     {
@@ -11534,7 +11549,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_complete_workflow_creation",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_complete_workflow_creation()"
     },
     {
@@ -11544,7 +11559,7 @@
       "source_location": "L47",
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_state_schema_completeness",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "test_state_schema_completeness()"
     },
@@ -11556,7 +11571,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_py_asyncio",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "asyncio"
     },
     {
@@ -11567,7 +11582,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_node_basic_functionality",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_node_basic_functionality()"
     },
     {
@@ -11578,7 +11593,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_core_migration_test_workflow_structure_stability",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_workflow_structure_stability()"
     },
     {
@@ -11731,8 +11746,8 @@
       "source_location": "",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_py_fixture",
-      "community": 38,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": "fixture"
     },
     {
@@ -11742,8 +11757,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowintegration_minimal_valid_state",
-      "community": 38,
-      "community_name": "create_initial_state",
+      "community": 12,
+      "community_name": "planning_workflow.py",
       "norm_label": ".minimal_valid_state()"
     },
     {
@@ -11786,7 +11801,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": "testworkflowdataflow"
     },
@@ -11797,7 +11812,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow_test_planning_state_fields",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": ".test_planning_state_fields()"
     },
@@ -11808,7 +11823,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowdataflow_test_state_update_functionality",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": ".test_state_update_functionality()"
     },
@@ -11852,7 +11867,7 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "tests_test_langgraph_planning_workflow_testworkflowimports_test_state_management_importable",
-      "community": 38,
+      "community": 8,
       "community_name": "create_initial_state",
       "norm_label": ".test_state_management_importable()"
     },
@@ -11875,7 +11890,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_langgraph_poc.py"
     },
     {
@@ -11886,7 +11901,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_fixture",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "fixture"
     },
     {
@@ -11897,7 +11912,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_sample_garmin_data",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "sample_garmin_data()"
     },
     {
@@ -11908,7 +11923,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_sample_state",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "sample_state()"
     },
     {
@@ -11919,7 +11934,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_state_creation",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_state_creation()"
     },
     {
@@ -11930,7 +11945,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_patch",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "patch"
     },
     {
@@ -11941,7 +11956,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_workflow_creation",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_workflow_creation()"
     },
     {
@@ -11952,7 +11967,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_py_asyncio",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "asyncio"
     },
     {
@@ -11963,7 +11978,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_test_metrics_expert_node_basic",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "test_metrics_expert_node_basic()"
     },
     {
@@ -11974,7 +11989,7 @@
       "_origin": "ast",
       "id": "tests_test_langgraph_poc_rationale_1",
       "community": 8,
-      "community_name": "analysis_workflow.py",
+      "community_name": "create_initial_state",
       "norm_label": "minimal tests for langgraph proof of concept."
     },
     {
@@ -13483,6 +13498,171 @@
       "community": 27,
       "community_name": "test_render_env.py",
       "norm_label": "a foreign project id in a shared bws.env must not be adopted.      the sibling a"
+    },
+    {
+      "label": "test_shell_scripts_parse.py",
+      "file_type": "code",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "test_shell_scripts_parse.py"
+    },
+    {
+      "label": "_bash()",
+      "file_type": "code",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_bash",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "_bash()"
+    },
+    {
+      "label": "test_shell_scripts_discovered()",
+      "file_type": "code",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_test_shell_scripts_discovered",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "test_shell_scripts_discovered()"
+    },
+    {
+      "label": "parametrize",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_py_parametrize",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "parametrize"
+    },
+    {
+      "label": "test_shell_script_parses()",
+      "file_type": "code",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_test_shell_script_parses",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "test_shell_script_parses()"
+    },
+    {
+      "label": "Path",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_py_path",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "path"
+    },
+    {
+      "label": "test_log_helpers_forward_their_arguments()",
+      "file_type": "code",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_test_log_helpers_forward_their_arguments",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "test_log_helpers_forward_their_arguments()"
+    },
+    {
+      "label": "test_die_reports_the_actual_error()",
+      "file_type": "code",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L81",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_test_die_reports_the_actual_error",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "test_die_reports_the_actual_error()"
+    },
+    {
+      "label": "test_startup_help_block_emits_line_continuations()",
+      "file_type": "code",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_test_startup_help_block_emits_line_continuations",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "test_startup_help_block_emits_line_continuations()"
+    },
+    {
+      "label": "Guards that every committed shell script is syntactically valid.  `startup.sh` i",
+      "file_type": "rationale",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_rationale_1",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "guards that every committed shell script is syntactically valid.  `startup.sh` i"
+    },
+    {
+      "label": "Guard the guard: a bad glob would make every test below vacuous.",
+      "file_type": "rationale",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_rationale_51",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "guard the guard: a bad glob would make every test below vacuous."
+    },
+    {
+      "label": "`bash -n` parses without executing -- catches unterminated strings.",
+      "file_type": "rationale",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_rationale_59",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "`bash -n` parses without executing -- catches unterminated strings."
+    },
+    {
+      "label": "`log \"msg\"` must print msg, not an empty string.",
+      "file_type": "rationale",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_rationale_72",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "`log \"msg\"` must print msg, not an empty string."
+    },
+    {
+      "label": "die() must interpolate its argument, not print a hardcoded word.",
+      "file_type": "rationale",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_rationale_82",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "die() must interpolate its argument, not print a hardcoded word."
+    },
+    {
+      "label": "r\"\"\"The copy-pasteable `docker run` block needs real trailing backslashes.",
+      "file_type": "rationale",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "tests_test_shell_scripts_parse_rationale_88",
+      "community": 38,
+      "community_name": "test_shell_scripts_parse.py",
+      "norm_label": "r\"\"\"the copy-pasteable `docker run` block needs real trailing backslashes."
     },
     {
       "label": "test_training_metrics.py",
@@ -47079,6 +47259,17 @@
       "relation": "defines",
       "confidence": "EXTRACTED",
       "source_file": "startup.sh",
+      "source_location": "L25",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "startup",
+      "target": "startup_die",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "defines",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.sh",
       "source_location": "L22",
       "weight": 1.0,
       "_origin": "ast",
@@ -47117,6 +47308,42 @@
       "_origin": "ast",
       "source": "startup",
       "target": "startup_warn",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.sh",
+      "source_location": "L99",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast",
+      "source": "startup_sh__entry",
+      "target": "startup_die",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.sh",
+      "source_location": "L62",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast",
+      "source": "startup_sh__entry",
+      "target": "startup_log",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "confidence": "EXTRACTED",
+      "source_file": "startup.sh",
+      "source_location": "L64",
+      "weight": 1.0,
+      "context": "call",
+      "_origin": "ast",
+      "source": "startup_sh__entry",
+      "target": "startup_ok",
       "confidence_score": 1.0
     },
     {
@@ -53149,6 +53376,186 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse",
+      "target": "tests_test_shell_scripts_parse_bash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L81",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse",
+      "target": "tests_test_shell_scripts_parse_test_die_reports_the_actual_error",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse",
+      "target": "tests_test_shell_scripts_parse_test_log_helpers_forward_their_arguments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse",
+      "target": "tests_test_shell_scripts_parse_test_shell_script_parses",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse",
+      "target": "tests_test_shell_scripts_parse_test_shell_scripts_discovered",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse",
+      "target": "tests_test_shell_scripts_parse_test_startup_help_block_emits_line_continuations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_rationale_1",
+      "target": "tests_test_shell_scripts_parse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L61",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_test_shell_script_parses",
+      "target": "tests_test_shell_scripts_parse_bash",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L51",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_rationale_51",
+      "target": "tests_test_shell_scripts_parse_test_shell_scripts_discovered",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_test_log_helpers_forward_their_arguments",
+      "target": "tests_test_shell_scripts_parse_py_parametrize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "context": "decorator",
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_test_shell_script_parses",
+      "target": "tests_test_shell_scripts_parse_py_parametrize",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_rationale_59",
+      "target": "tests_test_shell_scripts_parse_test_shell_script_parses",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L58",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_test_shell_script_parses",
+      "target": "tests_test_shell_scripts_parse_py_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L72",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_rationale_72",
+      "target": "tests_test_shell_scripts_parse_test_log_helpers_forward_their_arguments",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_rationale_82",
+      "target": "tests_test_shell_scripts_parse_test_die_reports_the_actual_error",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/test_shell_scripts_parse.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "tests_test_shell_scripts_parse_rationale_88",
+      "target": "tests_test_shell_scripts_parse_test_startup_help_block_emits_line_continuations",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "tests/test_training_metrics.py",
       "source_location": "L6",
       "weight": 1.0,
@@ -55645,5 +56052,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c29f7998b3064afa797a7e816b14862f3160d2c0"
+  "built_at_commit": "8650c8374ccbd67e874eeabd134168b70ec10813"
 }
