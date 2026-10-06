@@ -92,12 +92,27 @@ class HRZones:
         }
 
 
+def _parse_lthr_value(val: Any) -> int | None:
+    """Extract a positive integer LTHR, rejecting None, mocks, and invalid values."""
+    if val is None or type(val).__name__ in ("MagicMock", "Mock"):
+        return None
+    if isinstance(val, (int, float)):
+        i = int(val)
+        return i if i > 0 else None
+    if isinstance(val, str) and val.strip().isdigit():
+        i = int(val.strip())
+        return i if i > 0 else None
+    return None
+
+
 def resolve_lthr(client: Any, *, log_prefix: str = "HRZones") -> int:
     """Return the athlete's current LTHR from Garmin.
 
     Priority:
       1. ``get_user_profile() -> userData.lactateThresholdHeartRate`` (primary)
-      2. a scan of the last ``LTHR_SCAN_DAYS`` days of ``get_training_status()``
+      2. ``client.get_lactate_threshold(latest=True)`` (biometric endpoint)
+      3. a scan of the last ``LTHR_SCAN_DAYS`` days of ``get_training_status()``
+      4. ``client.get_heart_rate_zones()`` (configured biometric zones)
 
     Raises:
         ValueError: if LTHR cannot be resolved from any source. There is no
@@ -106,14 +121,29 @@ def resolve_lthr(client: Any, *, log_prefix: str = "HRZones") -> int:
     lthr: int | None = None
 
     try:
-        profile = client.get_user_profile() or {}
-        user_data = profile.get("userData") or {}
-        raw_lthr = user_data.get("lactateThresholdHeartRate")
-        if raw_lthr:
-            lthr = int(raw_lthr)
-            logger.info("%s: LTHR from get_user_profile: %d bpm", log_prefix, lthr)
+        profile = client.get_user_profile()
+        if isinstance(profile, dict):
+            user_data = profile.get("userData")
+            if isinstance(user_data, dict):
+                parsed = _parse_lthr_value(user_data.get("lactateThresholdHeartRate"))
+                if parsed:
+                    lthr = parsed
+                    logger.info("%s: LTHR from get_user_profile: %d bpm", log_prefix, lthr)
     except Exception as exc:
         logger.warning("%s: get_user_profile failed: %s", log_prefix, exc)
+
+    if not lthr and hasattr(client, "get_lactate_threshold"):
+        try:
+            lt_data = client.get_lactate_threshold(latest=True)
+            if isinstance(lt_data, dict):
+                sh_data = lt_data.get("speed_and_heart_rate")
+                if isinstance(sh_data, dict):
+                    parsed = _parse_lthr_value(sh_data.get("heartRate"))
+                    if parsed:
+                        lthr = parsed
+                        logger.info("%s: LTHR from get_lactate_threshold: %d bpm", log_prefix, lthr)
+        except Exception as exc:
+            logger.debug("%s: get_lactate_threshold failed: %s", log_prefix, exc)
 
     if not lthr:
         logger.info(
@@ -123,25 +153,52 @@ def resolve_lthr(client: Any, *, log_prefix: str = "HRZones") -> int:
         for days_ago in range(0, LTHR_SCAN_DAYS):
             day = (date.today() - timedelta(days=days_ago)).isoformat()
             try:
-                status = client.get_training_status(day) or {}
-                raw_lthr = status.get("lactateThresholdHeartRate") or status.get(
-                    "latestLactateThresholdHeartRate"
-                )
-                if raw_lthr:
-                    lthr = int(raw_lthr)
-                    logger.info(
-                        "%s: LTHR from training_status(%s): %d bpm", log_prefix, day, lthr
+                status = client.get_training_status(day)
+                if isinstance(status, dict):
+                    raw = status.get("lactateThresholdHeartRate") or status.get(
+                        "latestLactateThresholdHeartRate"
                     )
-                    break
+                    parsed = _parse_lthr_value(raw)
+                    if parsed:
+                        lthr = parsed
+                        logger.info(
+                            "%s: LTHR from training_status(%s): %d bpm", log_prefix, day, lthr
+                        )
+                        break
             except Exception:
                 continue
 
+    if not lthr and hasattr(client, "get_heart_rate_zones"):
+        try:
+            hr_zones_list = client.get_heart_rate_zones()
+            if isinstance(hr_zones_list, list):
+                running_profile = None
+                default_profile = None
+                for p in hr_zones_list:
+                    if isinstance(p, dict):
+                        sport = str(p.get("sport") or "").upper()
+                        if sport == "RUNNING":
+                            running_profile = p
+                        elif sport == "DEFAULT" or not default_profile:
+                            default_profile = p
+                chosen = running_profile or default_profile
+                if chosen:
+                    parsed = _parse_lthr_value(chosen.get("lactateThresholdHeartRate"))
+                    if parsed:
+                        lthr = parsed
+                        logger.info(
+                            "%s: LTHR from get_heart_rate_zones (%s): %d bpm",
+                            log_prefix, chosen.get("sport"), lthr,
+                        )
+        except Exception as exc:
+            logger.debug("%s: get_heart_rate_zones failed: %s", log_prefix, exc)
+
     if not lthr:
         raise ValueError(
-            f"{log_prefix}: LTHR is unavailable from all sources (get_user_profile + last "
-            f"{LTHR_SCAN_DAYS - 1} days of training_status). Cannot compute Zone 2 without "
-            "LTHR. Ensure at least one recent run with a known lactate threshold is synced "
-            "to Garmin Connect."
+            f"{log_prefix}: LTHR is unavailable from all sources (get_user_profile + "
+            f"get_lactate_threshold + training_status + get_heart_rate_zones). "
+            "Cannot compute Zone 2 without LTHR. Ensure at least one recent run with a known "
+            "lactate threshold is synced to Garmin Connect."
         )
 
     return lthr

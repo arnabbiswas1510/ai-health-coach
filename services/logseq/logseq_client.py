@@ -53,9 +53,11 @@ Public API (same signatures as before — daemon.py needs no changes):
 from __future__ import annotations
 
 import datetime
+import json
 import logging
 import os
 import re
+from pathlib import Path
 from typing import Any
 
 import paramiko
@@ -551,4 +553,92 @@ def write_daily_properties(
         logger.info("Logseq: no properties to write — all values are None")
         return False
     return write_props_dict(props, date=date)
+
+
+# ── Pending sync queue (resilience when host/SSH is offline) ──────────────────
+
+
+def load_pending_syncs(path: Path) -> list[dict]:
+    """Return the list of pending sync entries, or [] if none."""
+    if not path.exists():
+        return []
+    try:
+        return json.loads(path.read_text(encoding="utf-8")) or []
+    except Exception as exc:
+        logger.warning("Could not read pending sync queue %s: %s", path, exc)
+        return []
+
+
+def save_pending_syncs(path: Path, entries: list[dict]) -> None:
+    try:
+        path.write_text(json.dumps(entries, indent=2), encoding="utf-8")
+    except Exception as exc:
+        logger.warning("Could not save pending sync queue %s: %s", path, exc)
+
+
+def queue_pending_sync(
+    path: Path,
+    date_iso: str,
+    props: dict[str, Any],
+) -> None:
+    """Add or update a pending sync entry for date_iso (merges properties for the same date)."""
+    entries = load_pending_syncs(path)
+    existing = {e["date"]: i for i, e in enumerate(entries)}
+    if date_iso in existing:
+        idx = existing[date_iso]
+        old_props = entries[idx].get("properties", {})
+        merged_props = dict(old_props)
+        for cat, val in props.items():
+            if isinstance(val, dict) and isinstance(merged_props.get(cat), dict):
+                merged_props[cat] = {**merged_props[cat], **val}
+            else:
+                merged_props[cat] = val
+        entries[idx]["properties"] = merged_props
+    else:
+        entries.append({"date": date_iso, "properties": props})
+    save_pending_syncs(path, entries)
+    logger.info(
+        "Logseq: queued sync for %s (%d properties) — will retry when Logseq is open.",
+        date_iso, len(props),
+    )
+
+
+def flush_pending_syncs(path: Path) -> int:
+    """Try to write all pending syncs to their correct journal pages.
+
+    Processes entries oldest-first. Stops on the first failure (if Logseq is
+    still closed, no point attempting the rest). Removes successful entries.
+    Returns the number of entries still pending.
+    """
+    entries = load_pending_syncs(path)
+    if not entries:
+        return 0
+
+    logger.info("Logseq: attempting to flush %d pending sync(s)...", len(entries))
+    still_pending: list[dict] = []
+    logseq_reachable = True
+
+    for entry in sorted(entries, key=lambda e: e["date"]):
+        if not logseq_reachable:
+            still_pending.append(entry)
+            continue
+
+        target_date = datetime.date.fromisoformat(entry["date"])
+        ok = write_props_dict(entry["properties"], date=target_date)
+        if ok:
+            logger.info("Logseq: flushed pending sync for %s.", entry["date"])
+        else:
+            logger.warning(
+                "Logseq: could not flush pending sync for %s — Logseq still unavailable.",
+                entry["date"],
+            )
+            still_pending.append(entry)
+            logseq_reachable = False  # stop trying further entries
+
+    save_pending_syncs(path, still_pending)
+    flushed = len(entries) - len(still_pending)
+    if flushed:
+        logger.info("Logseq: flushed %d pending sync(s), %d still queued.", flushed, len(still_pending))
+    return len(still_pending)
+
 

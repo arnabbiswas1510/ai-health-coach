@@ -135,3 +135,24 @@ def test_plan_parser_honours_manual_zone_override():
 
     parser = PlanParser.from_lthr(177, athlete_cfg={"zone2_min": 125, "zone2_max": 145})
     assert parser._zones["Z2"] == (125, 145)
+
+
+def test_resolve_lthr_falls_back_to_get_lactate_threshold():
+    client = MagicMock()
+    client.get_user_profile.return_value = {"userData": {}}
+    client.get_lactate_threshold.return_value = {
+        "speed_and_heart_rate": {"heartRate": 175}
+    }
+    assert resolve_lthr(client) == 175
+
+
+def test_resolve_lthr_falls_back_to_get_heart_rate_zones():
+    client = MagicMock()
+    client.get_user_profile.return_value = {"userData": {}}
+    client.get_lactate_threshold.return_value = {}
+    client.get_training_status.return_value = {}
+    client.get_heart_rate_zones.return_value = [
+        {"sport": "RUNNING", "lactateThresholdHeartRate": 176}
+    ]
+    assert resolve_lthr(client) == 176
+

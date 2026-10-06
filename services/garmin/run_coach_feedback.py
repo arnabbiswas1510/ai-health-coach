@@ -52,14 +52,25 @@ def generate_run_feedback(
     dur_min    = round(dur_s / 60.0, 1) if dur_s else 0.0
     pace_min_km = round(1000.0 / avg_speed_ms / 60.0, 2) if avg_speed_ms > 0 else None
 
-    if dist_km < 0.5:
-        logger.info("Run feedback: activity %s too short (%.2f km) — skipping.", activity_id, dist_km)
+    # Guard: must be an actual completed run with positive duration, distance, and speed
+    if dist_km < 0.5 or dur_s < 60 or avg_speed_ms <= 0:
+        logger.info(
+            "Run feedback: activity %s is not a completed run (%.2f km, %.1f min, spd=%.2f m/s) — skipping.",
+            activity_id, dist_km, dur_min, avg_speed_ms,
+        )
         return None
+
+    # Resolve target date of the actual run from startTimeLocal
+    run_date = date.today()
+    if start_time:
+        try:
+            run_date = date.fromisoformat(start_time.split()[0].split("T")[0])
+        except Exception:
+            pass
 
     # ── Athlete context ───────────────────────────────────────────────────────
     athlete_cfg = config.get("athlete", {})
     context_cfg = config.get("context", {})
-    age         = int(athlete_cfg.get("age", 53))
 
     # HR zones — resolved from the SAME source of truth WOTD uses, so the run is
     # graded against exactly the zones it was prescribed in.
@@ -84,9 +95,8 @@ def generate_run_feedback(
     prompt = f"""You are a supportive running coach giving brief post-run feedback to an athlete.
 
 ATHLETE:
-  Age: {age}
   Goal: Lose weight to 160 lbs, building aerobic base
-  Zone 2 HR (run target): {z2_low}–{z2_high} bpm
+  Zone 2 HR (run target): {z2_low}–{z2_high} bpm (Garmin LTHR-calculated)
   Walk-break trigger: {walk_break_hr} bpm or above
   Background: {analysis_context.strip()}
 
@@ -95,6 +105,11 @@ prescribed with (anchored on a live Garmin LTHR of {zones.lthr} bpm), so judge
 the run against these numbers and no others. The athlete trains in a walk-run
 format: walk segments are INTENTIONAL recovery and HR dropping below {z2_low} bpm
 during them is correct, not a failure.
+
+CRITICAL INSTRUCTION:
+Do NOT use or mention any age-based heart rate formulas (e.g. 220 - age).
+Judge the run ONLY against the athlete's actual Garmin-calculated Zone 2 ({z2_low}–{z2_high} bpm)
+and walk-break trigger ({walk_break_hr} bpm).
 
 TODAY'S COMPLETED RUN:
   Name: {activity_name}
@@ -151,15 +166,20 @@ Keep it concise, personal, and actionable. No bullet points — flowing sentence
 
     # ── Write to Logseq journal ───────────────────────────────────────────────
     try:
-        from services.logseq import write_props_dict
-        props = {"coach-feedback": feedback}
-        synced = write_props_dict(props, date=date.today())
+        from services.logseq import queue_pending_sync, write_props_dict
+        props = {"coach": {"feedback": feedback.strip().replace("\n", " ")}}
+        synced = write_props_dict(props, date=run_date)
         if synced:
-            logger.info("Run feedback written to Logseq journal.")
+            logger.info("Run feedback written to Logseq journal for %s.", run_date.isoformat())
         else:
-            logger.info("Logseq not reachable — feedback saved to log file only.")
+            pending_sync_path = user_data_dir / "pending_logseq_syncs.json"
+            queue_pending_sync(pending_sync_path, run_date.isoformat(), props)
+            logger.info(
+                "Logseq: SSH unavailable — queued coach feedback for %s in %s",
+                run_date.isoformat(), pending_sync_path,
+            )
     except Exception as exc:
-        logger.debug("Logseq write skipped: %s", exc)
+        logger.warning("Could not write or queue run feedback for Logseq: %s", exc)
 
     return feedback
 

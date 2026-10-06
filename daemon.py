@@ -10,7 +10,20 @@ from typing import Any
 import yaml
 from garminconnect import Garmin
 
-from services.logseq import build_props, write_props_dict
+from services.logseq import (
+    build_props,
+    flush_pending_syncs,
+    load_pending_syncs,
+    queue_pending_sync,
+    save_pending_syncs,
+    write_props_dict,
+)
+
+# Aliases for backward compatibility within daemon.py
+_load_pending_syncs = load_pending_syncs
+_save_pending_syncs = save_pending_syncs
+_queue_pending_sync = queue_pending_sync
+_flush_pending_syncs = flush_pending_syncs
 
 logging.basicConfig(
     level=logging.INFO,
@@ -19,89 +32,6 @@ logging.basicConfig(
 logger = logging.getLogger("daemon")
 
 
-# ── Pending Logseq sync queue ─────────────────────────────────────────────────
-# When Logseq is closed (e.g. on vacation) the write fails silently.
-# We persist the formatted props + target date in a JSON file so they can be
-# replayed to the correct past journal pages once Logseq is open again.
-
-def _load_pending_syncs(path: Path) -> list[dict]:
-    """Return the list of pending sync entries, or [] if none."""
-    if not path.exists():
-        return []
-    try:
-        import json as _json
-        return _json.loads(path.read_text(encoding="utf-8")) or []
-    except Exception as exc:
-        logger.warning("Could not read pending sync queue %s: %s", path, exc)
-        return []
-
-
-def _save_pending_syncs(path: Path, entries: list[dict]) -> None:
-    import json as _json
-    try:
-        path.write_text(_json.dumps(entries, indent=2), encoding="utf-8")
-    except Exception as exc:
-        logger.warning("Could not save pending sync queue %s: %s", path, exc)
-
-
-def _queue_pending_sync(
-    path: Path,
-    date_iso: str,
-    props: dict,
-) -> None:
-    """Add or update a pending sync entry for date_iso (deduplicates by date)."""
-    entries = _load_pending_syncs(path)
-    # Replace existing entry for the same date, or append
-    existing = {e["date"]: i for i, e in enumerate(entries)}
-    entry = {"date": date_iso, "properties": props}
-    if date_iso in existing:
-        entries[existing[date_iso]] = entry
-    else:
-        entries.append(entry)
-    _save_pending_syncs(path, entries)
-    logger.info(
-        "Logseq: queued sync for %s (%d properties) — will retry when Logseq is open.",
-        date_iso, len(props),
-    )
-
-
-def _flush_pending_syncs(path: Path) -> int:
-    """Try to write all pending syncs to their correct journal pages.
-
-    Processes entries oldest-first. Stops on the first failure (if Logseq is
-    still closed, no point attempting the rest). Removes successful entries.
-    Returns the number of entries still pending.
-    """
-    entries = _load_pending_syncs(path)
-    if not entries:
-        return 0
-
-    logger.info("Logseq: attempting to flush %d pending sync(s)...", len(entries))
-    still_pending: list[dict] = []
-    logseq_reachable = True
-
-    for entry in sorted(entries, key=lambda e: e["date"]):
-        if not logseq_reachable:
-            still_pending.append(entry)
-            continue
-
-        target_date = date.fromisoformat(entry["date"])
-        ok = write_props_dict(entry["properties"], date=target_date)
-        if ok:
-            logger.info("Logseq: flushed pending sync for %s.", entry["date"])
-        else:
-            logger.warning(
-                "Logseq: could not flush pending sync for %s — Logseq still unavailable.",
-                entry["date"],
-            )
-            still_pending.append(entry)
-            logseq_reachable = False  # stop trying further entries
-
-    _save_pending_syncs(path, still_pending)
-    flushed = len(entries) - len(still_pending)
-    if flushed:
-        logger.info("Logseq: flushed %d pending sync(s), %d still queued.", flushed, len(still_pending))
-    return len(still_pending)
 
 
 def _sync_sleep_to_logseq(
@@ -299,14 +229,18 @@ def check_and_run():  # noqa: C901
             activity_id = str(latest_activity.get("activityId", ""))
             activity_type = (latest_activity.get("activityType") or {}).get("typeKey", "")
             is_run = "run" in activity_type.lower()
+            dur = float(latest_activity.get("duration") or latest_activity.get("movingDuration") or 0)
+            dist = float(latest_activity.get("distance") or 0)
+            spd = float(latest_activity.get("averageSpeed") or 0)
+            is_completed_run = is_run and dur >= 60.0 and dist >= 500.0 and spd > 0.0
 
             if activity_id and activity_id != last_processed_id:
                 # Mark processed immediately to prevent re-trigger on error
                 last_id_file.write_text(activity_id, encoding="utf-8")
-                if is_run:
+                if is_completed_run:
                     logger.info(
-                        "New run detected (id=%s) — generating post-run coaching feedback.",
-                        activity_id,
+                        "New completed run detected (id=%s, dist=%.2f km, dur=%.1f min) — generating post-run coaching feedback.",
+                        activity_id, dist / 1000.0, dur / 60.0,
                     )
                     # Marker consumed by services.feedback.detect_timing() so a
                     # note written later today is tagged as a post-run report
@@ -348,6 +282,11 @@ def check_and_run():  # noqa: C901
                         logger.info("ZoneCal: run counter advanced to %d/%d.", n, 10)
                     except Exception as cal_exc:
                         logger.warning("ZoneCal: could not advance run counter: %s", cal_exc)
+                elif is_run:
+                    logger.info(
+                        "Run activity detected (id=%s) but not completed (dist=%.2f km, dur=%.1f s, spd=%.2f m/s) — skipping feedback.",
+                        activity_id, dist / 1000.0, dur, spd,
+                    )
                 else:
                     logger.info(
                         "New non-run activity detected (id=%s, type=%s) — no feedback generated.",
@@ -446,10 +385,9 @@ def check_and_run():  # noqa: C901
     else:
         logger.info("WOTD already pushed for %s — skipping.", today_iso)
 
-    # ── Daily run backfill + pending flush ───────────────────────────────────
-    # Pending flush runs EVERY poll so queued items land as soon as Logseq opens.
-    # Run backfill is once-per-day: writes last 15 completed runs to their correct
-    # journal pages. Sleep/weight are handled by the sleep-triggered path above.
+    # ── Daily run check + pending flush ──────────────────────────────────────
+    # Pending flush runs EVERY poll so queued coach feedback / sleep lands as soon
+    # as Logseq is open. Completed runs receive only coach feedback in Logseq.
     run_backfill_file = user_data_dir / "last_run_backfill_date.txt"
     last_run_backfill = run_backfill_file.read_text(encoding="utf-8").strip() if run_backfill_file.exists() else ""
 
@@ -457,63 +395,14 @@ def check_and_run():  # noqa: C901
     _flush_pending_syncs(pending_sync_path)
 
     if last_run_backfill != today_iso:
-        logger.info("Running daily run backfill to Logseq for %s...", today_iso)
-        try:
-            import datetime as _dt
-            all_recent = client.get_activities(0, 15) or []
-            today_date = _dt.date.today()
-            for act in all_recent:
-                type_key = (act.get("activityType") or {}).get("typeKey", "").lower()
-                if type_key in ("running", "trail_running", "treadmill_running"):
-                    st = act.get("startTimeLocal") or ""
-                    if not st:
-                        continue
-                    act_date_str = st.split()[0]
-                    try:
-                        act_date = _dt.date.fromisoformat(act_date_str)
-                    except ValueError:
-                        continue
-
-                    # Skip today and future dates — backfill is for past days only.
-                    # This also filters out scheduled/planned WOTD calendar entries
-                    # that appear in get_activities before the run is actually done.
-                    if act_date >= today_date:
-                        logger.debug(
-                            "Logseq backfill: skipping activity on %s (today or future)",
-                            act_date_str,
-                        )
-                        continue
-
-                    # Require actual run metrics — planned workouts have distance
-                    # but no averageSpeed, so this guards against writing WOTD data.
-                    spd = act.get("averageSpeed")
-                    if not spd or float(spd) <= 0:
-                        logger.debug(
-                            "Logseq backfill: skipping activity on %s — no averageSpeed (planned/incomplete?)",
-                            act_date_str,
-                        )
-                        continue
-
-                    dist = round(act.get("distance", 0) / 1000.0, 2) if act.get("distance") else None
-                    hr = int(act.get("averageHR")) if act.get("averageHR") else None
-
-                    run_props = build_props(
-                        run_distance_km=dist,
-                        run_avg_speed_ms=spd,
-                        run_avg_heart_rate=hr,
-                    )
-                    if run_props:
-                        synced = write_props_dict(run_props, date=act_date)
-                        if synced:
-                            logger.info("Logseq: synced actual run for %s (%s km)", act_date_str, dist)
-                        else:
-                            _queue_pending_sync(pending_sync_path, act_date_str, run_props)
-            run_backfill_file.write_text(today_iso, encoding="utf-8")
-        except Exception as e:
-            logger.warning("Logseq run backfill failed: %s", e)
+        logger.info(
+            "Daily run check for %s: Logseq receives coach feedback on completed runs (raw metrics/suggestions omitted).",
+            today_iso,
+        )
+        run_backfill_file.write_text(today_iso, encoding="utf-8")
     else:
-        logger.info("Logseq run backfill already done for %s. Skipping.", today_iso)
-    # ── End Daily Run Backfill ────────────────────────────────────────────────
+        logger.debug("Daily run check already done for %s. Skipping.", today_iso)
+    # ── End Daily Run Check ───────────────────────────────────────────────────
 
 
 def _withings_sync_due(today: date | None = None) -> bool:

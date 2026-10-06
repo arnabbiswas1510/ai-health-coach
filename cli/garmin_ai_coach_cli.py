@@ -601,30 +601,11 @@ async def run_analysis_from_config(config_path: Path | None, output_dir_override
                         latest_ri.sleep.get("quality", {}) or {}
                     ).get("overall_score")
 
-            # Most-recent run: walk recent_activities newest-first
-            _run_distance   = None
-            _run_speed_ms   = None
-            _run_avg_hr     = None
-            if garmin_data.recent_activities:
-                for _act in garmin_data.recent_activities:
-                    if _act.activity_type and "run" in _act.activity_type.lower():
-                        if _act.summary:
-                            _run_distance = (
-                                _act.summary.distance / 1000.0
-                                if _act.summary.distance is not None else None
-                            )
-                            _run_speed_ms = _act.summary.average_speed
-                            _run_avg_hr   = _act.summary.average_hr
-                        break  # most recent run only
-
             write_daily_properties(
                 sleep_duration_hours=_sleep_hours,
                 sleep_bed_time=_bed_time,
                 sleep_wake_time=_wake_time,
                 sleep_quality=_sleep_quality,
-                run_distance_km=_run_distance,
-                run_avg_speed_ms=_run_speed_ms,
-                run_avg_heart_rate=_run_avg_hr,
             )
         except Exception:
             logger.exception("Logseq journal sync failed — pipeline continues")
